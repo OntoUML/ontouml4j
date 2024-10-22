@@ -8,10 +8,10 @@ import org.ontouml.OntoumlElement;
 public abstract class DiagramElement extends OntoumlElement {
 
   public DiagramElement(String id, MultilingualText name) {
-    super(id, name);
+    super(id, name, null, null);
   }
 
   public DiagramElement(String id) {
-    super(id, null);
+    super(id, null, null, null);
   }
 }

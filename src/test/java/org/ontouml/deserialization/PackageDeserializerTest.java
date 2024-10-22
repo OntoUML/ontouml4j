@@ -11,8 +11,13 @@ import org.ontouml.model.Relation;
 import org.ontouml.model.Class;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.ontouml.utils.ResourceGetter;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,38 +26,27 @@ import static com.google.common.truth.Truth8.assertThat;
 
 class PackageDeserializerTest {
 
-  static String json =
-      "{\n"
-          + "  \"id\": \"pk1\",\n"
-          + "  \"name\": \"My Package\",\n"
-          + "  \"description\": \"My description.\",\n"
-          + "  \"type\": \"Package\",\n"
-          + "  \"propertyAssignments\": {\n"
-          + "    \"uri\": \"http://example.com/MyPackage\"\n"
-          + "  },\n"
-          + "  \"contents\": [\n"
-          + "    { \"id\": \"c1\", \"type\": \"Class\", \"name\": \"Agent\" },\n"
-          + "    { \"id\": \"r1\", \"type\": \"Relation\", \"name\": \"knows\" },\n"
-          + "    { \"id\": \"g1\", \"type\": \"Generalization\", \"name\": \"PersonToAgent\" },\n"
-          + "    { \"id\": \"gs1\", \"type\": \"GeneralizationSet\", \"name\": \"AgentNature\" },\n"
-          + "    { "
-          + "      \"id\": \"pk2\","
-          + "      \"type\": \"Package\","
-          + "      \"name\": \"Subpackage\","
-          + "      \"contents\": [\n"
-          + "        { \"id\": \"c2\", \"type\": \"Class\", \"name\": \"Person\" }"
-          + "      ]\n"
-          + "    }\n"
-          + "  ]\n"
-          + "}";
+static String json;
 
-  static ObjectMapper mapper;
+static ObjectMapper mapper;
+
   static Package pkg;
+  static ResourceGetter resourceGetter;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    pkg = mapper.readValue(json, Package.class);
+    resourceGetter = new ResourceGetter();
+    File jsonFile = resourceGetter.getJsonFromDeserialization("project.allfields.ontouml.json");
+
+    try {
+        pkg = mapper.readValue(jsonFile, Package.class);
+
+        System.out.println(pkg);
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
   }
 
   @Test
@@ -62,6 +56,10 @@ class PackageDeserializerTest {
 
   @Test
   void shouldDeserializeName() {
+    Truth8.assertThat(pkg.getNameIn("en")).hasValue("My Package");
+  }
+
+  void shouldDeserializeAlternativeNames() {
     Truth8.assertThat(pkg.getNameIn("en")).hasValue("My Package");
   }
 

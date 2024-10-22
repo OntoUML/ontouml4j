@@ -24,7 +24,7 @@ public class GeneralizationSet extends ModelElement {
       MultilingualText name,
       Class categorizer,
       Collection<Generalization> generalizations) {
-    super(id, name);
+    super(id, name, new ArrayList<>());
     OntoumlUtils.addIfNotNull(this.generalizations, generalizations);
     this.categorizer = categorizer;
   }

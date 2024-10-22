@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.ontouml.MultilingualText;
 import org.ontouml.serialization.DecoratableSerializer;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @JsonSerialize(using = DecoratableSerializer.class)
@@ -12,12 +13,12 @@ public abstract class Decoratable<S extends Stereotype> extends ModelElement {
   private S ontoumlStereotype;
 
   public Decoratable(String id, MultilingualText name, S ontoumlStereotype) {
-    super(id, name);
+    super(id, name, new ArrayList<>());
     setOntoumlStereotype(ontoumlStereotype);
   }
 
   public Decoratable(String id, MultilingualText name, String stereotypeName) {
-    super(id, name);
+    super(id, name, new ArrayList<>());
     setStereotype(stereotypeName);
   }
 

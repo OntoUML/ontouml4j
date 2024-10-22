@@ -8,8 +8,10 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ontouml.Project;
 import org.ontouml.model.Package;
+import org.ontouml.model.Resource;
 import org.ontouml.view.Diagram;
 
+import java.awt.color.ICC_ColorSpace;
 import java.io.IOException;
 import java.util.List;
 
@@ -29,9 +31,17 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
 
     ElementDeserializer.deserialize(project, root, codec);
 
-    Package model = DeserializerUtils.deserializeObjectField(root, "model", Package.class, codec);
-    project.setModel(model);
+    JsonNode keywordsNode = root.get("keywords");
+    if (keywordsNode != null) {
+      List<String> keywords = keywordsNode.traverse(codec).readValueAs(List.class);
+      project.setKeywords(keywords);
+      System.out.println("Deserialized Keywords: " + keywords);
+    }
 
+    // TODO: Change Model to root elements
+//    Package model = DeserializerUtils.deserializeObjectField(root, "model", Package.class, codec);
+//    project.setModel(model);
+//
     List<Diagram> diagrams = DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
     project.setDiagrams(diagrams);
 

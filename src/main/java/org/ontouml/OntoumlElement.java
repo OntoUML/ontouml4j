@@ -1,5 +1,9 @@
 package org.ontouml;
 
+import org.ontouml.model.Resource;
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -9,16 +13,33 @@ public abstract class OntoumlElement extends Element {
   private OntoumlElement container;
   private Project project;
 
-  public OntoumlElement(OntoumlElement container, String id, MultilingualText name) {
-    super(id, name);
+  public OntoumlElement(OntoumlElement container,
+                        String id,
+                        MultilingualText name,
+                        List<MultilingualText> alternativeNames,
+                        Date created,
+                        Date modified,
+                        List<MultilingualText> editorialNotes,
+                        List<Resource> creators,
+                        List<Resource> contributors) {
+    super(id, name, alternativeNames, created, modified, editorialNotes, creators, contributors);
     this.container = container;
 
     if (container != null) project = container.project;
   }
 
   public OntoumlElement(String id, MultilingualText name) {
-    super(id, name);
+    super(id, name, new ArrayList<>());
   }
+
+  public OntoumlElement(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
+    super(id, name, new ArrayList<>());
+  }
+
+  public OntoumlElement(String id, MultilingualText name, Date created, Date modified) {
+    super(id, name, new ArrayList<>(), created, modified);
+  }
+
 
   public Optional<OntoumlElement> getContainer() {
     return Optional.ofNullable(container);

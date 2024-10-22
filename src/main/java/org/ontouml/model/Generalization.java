@@ -7,6 +7,7 @@ import org.ontouml.OntoumlElement;
 import org.ontouml.deserialization.GeneralizationDeserializer;
 import org.ontouml.serialization.GeneralizationSerializer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +21,7 @@ public class Generalization extends ModelElement {
 
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
           String id, MultilingualText name, Classifier<T, S> specific, Classifier<T, S> general) {
-    super(id, name);
+    super(id, name, new ArrayList<>());
     setGeneral(general);
     setSpecific(specific);
   }
@@ -41,7 +42,7 @@ public class Generalization extends ModelElement {
   }
 
   public Generalization() {
-    super(null, null);
+    super(null, null, null);
   }
 
   @Override

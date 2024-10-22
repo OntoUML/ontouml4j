@@ -17,14 +17,15 @@ import java.util.*;
 @JsonTypeName("Package")
 public class Package extends ModelElement implements ModelElementContainer {
 
-  List<ModelElement> contents = new ArrayList<>();
+  List<ModelElement> contentsModels = new ArrayList<>();
+  List<String> contents = new ArrayList<String>();
 
-  public Package(String id, MultilingualText name) {
+  public Package(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
     super(id, name);
   }
 
   public Package(String id, String name) {
-    this(id, new MultilingualText(name));
+    this(id, new MultilingualText(name), new ArrayList<MultilingualText>());
   }
 
   public Package(String name) {
@@ -32,7 +33,7 @@ public class Package extends ModelElement implements ModelElementContainer {
   }
 
   public Package() {
-    this(null, (MultilingualText) null);
+    this(null, (MultilingualText) null, new ArrayList<>());
   }
 
   @Override
@@ -44,9 +45,9 @@ public class Package extends ModelElement implements ModelElementContainer {
   public List<OntoumlElement> getContents() {
     List<OntoumlElement> copiedContents = new ArrayList<>();
 
-    if (contents == null) return copiedContents;
+    if (contentsModels == null) return copiedContents;
 
-    OntoumlUtils.addIfNotNull(copiedContents, contents);
+    OntoumlUtils.addIfNotNull(copiedContents, contentsModels);
     return copiedContents;
   }
 
@@ -54,7 +55,7 @@ public class Package extends ModelElement implements ModelElementContainer {
     if (child == null) throw new NullPointerException("Cannot add a null element to the package.");
 
     child.setContainer(this);
-    contents.add(child);
+    contentsModels.add(child);
     return child;
   }
 

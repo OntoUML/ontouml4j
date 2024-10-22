@@ -7,6 +7,7 @@ import org.ontouml.OntoumlElement;
 import org.ontouml.deserialization.LiteralDeserializer;
 import org.ontouml.serialization.LiteralSerializer;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public class Literal extends ModelElement {
 
   public Literal(String id, MultilingualText name) {
-    super(id, name);
+    super(id, name, new ArrayList<>());
   }
 
   public Literal(String name) {

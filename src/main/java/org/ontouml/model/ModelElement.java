@@ -6,9 +6,7 @@ import org.ontouml.OntoumlElement;
 import org.ontouml.Project;
 import org.ontouml.serialization.ModelElementSerializer;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
 
 @JsonSerialize(using = ModelElementSerializer.class)
 public abstract class ModelElement extends OntoumlElement {
@@ -16,6 +14,10 @@ public abstract class ModelElement extends OntoumlElement {
 
   public ModelElement(String id, MultilingualText name) {
     super(id, name);
+  }
+
+  public ModelElement(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
+    super(id, name, alternativeNames);
   }
 
   public void setPropertyAssignments(Map<String, Object> map) {
