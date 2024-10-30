@@ -1,11 +1,11 @@
 package org.ontouml;
 
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.ontouml.model.Package;
+
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
-
-import org.ontouml.model.Package;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
 
 public class ProjectTest {
   Project project = new Project();
@@ -45,7 +45,7 @@ public class ProjectTest {
   @DisplayName("setModel() should set the container of the argument.")
   void setModelShouldSetContainerOfArgument() {
     Package anotherModel = new Package();
-    project.setModel(anotherModel);
+    project.setRoot(anotherModel);
 
     assertThat(anotherModel.getContainer()).hasValue(project);
   }
@@ -54,21 +54,21 @@ public class ProjectTest {
   @DisplayName("setModel() should set the project of the argument.")
   void setModelShouldSetProjectOfArgument() {
     Package anotherModel = new Package();
-    project.setModel(anotherModel);
+    project.setRoot(anotherModel);
 
     assertThat(anotherModel.getProject()).hasValue(project);
   }
 
   @Test
   @DisplayName(
-      "setModel() should propagate the caller as the project of the all direct contents of the"
-          + " argument.")
-  void setModelShouldPropagateProject() {
+          "setModel() should propagate the caller as the project of the all direct contents of the"
+                  + " argument.")
+  void setRootShouldPropagateProject() {
     Package anotherModel = new Package();
     Package firstChild = anotherModel.createPackage();
     Package secondChild = anotherModel.createPackage();
 
-    project.setModel(anotherModel);
+    project.setRoot(anotherModel);
 
     assertThat(firstChild.getProject()).hasValue(project);
     assertThat(secondChild.getProject()).hasValue(project);

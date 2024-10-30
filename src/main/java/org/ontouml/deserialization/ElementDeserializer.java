@@ -8,14 +8,13 @@ import org.ontouml.MultilingualText;
 import org.ontouml.model.Resource;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ElementDeserializer {
 
   public static void deserialize(Element element, JsonNode root, ObjectCodec codec)
-      throws IOException {
+          throws IOException {
     System.out.println("Deserializing type: " + root.get("type") + "");
     String id = root.get("id").asText();
     element.setId(id);
@@ -30,7 +29,8 @@ public class ElementDeserializer {
 
     JsonNode alternativeNamesNode = root.get("alternativeNames");
     if (alternativeNamesNode != null) {
-      List alternativeNames = alternativeNamesNode.traverse(codec).readValueAs(new TypeReference<List<MultilingualText>>() {});
+      List alternativeNames = alternativeNamesNode.traverse(codec).readValueAs(new TypeReference<List<MultilingualText>>() {
+      });
       element.setAlternativeNames(alternativeNames);
       System.out.println("Deserialized alternativeNames: " + alternativeNames.toString());
     }
@@ -58,7 +58,8 @@ public class ElementDeserializer {
 
     JsonNode editorialNotesNode = root.get("editorialNotes");
     if (editorialNotesNode != null) {
-      List<MultilingualText> editorialNotes = editorialNotesNode.traverse(codec).readValueAs(List.class);
+      List<MultilingualText> editorialNotes = editorialNotesNode.traverse(codec).readValueAs(new TypeReference<List<MultilingualText>>() {
+      });
       element.setEditorialNotes(editorialNotes);
       System.out.println("Deserialized editorial Notes: " + editorialNotes);
     }

@@ -1,30 +1,20 @@
 package org.ontouml.deserialization;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.google.common.truth.Truth;
-import com.google.common.truth.Truth8;
-import org.ontouml.MultilingualText;
-import org.ontouml.Project;
-import org.ontouml.model.Package;
-import org.ontouml.Element;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.ontouml.MultilingualText;
+import org.ontouml.Project;
 import org.ontouml.utils.ResourceGetter;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
-import static com.google.common.truth.Truth8.assertThat;
 import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
 
 class ProjectDeserializerTest {
 
@@ -39,12 +29,12 @@ class ProjectDeserializerTest {
     File jsonFile = resourceGetter.getJsonFromDeserialization("project.allfields.ontouml.json");
 
     try {
-        project = mapper.readValue(jsonFile, Project.class);
+      project = mapper.readValue(jsonFile, Project.class);
 
-        System.out.println(project);
+      System.out.println(project);
 
     } catch (IOException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -63,16 +53,16 @@ class ProjectDeserializerTest {
   void shouldDeserializeDescription() {
     assertThat(project.getDescriptionIn("en")).hasValue("The best conceptual modeling project.");
     assertThat(project.getDescriptionIn("it"))
-        .hasValue("Il miglior progetto in modellazione concettuale.");
+            .hasValue("Il miglior progetto in modellazione concettuale.");
   }
 
-  @Test
-  void shouldDeserializeModel() {
+//  @Test
+//  void shouldDeserializeModel() {
 //    Optional<Package> model = project.getModel();
 //    assertThat(model).isPresent();
 //    Truth.assertThat(model.get().getId()).isEqualTo("pk1");
 //    Truth8.assertThat(model.get().getFirstName()).hasValue("Model");
-  }
+//  }
 
 //  @Test
 //  void shouldDeserializeModelContents() {
@@ -97,19 +87,17 @@ class ProjectDeserializerTest {
 
   @Test
   void shouldDeserializeKeywords() {
-    List<String> keywords = new ArrayList<>();
-    keywords.add("keyword1");
-    keywords.add("keyword2");
+    List<MultilingualText> keywords = project.getMetaProperties().getKeywords();
 
-    assertThat(project.getKeywords()).isEqualTo(keywords);
+    assertThat(keywords.getFirst().getText("en").get()).isEqualTo("keyword1");
+    assertThat(keywords.get(1).getText("en").get()).isEqualTo("keyword2");
   }
 
   @Test
   void shouldDeserializeEditorialNotes() {
-    List<String> editorialNotes = new ArrayList<>();
-    editorialNotes.add("An editorial Note.");
+    MultilingualText editorialNote = new MultilingualText("pt", "An editorial Note.");
 
-    assertThat(project.getEditorialNotes()).isEqualTo(editorialNotes);
+    assertThat(project.getEditorialNotes().getFirst().toString()).isEqualTo(editorialNote.toString());
   }
 
   @Test
