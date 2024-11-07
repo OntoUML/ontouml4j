@@ -3,10 +3,7 @@ package org.ontouml.model;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.ontouml.ModelElementContainer;
-import org.ontouml.MultilingualText;
-import org.ontouml.OntoumlElement;
-import org.ontouml.OntoumlUtils;
+import org.ontouml.*;
 import org.ontouml.deserialization.PackageDeserializer;
 import org.ontouml.serialization.PackageSerializer;
 
@@ -51,6 +48,11 @@ public class Package extends ModelElement implements ModelElementContainer {
     return copiedContents;
   }
 
+  public void setContents(Collection<? extends ModelElement> contents) {
+    this.contents.clear();
+    addContents(contents);
+  }
+
   public <T extends ModelElement> T addContent(T child) {
     if (child == null) throw new NullPointerException("Cannot add a null element to the package.");
 
@@ -62,11 +64,6 @@ public class Package extends ModelElement implements ModelElementContainer {
   public void addContents(Collection<? extends ModelElement> contents) {
     if (contents == null) return;
     contents.stream().filter(Objects::nonNull).forEach(x -> addContent(x));
-  }
-
-  public void setContents(Collection<? extends ModelElement> contents) {
-    this.contents.clear();
-    addContents(contents);
   }
 
   public boolean hasContents() {
@@ -283,21 +280,21 @@ public class Package extends ModelElement implements ModelElementContainer {
   }
 
   public Relation createRelation(
-      String id,
-      String name,
-      RelationStereotype stereotype,
-      Classifier<?, ?> source,
-      Classifier<?, ?> target) {
+          String id,
+          String name,
+          RelationStereotype stereotype,
+          Classifier<?, ?> source,
+          Classifier<?, ?> target) {
     return addContent(new Relation(id, name, stereotype, source, target));
   }
 
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization createGeneralization(
-      Classifier<T, S> specific, Classifier<T, S> general) {
+          Classifier<T, S> specific, Classifier<T, S> general) {
     return createGeneralization(null, specific, general);
   }
 
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization createGeneralization(
-      String id, Classifier<T, S> specific, Classifier<T, S> general) {
+          String id, Classifier<T, S> specific, Classifier<T, S> general) {
     return addContent(new Generalization(id, specific, general));
   }
 
@@ -310,22 +307,26 @@ public class Package extends ModelElement implements ModelElementContainer {
   }
 
   public GeneralizationSet createGeneralizationSet(
-      String name, Collection<Generalization> generalizations) {
+          String name, Collection<Generalization> generalizations) {
     return createGeneralizationSet(null, name, null, generalizations);
   }
 
   public GeneralizationSet createGeneralizationSet(
-      String name, Class categorizer, Collection<Generalization> generalizations) {
+          String name, Class categorizer, Collection<Generalization> generalizations) {
     return createGeneralizationSet(null, name, categorizer, generalizations);
   }
 
   public GeneralizationSet createGeneralizationSet(
-      String id, String name, Class categorizer, Collection<Generalization> generalizations) {
+          String id, String name, Class categorizer, Collection<Generalization> generalizations) {
     return addContent(new GeneralizationSet(id, name, categorizer, generalizations));
   }
 
   public boolean isRoot() {
     return getContainer().isEmpty()
-        || getProject().isPresent() && getContainer().get().equals(getProject().get());
+            || getProject().isPresent() && getContainer().get().equals(getProject().get());
+  }
+
+  public void buildAllReferences(Project project) {
+    // TODO: make root reference
   }
 }

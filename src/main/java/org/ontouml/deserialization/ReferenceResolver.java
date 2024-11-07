@@ -2,10 +2,10 @@ package org.ontouml.deserialization;
 
 import org.ontouml.OntoumlElement;
 import org.ontouml.Project;
+import org.ontouml.model.*;
 import org.ontouml.view.ConnectorView;
 import org.ontouml.view.Diagram;
 import org.ontouml.view.ElementView;
-import org.ontouml.model.*;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -44,6 +44,9 @@ public class ReferenceResolver {
       resolveSource(elementMap, connectorView);
       resolveTarget(elementMap, connectorView);
     }
+
+    buildClassReferences(project);
+    buildPropertyReferences(project);
   }
 
   private static void resolveOwner(Map<String, OntoumlElement> elementMap, Diagram diagram) {
@@ -74,7 +77,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveModelElement(
-      Map<String, OntoumlElement> elementMap, ElementView element) {
+          Map<String, OntoumlElement> elementMap, ElementView element) {
     ModelElement reference = element.getModelElement();
 
     if (reference == null) return;
@@ -84,7 +87,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveGeneralizations(
-      Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
+          Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
 
     Set<Generalization> sources = new HashSet<>();
 
@@ -95,7 +98,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveCategorizer(
-      Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
+          Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
     Optional<org.ontouml.model.Class> reference = gs.getCategorizer();
 
     if (reference.isEmpty()) return;
@@ -105,7 +108,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveGeneral(
-      Map<String, OntoumlElement> elementMap, Generalization generalization) {
+          Map<String, OntoumlElement> elementMap, Generalization generalization) {
     Optional<Classifier<?, ?>> reference = generalization.getGeneral();
 
     if (reference.isEmpty()) return;
@@ -115,7 +118,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveSpecific(
-      Map<String, OntoumlElement> elementMap, Generalization generalization) {
+          Map<String, OntoumlElement> elementMap, Generalization generalization) {
     Optional<Classifier<?, ?>> reference = generalization.getSpecific();
 
     if (reference.isEmpty()) return;
@@ -125,7 +128,7 @@ public class ReferenceResolver {
   }
 
   private static void resolvePropertyType(
-      Map<String, OntoumlElement> elementMap, Property property) {
+          Map<String, OntoumlElement> elementMap, Property property) {
     Optional<Classifier<?, ?>> reference = property.getPropertyType();
 
     if (reference.isEmpty()) return;
@@ -135,7 +138,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveSubsettedProperties(
-      Map<String, OntoumlElement> elementMap, Property property) {
+          Map<String, OntoumlElement> elementMap, Property property) {
     for (Property reference : property.getSubsettedProperties()) {
       Property source = resolve(elementMap, reference, Property.class);
       property.replaceSubsettedProperty(reference, source);
@@ -143,7 +146,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveRedefinedProperties(
-      Map<String, OntoumlElement> elementMap, Property property) {
+          Map<String, OntoumlElement> elementMap, Property property) {
     for (Property reference : property.getRedefinedProperties()) {
       Property source = resolve(elementMap, reference, Property.class);
       property.replaceRedefinedProperty(reference, source);
@@ -151,7 +154,7 @@ public class ReferenceResolver {
   }
 
   private static <T extends OntoumlElement> T resolve(
-      Map<String, OntoumlElement> elementMap, T reference, java.lang.Class<T> referenceType) {
+          Map<String, OntoumlElement> elementMap, T reference, java.lang.Class<T> referenceType) {
 
     OntoumlElement source = elementMap.get(reference.getId());
 
@@ -162,5 +165,28 @@ public class ReferenceResolver {
       throw new NullPointerException("Referenced element in property type is not a classifier!");
 
     return referenceType.cast(source);
+  }
+
+  /**
+   * This method is responsible for building the literals references after the entire project is parsed. This needs to
+   * be done because the OntoUML JSON Schema v1.2 only contains an array of ids in the literals property
+   *
+   * @param project - the parsed project
+   */
+  private static void buildClassReferences(Project project) {
+    project.getAllClasses().forEach(clazz -> {
+      clazz.buildAllReferences(project);
+    });
+  }
+
+  /**
+   * This method is responsible for building the propertyType references after the entire project is parsed.
+   *
+   * @param project - the parsed project
+   */
+  private static void buildPropertyReferences(Project project) {
+    project.getAllProperties().forEach(clazz -> {
+      clazz.buildAllReferences(project);
+    });
   }
 }

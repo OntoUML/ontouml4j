@@ -3,6 +3,7 @@ package org.ontouml;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.ontouml.deserialization.ProjectDeserializer;
+import org.ontouml.model.ModelElement;
 import org.ontouml.model.Package;
 import org.ontouml.model.Resource;
 import org.ontouml.serialization.ProjectSerializer;
@@ -18,12 +19,14 @@ import java.util.Optional;
 public class Project extends OntoumlElement implements ModelElementContainer, DiagramElementContainer {
   ProjectMetaProperties metaProperties;
   private Package root;
+  private List<? extends ModelElement> elements;
   private List<Diagram> diagrams = new ArrayList<>();
 
   public Project(OntoumlElement container,
                  String id,
                  MultilingualText name,
                  List<MultilingualText> alternativeNames,
+                 MultilingualText description,
                  Date created, Date modified,
                  List<MultilingualText> editorialNotes,
                  List<Resource> creators,
@@ -31,20 +34,20 @@ public class Project extends OntoumlElement implements ModelElementContainer, Di
                  Package root,
                  List<Diagram> diagrams,
                  ProjectMetaProperties metaProperties) {
-    super(container, id, name, alternativeNames, created, modified, editorialNotes, creators, contributors);
+    super(container, id, name, alternativeNames, description, created, modified, editorialNotes, creators, contributors);
     this.root = root;
     this.diagrams = diagrams;
     this.metaProperties = metaProperties != null ? new ProjectMetaProperties() : null;
   }
 
   public Project(String id, MultilingualText name, Date created, Date modified) {
-    super(null, id, name, new ArrayList<>(), created, modified, null, null, null);
+    super(null, id, name, new ArrayList<>(), null, created, modified, null, null, null);
     setProject(this);
     this.metaProperties = new ProjectMetaProperties();
   }
 
   public Project(String id, String name, Date created, Date modified) {
-    super(null, id, new MultilingualText(name), new ArrayList<>(), created, modified, null, null, null);
+    super(null, id, new MultilingualText(name), new ArrayList<>(), null, created, modified, null, null, null);
     setProject(this);
     this.metaProperties = new ProjectMetaProperties();
   }
@@ -142,7 +145,7 @@ public class Project extends OntoumlElement implements ModelElementContainer, Di
 
     contents.addAll(diagrams);
 
-    if (getModel().isPresent()) contents.add(getModel().get());
+    if (contents.addAll(elements)) ;
 
     return contents;
   }
@@ -163,5 +166,13 @@ public class Project extends OntoumlElement implements ModelElementContainer, Di
     this.root = root;
 
     if (root != null) root.setContainer(this);
+  }
+
+  public List<? extends ModelElement> getElements() {
+    return elements;
+  }
+
+  public void setElements(List<? extends ModelElement> elements) {
+    this.elements = elements;
   }
 }

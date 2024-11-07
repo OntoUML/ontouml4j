@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ontouml.model.AggregationKind;
-import org.ontouml.model.Classifier;
 import org.ontouml.model.Property;
 
 import java.io.IOException;
@@ -16,7 +15,7 @@ public class PropertyDeserializer extends JsonDeserializer<Property> {
 
   @Override
   public Property deserialize(JsonParser parser, DeserializationContext context)
-      throws IOException {
+          throws IOException {
     ObjectCodec codec = parser.getCodec();
     JsonNode root = parser.readValueAsTree();
 
@@ -37,15 +36,15 @@ public class PropertyDeserializer extends JsonDeserializer<Property> {
     String cardinality = DeserializerUtils.deserializeNullableStringField(root, "cardinality");
     property.setCardinality(cardinality);
 
-    Classifier<?, ?> propertyType = DeserializerUtils.deserializeClassifierField(root, "propertyType", codec);
-    property.setPropertyType(propertyType);
+    String propertyType = DeserializerUtils.deserializeNullableStringField(root, "propertyType");
+    property.setPropertyTypeId(propertyType);
 
     List<Property> subsettedProperties =
-        DeserializerUtils.deserializeArrayField(root, "subsettedProperties", Property.class, codec);
+            DeserializerUtils.deserializeArrayField(root, "subsettedProperties", Property.class, codec);
     property.setSubsettedProperties(subsettedProperties);
 
     List<Property> redefinedProperties =
-        DeserializerUtils.deserializeArrayField(root, "redefinedProperties", Property.class, codec);
+            DeserializerUtils.deserializeArrayField(root, "redefinedProperties", Property.class, codec);
     property.setRedefinedProperties(redefinedProperties);
 
     String aggregationKind = DeserializerUtils.deserializeNullableStringField(root, "aggregationKind");

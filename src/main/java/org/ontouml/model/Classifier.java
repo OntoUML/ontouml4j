@@ -3,16 +3,17 @@ package org.ontouml.model;
 
 import org.ontouml.MultilingualText;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotype>
-    extends Decoratable<S> {
+        extends Decoratable<S> {
   boolean isAbstract;
   boolean isDerived;
-  List<Property> properties = new ArrayList<>();
+  Map<String, Property> properties = new HashMap<>();
 
   public Classifier(String id, MultilingualText name, S ontoumlStereotype) {
     super(id, name, ontoumlStereotype);
@@ -20,6 +21,14 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
 
   public Classifier(String id, MultilingualText name, String stereotypeName) {
     super(id, name, stereotypeName);
+  }
+
+  public static boolean areAbstract(Collection<? extends Classifier<?, ?>> classifiers) {
+    return classifiers.stream().allMatch(c -> c.isAbstract());
+  }
+
+  public static boolean areDerived(Collection<? extends Classifier<?, ?>> classifiers) {
+    return classifiers.stream().allMatch(c -> c.isDerived());
   }
 
   public boolean isAbstract() {
@@ -39,20 +48,26 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
   }
 
   public List<Property> getProperties() {
-    return properties;
+    return properties.values().stream().toList();
+  }
+
+  public void setProperties(Collection<String> properties) {
+    this.properties.clear();
+
+    if (properties != null) properties.forEach(p -> addProperty(p));
+  }
+
+  public void addProperty(String propertyId) {
+    if (propertyId != null) {
+      properties.put(propertyId, null);
+    }
   }
 
   public void addProperty(Property property) {
     if (property != null) {
       property.setContainer(this);
-      properties.add(property);
+      properties.put(property.getId(), property);
     }
-  }
-
-  public void setProperties(Collection<Property> properties) {
-    this.properties.clear();
-
-    if (properties != null) properties.forEach(p -> addProperty(p));
   }
 
   public boolean hasProperties() {
@@ -105,13 +120,5 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
 
   public List<T> getFilteredDescendants(Predicate<T> filter) {
     return null;
-  }
-
-  public static boolean areAbstract(Collection<? extends Classifier<?, ?>> classifiers) {
-    return classifiers.stream().allMatch(c -> c.isAbstract());
-  }
-
-  public static boolean areDerived(Collection<? extends Classifier<?, ?>> classifiers) {
-    return classifiers.stream().allMatch(c -> c.isDerived());
   }
 }

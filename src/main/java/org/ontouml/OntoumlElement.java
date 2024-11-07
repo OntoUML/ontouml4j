@@ -17,12 +17,13 @@ public abstract class OntoumlElement extends Element {
                         String id,
                         MultilingualText name,
                         List<MultilingualText> alternativeNames,
+                        MultilingualText description,
                         Date created,
                         Date modified,
                         List<MultilingualText> editorialNotes,
                         List<Resource> creators,
                         List<Resource> contributors) {
-    super(id, name, alternativeNames, created, modified, editorialNotes, creators, contributors);
+    super(id, name, alternativeNames, description, created, modified, editorialNotes, creators, contributors);
     this.container = container;
 
     if (container != null) project = container.project;
@@ -33,11 +34,15 @@ public abstract class OntoumlElement extends Element {
   }
 
   public OntoumlElement(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
-    super(id, name, new ArrayList<>());
+    super(id, name, alternativeNames);
+  }
+
+  public OntoumlElement(String id, MultilingualText name, List<MultilingualText> alternativeNames, Date created, Date modified) {
+    super(id, name, alternativeNames, created, modified);
   }
 
   public OntoumlElement(String id, MultilingualText name, Date created, Date modified) {
-    super(id, name, new ArrayList<>(), created, modified);
+    super(id, name, null, created, modified);
   }
 
 
@@ -59,14 +64,16 @@ public abstract class OntoumlElement extends Element {
     return Optional.ofNullable(project);
   }
 
-  public boolean hasProject() {
-    return getProject().isEmpty();
-  }
-
-  /** Setting the project of an element propagates to all of its contents */
+  /**
+   * Setting the project of an element propagates to all of its contents
+   */
   public void setProject(Project project) {
     this.project = project;
     getAllContents().forEach(elem -> elem.setProject(project));
+  }
+
+  public boolean hasProject() {
+    return getProject().isEmpty();
   }
 
   public List<OntoumlElement> getContents(Predicate<OntoumlElement> filter) {
@@ -83,9 +90,9 @@ public abstract class OntoumlElement extends Element {
     if (children.isEmpty()) return children;
 
     List<OntoumlElement> childrenContents =
-        children.stream()
-            .flatMap(child -> child.getAllContents().stream())
-            .collect(Collectors.toList());
+            children.stream()
+                    .flatMap(child -> child.getAllContents().stream())
+                    .collect(Collectors.toList());
 
     childrenContents.addAll(children);
 
@@ -96,6 +103,7 @@ public abstract class OntoumlElement extends Element {
   public String toString() {
     return getType() + " { id: " + id + "(hash: " + hashCode() + "), name: " + getName() + "}";
   }
+
 
   public abstract String getType();
 }

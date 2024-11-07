@@ -9,11 +9,13 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ontouml.MultilingualText;
 import org.ontouml.Project;
-import org.ontouml.model.Resource;
+import org.ontouml.model.Package;
+import org.ontouml.model.*;
 import org.ontouml.view.Diagram;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectDeserializer extends JsonDeserializer<Project> {
@@ -31,9 +33,10 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
     deserializeMetaProperties(codec, project, root);
 
     // TODO: Change Model to root elements
+    this.deserializeContents(project, root, codec);
 //    Package model = DeserializerUtils.deserializeObjectField(root, "model", Package.class, codec);
 //    project.setModel(model);
-//
+
     List<Diagram> diagrams = DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
     project.setDiagrams(diagrams);
 
@@ -46,7 +49,62 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
     return project;
   }
 
-  public void deserializeMetaProperties(ObjectCodec codec, Project project, JsonNode root) throws IOException {
+  private void deserializeContents(Project project, JsonNode root, ObjectCodec codec) {
+    JsonNode elementsNode = root.get("elements");
+
+    if (elementsNode != null) {
+      List<ModelElement> elements = new ArrayList<>();
+
+      elementsNode
+              .elements()
+              .forEachRemaining(
+                      elementNode -> {
+                        System.out.println(elementNode);
+                        if (!elementNode.isObject()) return;
+
+                        String type = elementNode.get("type").asText();
+
+                        java.lang.Class<? extends ModelElement> referenceType;
+
+                        switch (type) {
+                          case "Package":
+                            referenceType = Package.class;
+                            break;
+                          case "Class":
+                            referenceType = org.ontouml.model.Class.class;
+                            break;
+                          case "Relation":
+                            referenceType = Relation.class;
+                            break;
+                          case "Generalization":
+                            referenceType = Generalization.class;
+                            break;
+                          case "GeneralizationSet":
+                            referenceType = GeneralizationSet.class;
+                            break;
+                          case "Property":
+                            referenceType = Property.class;
+                            break;
+                          case "Literal":
+                            referenceType = Literal.class;
+                            break;
+                          default:
+                            return;
+                        }
+
+                        try {
+                          ModelElement content = elementNode.traverse(codec).readValueAs(referenceType);
+                          elements.add(content);
+                        } catch (IOException e) {
+                          e.printStackTrace();
+                        }
+                      }
+              );
+      project.setElements(elements);
+    }
+  }
+
+  private void deserializeMetaProperties(ObjectCodec codec, Project project, JsonNode root) throws IOException {
     JsonNode keywordsNode = root.get("keywords");
     if (keywordsNode != null) {
       List<MultilingualText> keywords = keywordsNode.traverse(codec).readValueAs(new TypeReference<List<MultilingualText>>() {

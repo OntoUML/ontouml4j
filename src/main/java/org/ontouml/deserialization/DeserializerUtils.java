@@ -38,7 +38,7 @@ public class DeserializerUtils {
   }
 
   public static String[] deserializeNullableStringArrayField(
-      JsonNode containerNode, String fieldname, ObjectCodec codec) throws IOException {
+          JsonNode containerNode, String fieldname, ObjectCodec codec) throws IOException {
     JsonNode arrayNode = containerNode.get(fieldname);
 
     if (arrayNode != null && arrayNode.isArray()) {
@@ -153,11 +153,12 @@ public class DeserializerUtils {
    * of the JSON object
    */
   private static OntoumlElement deserializeObject(
-      JsonNode node,
-      List<java.lang.Class<? extends OntoumlElement>> allowedTypes,
-      ObjectCodec codec)
-      throws IOException {
+          JsonNode node,
+          List<java.lang.Class<? extends OntoumlElement>> allowedTypes,
+          ObjectCodec codec)
+          throws IOException {
 
+    boolean isObject = node.isObject();
     if (node == null || !node.isObject()) return null;
 
     JsonNode typeNode = node.get("type");
@@ -171,7 +172,7 @@ public class DeserializerUtils {
     }
 
     throw new JsonParseException(
-        codec.treeAsTokens(node), "Cannot deserialize object! Wrong type.");
+            codec.treeAsTokens(node), "Cannot deserialize object! Wrong type.");
   }
 
   private static <T extends OntoumlElement> T deserializeObject(
@@ -182,30 +183,30 @@ public class DeserializerUtils {
   }
 
   public static OntoumlElement deserializeObjectField(
-      JsonNode containerNode,
-      String fieldName,
-      List<java.lang.Class<? extends OntoumlElement>> allowedTypes,
-      ObjectCodec codec)
-      throws IOException {
+          JsonNode containerNode,
+          String fieldName,
+          List<java.lang.Class<? extends OntoumlElement>> allowedTypes,
+          ObjectCodec codec)
+          throws IOException {
 
     JsonNode node = containerNode.get(fieldName);
     return deserializeObject(node, allowedTypes, codec);
   }
 
   public static <T extends OntoumlElement> T deserializeObjectField(
-      JsonNode containerNode, String fieldName, java.lang.Class<T> allowedType, ObjectCodec codec)
-      throws IOException {
+          JsonNode containerNode, String fieldName, java.lang.Class<T> allowedType, ObjectCodec codec)
+          throws IOException {
 
     JsonNode node = containerNode.get(fieldName);
     return deserializeObject(node, allowedType, codec);
   }
 
   public static List<OntoumlElement> deserializeArrayField(
-      JsonNode containerNode,
-      String fieldName,
-      List<java.lang.Class<? extends OntoumlElement>> allowedTypes,
-      ObjectCodec codec)
-      throws IOException {
+          JsonNode containerNode,
+          String fieldName,
+          List<java.lang.Class<? extends OntoumlElement>> allowedTypes,
+          ObjectCodec codec)
+          throws IOException {
 
     JsonNode arrayNode = containerNode.get(fieldName);
 
@@ -230,8 +231,8 @@ public class DeserializerUtils {
   }
 
   public static <T extends OntoumlElement> List<T> deserializeArrayField(
-      JsonNode containerNode, String fieldName, java.lang.Class<T> allowedType, ObjectCodec codec)
-      throws IOException {
+          JsonNode containerNode, String fieldName, java.lang.Class<T> allowedType, ObjectCodec codec)
+          throws IOException {
 
     JsonNode arrayNode = containerNode.get(fieldName);
 
@@ -256,11 +257,11 @@ public class DeserializerUtils {
   }
 
   public static Classifier<?, ?> deserializeClassifierField(
-      JsonNode containerNode, String fieldName, ObjectCodec codec) throws IOException {
+          JsonNode containerNode, String fieldName, ObjectCodec codec) throws IOException {
 
-    OntoumlElement classifier =
-        deserializeObjectField(
-            containerNode, fieldName, List.of(Class.class, Relation.class), codec);
+    String classifier =
+            deserializeNullableStringField(
+                    containerNode, fieldName);
 
     return castOrNull(classifier, Classifier.class);
   }

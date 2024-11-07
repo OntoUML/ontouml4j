@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.ontouml.MultilingualText;
 import org.ontouml.OntoumlElement;
 import org.ontouml.OntoumlUtils;
+import org.ontouml.Project;
 import org.ontouml.deserialization.ClassDeserializer;
 import org.ontouml.serialization.ClassSerializer;
 
@@ -23,7 +24,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   protected Boolean isPowertype;
   protected Integer order;
   protected Set<Nature> restrictedTo = new TreeSet<>();
-  protected List<Literal> literals = new ArrayList<>();
+  protected Map<String, Literal> literals = new HashMap<>();
 
   public Class(String id, MultilingualText name, ClassStereotype ontoumlStereotype) {
     super(id, name, ontoumlStereotype);
@@ -60,268 +61,6 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
   public Class() {
     this(null, (MultilingualText) null, (ClassStereotype) null);
-  }
-
-  @Override
-  public String getType() {
-    return "Class";
-  }
-
-  public Optional<Boolean> isExtensional() {
-    return Optional.ofNullable(isExtensional);
-  }
-
-  public void setExtensional(Boolean value) {
-    isExtensional = value;
-  }
-
-  public Optional<Boolean> isPowertype() {
-    return Optional.ofNullable(isPowertype);
-  }
-
-  public void setPowertype(Boolean value) {
-    isPowertype = value;
-  }
-
-  public Optional<Integer> getOrder() {
-    return Optional.ofNullable(order);
-  }
-
-  public void setOrder(Integer value) {
-    order = value;
-  }
-
-  public Optional<String> getOrderAsString() {
-    if (order == null) return Optional.empty();
-    else
-      return ORDERLESS.equals(order)
-          ? Optional.of(ORDERLESS_STRING)
-          : Optional.of(order.toString());
-  }
-
-  public Set<Nature> getRestrictedTo() {
-    return restrictedTo;
-  }
-
-  public void setRestrictedTo(Collection<Nature> restrictedTo) {
-    this.restrictedTo.clear();
-    this.restrictedTo.addAll(restrictedTo);
-  }
-
-  public void setRestrictedTo(String[] array) {
-    List<Nature> natures =
-        Stream.of(array)
-            .map(Nature::findByName)
-            .flatMap(Optional::stream)
-            .collect(Collectors.toList());
-    this.restrictedTo.clear();
-    this.restrictedTo.addAll(natures);
-  }
-
-  public void setRestrictedTo(Nature... restrictedTo) {
-    this.restrictedTo.clear();
-    this.restrictedTo.addAll(Arrays.asList(restrictedTo));
-  }
-
-  public List<Literal> getLiterals() {
-    return literals;
-  }
-
-  public boolean hasLiterals() {
-    return literals != null && literals.size() > 0;
-  }
-
-  public List<Literal> createLiterals(String[] names) {
-    return Stream.of(names).map(name -> createLiteral(name)).collect(Collectors.toList());
-  }
-
-  public Literal createLiteral(String name) {
-    if (literals == null) literals = new ArrayList<>();
-
-    Literal literal = new Literal(name);
-    addLiteral(literal);
-    return literal;
-  }
-
-  public void addLiteral(Literal literal) {
-    if (literals == null) literals = new ArrayList<>();
-
-    literal.setContainer(this);
-    literals.add(literal);
-  }
-
-  public void setLiterals(Collection<Literal> literals) {
-    literals.forEach(l -> l.setContainer(this));
-    this.literals.clear();
-    this.literals.addAll(literals);
-  }
-
-  public boolean hasAttributes() {
-    return hasProperties();
-  }
-
-  public List<Property> getAttributes() {
-    return getProperties();
-  }
-
-  public void addAttribute(Property attribute) {
-    if (attribute == null) return;
-
-    attribute.setContainer(this);
-    properties.add(attribute);
-  }
-
-  public void setAttributes(Collection<Property> attributes) {
-    if (properties == null) properties = new ArrayList<>();
-    else properties.clear();
-
-    if (attributes == null) return;
-
-    attributes.forEach(a -> addAttribute(a));
-  }
-
-  public Property createAttribute(String name, Classifier<?, ?> type) {
-    return createAttribute(null, name, type);
-  }
-
-  public Property createAttribute(String id, String name, Classifier<?, ?> type) {
-    Property attribute = new Property(id, name, type);
-    attribute.setContainer(this);
-    properties.add(attribute);
-
-    return attribute;
-  }
-
-  @Override
-  public void setStereotype(String stereotypeName) {
-    Optional<ClassStereotype> stereotype = ClassStereotype.findByName(stereotypeName);
-
-    stereotype.ifPresentOrElse(
-        s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
-  }
-
-  @Override
-  public List<OntoumlElement> getContents() {
-    List<OntoumlElement> contents = new ArrayList<>();
-
-    if (hasAttributes()) OntoumlUtils.addIfNotNull(contents, getAttributes());
-
-    if (hasLiterals()) OntoumlUtils.addIfNotNull(contents, getLiterals());
-
-    return contents;
-  }
-
-  public boolean restrictedToOverlaps(List<Nature> natures) {
-    if (natures == null) return false;
-
-    TreeSet<Nature> natureSet = new TreeSet<>(natures);
-    natureSet.retainAll(restrictedTo);
-    return natureSet.size() > 0;
-  }
-
-  public boolean restrictedToContainedIn(List<Nature> natures) {
-    if (natures == null) return false;
-
-    return natures.containsAll(restrictedTo);
-  }
-
-  public boolean restrictedToContains(Nature nature) {
-    return restrictedToContains(Collections.singletonList(nature));
-  }
-
-  public boolean restrictedToContains(List<Nature> natures) {
-    if (natures == null) return false;
-
-    return restrictedTo.containsAll(natures);
-  }
-
-  public boolean restrictedToEquals(Nature nature) {
-    return restrictedToEquals(Collections.singletonList(nature));
-  }
-
-  public boolean restrictedToEquals(List<Nature> natures) {
-    if (natures == null) return false;
-
-    if (restrictedTo.size() != natures.size()) return false;
-
-    TreeSet<Nature> naturesSet = new TreeSet<>(natures);
-    return restrictedTo.equals(naturesSet);
-  }
-
-  public boolean isRestrictedToMoments() {
-    return restrictedTo.stream().allMatch(Nature::isMoment);
-  }
-
-  public boolean isRestrictedToSubstantials() {
-    return restrictedTo.stream().allMatch(Nature::isSubstantial);
-  }
-
-  public boolean isEnumeration() {
-    return hasStereotype(ClassStereotype.ENUMERATION);
-  }
-
-  public boolean isRestrictedToEndurants() {
-    return restrictedTo.stream().allMatch(Nature::isEndurant);
-  }
-
-  public boolean isRestrictedToFunctionalComplexes() {
-    return restrictedToEquals(Nature.FUNCTIONAL_COMPLEX);
-  }
-
-  public boolean isRestrictedToCollectives() {
-    return restrictedToEquals(Nature.COLLECTIVE);
-  }
-
-  public boolean isRestrictedToQuantity() {
-    return restrictedToEquals(Nature.QUANTITY);
-  }
-
-  public boolean isRestrictedToIntrinsicMoments() {
-    return restrictedTo.stream().allMatch(Nature::isIntrinsicMoment);
-  }
-
-  public boolean isRestrictedToExtrinsicMoments() {
-    return restrictedTo.stream().allMatch(Nature::isExtrinsicMoment);
-  }
-
-  public boolean isRestrictedToRelators() {
-    return restrictedToEquals(Nature.RELATOR);
-  }
-
-  public boolean isRestrictedToIntrinsicModes() {
-    return restrictedToEquals(Nature.INTRINSIC_MODE);
-  }
-
-  public boolean isRestrictedToExtrinsicModes() {
-    return restrictedToEquals(Nature.EXTRINSIC_MODE);
-  }
-
-  public boolean isRestrictedToQualities() {
-    return restrictedToEquals(Nature.QUALITY);
-  }
-
-  public boolean isRestrictedToEvents() {
-    return restrictedToEquals(Nature.EVENT);
-  }
-
-  public boolean isRestrictedToSituations() {
-    return restrictedToEquals(Nature.SITUATION);
-  }
-
-  public boolean isRestrictedToTypes() {
-    return restrictedToEquals(Nature.TYPE);
-  }
-
-  public boolean isRestrictedToAbstract() {
-    return restrictedToEquals(Nature.ABSTRACT);
-  }
-
-  public boolean isDatatype() {
-    return hasStereotype(ClassStereotype.DATATYPE);
-  }
-
-  public boolean isPrimitiveDatatype() {
-    return isDatatype() && !hasAttributes();
   }
 
   public static Class createKind(String id, String name) {
@@ -454,5 +193,301 @@ public class Class extends Classifier<Class, ClassStereotype> {
     enumeration.setRestrictedTo(Nature.ABSTRACT);
     enumeration.createLiterals(literals);
     return enumeration;
+  }
+
+  @Override
+  public String getType() {
+    return "Class";
+  }
+
+  public Optional<Boolean> isExtensional() {
+    return Optional.ofNullable(isExtensional);
+  }
+
+  public void setExtensional(Boolean value) {
+    isExtensional = value;
+  }
+
+  public Optional<Boolean> isPowertype() {
+    return Optional.ofNullable(isPowertype);
+  }
+
+  public void setPowertype(Boolean value) {
+    isPowertype = value;
+  }
+
+  public Optional<Integer> getOrder() {
+    return Optional.ofNullable(order);
+  }
+
+  public void setOrder(String value) {
+    Integer intValue = Integer.parseInt(value);
+    if (value.equals("*")) {
+      intValue = ORDERLESS;
+    }
+    order = intValue;
+  }
+
+  public Optional<String> getOrderAsString() {
+    if (order == null) return Optional.empty();
+    else
+      return ORDERLESS.equals(order)
+              ? Optional.of(ORDERLESS_STRING)
+              : Optional.of(order.toString());
+  }
+
+  public Set<Nature> getRestrictedTo() {
+    return restrictedTo;
+  }
+
+  public void setRestrictedTo(Collection<Nature> restrictedTo) {
+    this.restrictedTo.clear();
+    this.restrictedTo.addAll(restrictedTo);
+  }
+
+  public void setRestrictedTo(String[] array) {
+    List<Nature> natures =
+            Stream.of(array)
+                    .map(Nature::findByName)
+                    .flatMap(Optional::stream)
+                    .collect(Collectors.toList());
+    this.restrictedTo.clear();
+    this.restrictedTo.addAll(natures);
+  }
+
+  public void setRestrictedTo(Nature... restrictedTo) {
+    this.restrictedTo.clear();
+    this.restrictedTo.addAll(Arrays.asList(restrictedTo));
+  }
+
+  public boolean hasLiterals() {
+    return literals != null && literals.size() > 0;
+  }
+
+  public List<Literal> createLiterals(String[] names) {
+    return Stream.of(names).map(name -> createLiteral(name)).collect(Collectors.toList());
+  }
+
+  public Literal createLiteral(String name) {
+    if (literals == null) literals = new HashMap<>();
+
+    Literal literal = new Literal(name);
+    addLiteral(literal);
+    return literal;
+  }
+
+  public void addLiteral(Literal literal) {
+    if (literals == null) literals = new HashMap<>();
+
+    literal.setContainer(this);
+    literals.put(literal.getId(), literal);
+  }
+
+  public boolean hasAttributes() {
+    return hasProperties();
+  }
+
+  public List<Property> getAttributes() {
+    return getProperties();
+  }
+
+  public void setAttributes(Collection<Property> attributes) {
+    if (properties == null) properties = new HashMap<>();
+    else properties.clear();
+
+    if (attributes == null) return;
+
+    attributes.forEach(a -> addAttribute(a));
+  }
+
+  public void addAttribute(Property attribute) {
+    if (attribute == null) return;
+
+    attribute.setContainer(this);
+    properties.put(attribute.getId(), attribute);
+  }
+
+  public Property createAttribute(String name, Classifier<?, ?> type) {
+    return createAttribute(null, name, type);
+  }
+
+  public Property createAttribute(String id, String name, Classifier<?, ?> type) {
+    Property attribute = new Property(id, name, type);
+    attribute.setContainer(this);
+    properties.put(attribute.getId(), attribute);
+
+    return attribute;
+  }
+
+  @Override
+  public void setStereotype(String stereotypeName) {
+    Optional<ClassStereotype> stereotype = ClassStereotype.findByName(stereotypeName);
+
+    stereotype.ifPresentOrElse(
+            s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
+  }
+
+  @Override
+  public List<OntoumlElement> getContents() {
+    List<OntoumlElement> contents = new ArrayList<>();
+
+    if (hasAttributes()) OntoumlUtils.addIfNotNull(contents, getAttributes());
+
+    if (hasLiterals()) OntoumlUtils.addIfNotNull(contents, getLiterals());
+
+    return contents;
+  }
+
+  public boolean restrictedToOverlaps(List<Nature> natures) {
+    if (natures == null) return false;
+
+    TreeSet<Nature> natureSet = new TreeSet<>(natures);
+    natureSet.retainAll(restrictedTo);
+    return natureSet.size() > 0;
+  }
+
+  public boolean restrictedToContainedIn(List<Nature> natures) {
+    if (natures == null) return false;
+
+    return natures.containsAll(restrictedTo);
+  }
+
+  public boolean restrictedToContains(Nature nature) {
+    return restrictedToContains(Collections.singletonList(nature));
+  }
+
+  public boolean restrictedToContains(List<Nature> natures) {
+    if (natures == null) return false;
+
+    return restrictedTo.containsAll(natures);
+  }
+
+  public boolean restrictedToEquals(Nature nature) {
+    return restrictedToEquals(Collections.singletonList(nature));
+  }
+
+  public boolean restrictedToEquals(List<Nature> natures) {
+    if (natures == null) return false;
+
+    if (restrictedTo.size() != natures.size()) return false;
+
+    TreeSet<Nature> naturesSet = new TreeSet<>(natures);
+    return restrictedTo.equals(naturesSet);
+  }
+
+  public boolean isRestrictedToMoments() {
+    return restrictedTo.stream().allMatch(Nature::isMoment);
+  }
+
+  public boolean isRestrictedToSubstantials() {
+    return restrictedTo.stream().allMatch(Nature::isSubstantial);
+  }
+
+  public boolean isEnumeration() {
+    return hasStereotype(ClassStereotype.ENUMERATION);
+  }
+
+  public boolean isRestrictedToEndurants() {
+    return restrictedTo.stream().allMatch(Nature::isEndurant);
+  }
+
+  public boolean isRestrictedToFunctionalComplexes() {
+    return restrictedToEquals(Nature.FUNCTIONAL_COMPLEX);
+  }
+
+  public boolean isRestrictedToCollectives() {
+    return restrictedToEquals(Nature.COLLECTIVE);
+  }
+
+  public boolean isRestrictedToQuantity() {
+    return restrictedToEquals(Nature.QUANTITY);
+  }
+
+  public boolean isRestrictedToIntrinsicMoments() {
+    return restrictedTo.stream().allMatch(Nature::isIntrinsicMoment);
+  }
+
+  public boolean isRestrictedToExtrinsicMoments() {
+    return restrictedTo.stream().allMatch(Nature::isExtrinsicMoment);
+  }
+
+  public boolean isRestrictedToRelators() {
+    return restrictedToEquals(Nature.RELATOR);
+  }
+
+  public boolean isRestrictedToIntrinsicModes() {
+    return restrictedToEquals(Nature.INTRINSIC_MODE);
+  }
+
+  public boolean isRestrictedToExtrinsicModes() {
+    return restrictedToEquals(Nature.EXTRINSIC_MODE);
+  }
+
+  public boolean isRestrictedToQualities() {
+    return restrictedToEquals(Nature.QUALITY);
+  }
+
+  public boolean isRestrictedToEvents() {
+    return restrictedToEquals(Nature.EVENT);
+  }
+
+  public boolean isRestrictedToSituations() {
+    return restrictedToEquals(Nature.SITUATION);
+  }
+
+  public boolean isRestrictedToTypes() {
+    return restrictedToEquals(Nature.TYPE);
+  }
+
+  public boolean isRestrictedToAbstract() {
+    return restrictedToEquals(Nature.ABSTRACT);
+  }
+
+  public boolean isDatatype() {
+    return hasStereotype(ClassStereotype.DATATYPE);
+  }
+
+  public boolean isPrimitiveDatatype() {
+    return isDatatype() && !hasAttributes();
+  }
+
+  public List<Literal> getLiterals() {
+    return literals.values().stream().toList();
+  }
+
+  public void setLiterals(Collection<String> literals) {
+//    literals.forEach(l -> l.setContainer(this));
+    this.literals.clear();
+    literals.forEach(literal -> {
+      this.literals.put(literal, null);
+    });
+    // TODO: Fix literals
+  }
+
+  public List<String> getLiteralIds() {
+    return literals.keySet().stream().toList();
+  }
+
+  public void buildAllReferences(Project project) {
+    this.buildLiteralsReferences(project);
+    this.buildPropertiesReferences(project);
+  }
+
+  private void buildLiteralsReferences(Project project) {
+    this.literals.forEach((literalId, value) -> {
+      Optional<Literal> literalInProject = project.getElementById(literalId, Literal.class);
+      literalInProject.ifPresent(literal -> {
+        this.literals.put(literalId, literal);
+      });
+    });
+  }
+
+  private void buildPropertiesReferences(Project project) {
+    this.properties.forEach((propertyId, value) -> {
+      Optional<Property> propertyInProject = project.getElementById(propertyId, Property.class);
+      propertyInProject.ifPresent(property -> {
+        this.properties.put(propertyId, property);
+      });
+    });
   }
 }

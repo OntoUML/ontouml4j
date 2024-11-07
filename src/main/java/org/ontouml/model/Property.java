@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.ontouml.MultilingualText;
 import org.ontouml.OntoumlElement;
 import org.ontouml.OntoumlUtils;
+import org.ontouml.Project;
 import org.ontouml.deserialization.PropertyDeserializer;
 import org.ontouml.serialization.PropertySerializer;
 
@@ -17,6 +18,7 @@ import java.util.Optional;
 @JsonDeserialize(using = PropertyDeserializer.class)
 public final class Property extends Decoratable<PropertyStereotype> {
   private Cardinality cardinality = new Cardinality();
+  private String propertyTypeId;
   private Classifier<?, ?> propertyType;
   private List<Property> subsettedProperties = new ArrayList<>();
   private List<Property> redefinedProperties = new ArrayList<>();
@@ -26,10 +28,10 @@ public final class Property extends Decoratable<PropertyStereotype> {
   private boolean isReadOnly;
 
   public Property(
-      String id,
-      MultilingualText name,
-      PropertyStereotype ontoumlStereotype,
-      Classifier<?, ?> type) {
+          String id,
+          MultilingualText name,
+          PropertyStereotype ontoumlStereotype,
+          Classifier<?, ?> type) {
     super(id, name, ontoumlStereotype);
     setPropertyType(type);
   }
@@ -65,6 +67,14 @@ public final class Property extends Decoratable<PropertyStereotype> {
     this(null);
   }
 
+  public String getPropertyTypeId() {
+    return propertyTypeId;
+  }
+
+  public void setPropertyTypeId(String propertyTypeId) {
+    this.propertyTypeId = propertyTypeId;
+  }
+
   @Override
   public String getType() {
     return "Property";
@@ -75,7 +85,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
     Optional<PropertyStereotype> stereotype = PropertyStereotype.findByName(stereotypeName);
 
     stereotype.ifPresentOrElse(
-        s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
+            s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
   }
 
   @Override
@@ -85,10 +95,6 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public Cardinality getCardinality() {
     return cardinality;
-  }
-
-  public Optional<String> getCardinalityValue() {
-    return cardinality.getValue();
   }
 
   public void setCardinality(Cardinality cardinality) {
@@ -102,8 +108,8 @@ public final class Property extends Decoratable<PropertyStereotype> {
     this.cardinality.setValue(cardinality);
   }
 
-  public void setPropertyType(Classifier<?, ?> propertyType) {
-    this.propertyType = propertyType;
+  public Optional<String> getCardinalityValue() {
+    return cardinality.getValue();
   }
 
   public List<Property> getSubsettedProperties() {
@@ -119,7 +125,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
   public void addSubsettedProperty(Property property) {
     if (property == null)
       throw new NullPointerException(
-          "Cannot add a null value to the list of subsetted properties.");
+              "Cannot add a null value to the list of subsetted properties.");
 
     subsettedProperties.add(property);
   }
@@ -148,7 +154,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
   public void addRedefinedProperty(Property property) {
     if (property == null)
       throw new NullPointerException(
-          "Cannot add a null value to the list of redefined properties.");
+              "Cannot add a null value to the list of redefined properties.");
 
     redefinedProperties.add(property);
   }
@@ -200,6 +206,10 @@ public final class Property extends Decoratable<PropertyStereotype> {
     return Optional.ofNullable(propertyType);
   }
 
+  public void setPropertyType(Classifier<?, ?> propertyType) {
+    this.propertyType = propertyType;
+  }
+
   public boolean isPropertyTypeClass() {
     Optional<Classifier<?, ?>> type = getPropertyType();
     return type.isPresent() && type.get() instanceof Class;
@@ -225,7 +235,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public boolean isAggregationEnd() {
     return aggregationKind == AggregationKind.COMPOSITE
-        || aggregationKind == AggregationKind.SHARED;
+            || aggregationKind == AggregationKind.SHARED;
   }
 
   public boolean isAttribute() {
@@ -235,4 +245,12 @@ public final class Property extends Decoratable<PropertyStereotype> {
   public boolean isRelationEnd() {
     return getContainer().orElse(null) instanceof Relation;
   }
+
+  public void buildAllReferences(Project project) {
+    Optional<Classifier> type = project.getElementById(this.propertyTypeId, Classifier.class);
+    if (type.isPresent()) {
+      this.setPropertyType(type.get());
+    }
+  }
+
 }

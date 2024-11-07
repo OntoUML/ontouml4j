@@ -27,60 +27,60 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   }
 
   public Relation(
-      String id,
-      MultilingualText name,
-      RelationStereotype ontoumlStereotype,
-      Classifier<?, ?> source,
-      Classifier<?, ?> target) {
+          String id,
+          MultilingualText name,
+          RelationStereotype ontoumlStereotype,
+          Classifier<?, ?> source,
+          Classifier<?, ?> target) {
     this(id, name, ontoumlStereotype);
     createMemberEnd(source);
     createMemberEnd(target);
   }
 
   public Relation(
-      String id,
-      MultilingualText name,
-      String stereotypeName,
-      Classifier<?, ?> source,
-      Classifier<?, ?> target) {
+          String id,
+          MultilingualText name,
+          String stereotypeName,
+          Classifier<?, ?> source,
+          Classifier<?, ?> target) {
     this(id, name, stereotypeName);
     createMemberEnd(source);
     createMemberEnd(target);
   }
 
   public Relation(
-      String id,
-      MultilingualText name,
-      RelationStereotype ontoumlStereotype,
-      List<Classifier<?, ?>> participants) {
+          String id,
+          MultilingualText name,
+          RelationStereotype ontoumlStereotype,
+          List<Classifier<?, ?>> participants) {
     this(id, name, ontoumlStereotype);
     participants.forEach(this::createMemberEnd);
   }
 
   public Relation(
-      String id,
-      MultilingualText name,
-      String stereotypeName,
-      List<Classifier<?, ?>> participants) {
+          String id,
+          MultilingualText name,
+          String stereotypeName,
+          List<Classifier<?, ?>> participants) {
     this(id, name, stereotypeName);
     participants.forEach(this::createMemberEnd);
   }
 
   public Relation(
-      String id,
-      String name,
-      RelationStereotype ontoumlStereotype,
-      Classifier<?, ?> source,
-      Classifier<?, ?> target) {
+          String id,
+          String name,
+          RelationStereotype ontoumlStereotype,
+          Classifier<?, ?> source,
+          Classifier<?, ?> target) {
     this(id, new MultilingualText(name), ontoumlStereotype, source, target);
   }
 
   public Relation(
-      String id,
-      String name,
-      String stereotypeName,
-      Classifier<?, ?> source,
-      Classifier<?, ?> target) {
+          String id,
+          String name,
+          String stereotypeName,
+          Classifier<?, ?> source,
+          Classifier<?, ?> target) {
     this(id, new MultilingualText(name), stereotypeName, source, target);
   }
 
@@ -89,7 +89,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   }
 
   public Relation(
-      RelationStereotype ontoumlStereotype, Classifier<?, ?> source, Classifier<?, ?> target) {
+          RelationStereotype ontoumlStereotype, Classifier<?, ?> source, Classifier<?, ?> target) {
     this(null, (MultilingualText) null, ontoumlStereotype, source, target);
   }
 
@@ -105,12 +105,41 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
     this(null, null, (RelationStereotype) null);
   }
 
+  public static Relation createRelation(
+          String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
+    return new Relation(id, name, source, target);
+  }
+
+  public static Relation createMaterial(
+          String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
+    return new Relation(id, name, RelationStereotype.MATERIAL, source, target);
+  }
+
+  public static Relation createMaterial(
+          String name, Classifier<?, ?> source, Classifier<?, ?> target) {
+    return createMaterial(null, name, source, target);
+  }
+
+  public static Relation createComparative(
+          String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
+    return new Relation(id, name, RelationStereotype.COMPARATIVE, source, target);
+  }
+
+  public static Relation createDerivation(
+          String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
+    return new Relation(id, name, RelationStereotype.DERIVATION, source, target);
+  }
+
+  public static Relation createDerivation(Classifier<?, ?> source, Classifier<?, ?> target) {
+    return createDerivation(null, null, source, target);
+  }
+
   @Override
   public void setStereotype(String stereotypeName) {
     Optional<RelationStereotype> stereotype = RelationStereotype.findByName(stereotypeName);
 
     stereotype.ifPresentOrElse(
-        s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
+            s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
   }
 
   @Override
@@ -126,7 +155,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public void createMemberEnd(Classifier<?, ?> classifier) {
     Property end = new Property(classifier);
     end.setContainer(this);
-    properties.add(end);
+    properties.put(end.getId(), end);
   }
 
   public int arity() {
@@ -134,7 +163,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   }
 
   public List<Property> getRelationEnds() {
-    return properties;
+    return properties.values().stream().toList();
   }
 
   public Property getSourceEnd() {
@@ -161,7 +190,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getDerivedRelationEnd() {
     if (!fromRelationToClass())
       throw new IllegalCallerException(
-          "Can only retrieve the derived relation end of a derivation relation.");
+              "Can only retrieve the derived relation end of a derivation relation.");
 
     return getSourceEnd();
   }
@@ -169,7 +198,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getDerivingClassEnd() {
     if (!fromRelationToClass())
       throw new IllegalCallerException(
-          "Can only retrieve the deriving class end of a derivation relation.");
+              "Can only retrieve the deriving class end of a derivation relation.");
 
     return getTargetEnd();
   }
@@ -245,7 +274,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
 
     if (!(_class.get() instanceof Class))
       throw new IllegalCallerException(
-          "The element from which the relation is derived is not a class.");
+              "The element from which the relation is derived is not a class.");
 
     return (Class) _class.get();
   }
@@ -296,43 +325,43 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
 
   public boolean holdsBetweenClasses() {
     if (arity() < 2) return false;
-    return properties.stream().allMatch(p -> p.isPropertyTypeClass());
+    return properties.values().stream().allMatch(p -> p.isPropertyTypeClass());
   }
 
   public boolean holdsBetweenRelations() {
     if (arity() < 2) return false;
-    return properties.stream().allMatch(p -> p.isPropertyTypeRelation());
+    return properties.values().stream().allMatch(p -> p.isPropertyTypeRelation());
   }
 
   public boolean holdsBetweenClassAndRelation() {
     if (arity() < 2) return false;
-    return properties.stream().anyMatch(p -> p.isPropertyTypeRelation())
-        && properties.stream().anyMatch(p -> p.isPropertyTypeClass());
+    return properties.values().stream().anyMatch(p -> p.isPropertyTypeRelation())
+            && properties.values().stream().anyMatch(p -> p.isPropertyTypeClass());
   }
 
   public boolean holdsBetweenEvents() {
     if (arity() < 2) return false;
 
-    return properties.stream()
-        .allMatch(
-            p -> p.isPropertyTypeClass() && p.getPropertyTypeAsClass().isRestrictedToEvents());
+    return properties.values().stream()
+            .allMatch(
+                    p -> p.isPropertyTypeClass() && p.getPropertyTypeAsClass().isRestrictedToEvents());
   }
 
   public boolean holdsBetweenMoments() {
     if (arity() < 2) return false;
 
-    return properties.stream()
-        .allMatch(
-            p -> p.isPropertyTypeClass() && p.getPropertyTypeAsClass().isRestrictedToMoments());
+    return properties.values().stream()
+            .allMatch(
+                    p -> p.isPropertyTypeClass() && p.getPropertyTypeAsClass().isRestrictedToMoments());
   }
 
   public boolean holdsBetweenSubstantials() {
     if (arity() < 2) return false;
 
-    return properties.stream()
-        .allMatch(
-            p ->
-                p.isPropertyTypeClass() && p.getPropertyTypeAsClass().isRestrictedToSubstantials());
+    return properties.values().stream()
+            .allMatch(
+                    p ->
+                            p.isPropertyTypeClass() && p.getPropertyTypeAsClass().isRestrictedToSubstantials());
   }
 
   public boolean isBinaryClassRelation() {
@@ -352,7 +381,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   }
 
   public boolean isExistentialDependency() {
-    return properties.stream().anyMatch(Property::isReadOnly);
+    return properties.values().stream().anyMatch(Property::isReadOnly);
   }
 
   public boolean isSourceExistentiallyDependent() {
@@ -394,7 +423,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
 
   public boolean isExternalDependence() {
     return isBinary()
-        && getOntoumlStereotype().orElse(null) == RelationStereotype.EXTERNAL_DEPENDENCE;
+            && getOntoumlStereotype().orElse(null) == RelationStereotype.EXTERNAL_DEPENDENCE;
   }
 
   public boolean isComponentOf() {
@@ -431,7 +460,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
 
   public boolean isHistoricalDependence() {
     return isBinary()
-        && getOntoumlStereotype().orElse(null) == RelationStereotype.HISTORICAL_DEPENDENCE;
+            && getOntoumlStereotype().orElse(null) == RelationStereotype.HISTORICAL_DEPENDENCE;
   }
 
   public boolean isCreation() {
@@ -459,7 +488,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
 
     if (arity() != conditions.size()) {
       throw new IllegalArgumentException(
-          "The number of conditions must be the same as that of properties of the relation.");
+              "The number of conditions must be the same as that of properties of the relation.");
     }
 
     for (int i = 0; i < conditions.size(); i++) {
@@ -509,7 +538,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getCharacterizerEnd() {
     if (!isCharacterization())
       throw new IllegalCallerException(
-          "Can only retrieve characterizer (.e.g Mode, Quality) end of a characterization!");
+              "Can only retrieve characterizer (.e.g Mode, Quality) end of a characterization!");
 
     return getSourceEnd();
   }
@@ -521,7 +550,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getDependeeEnd() {
     if (!isExternalDependence())
       throw new IllegalCallerException(
-          "Can only retrieve dependee end of an external dependence relation!");
+              "Can only retrieve dependee end of an external dependence relation!");
 
     return getTargetEnd();
   }
@@ -533,7 +562,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getDependerEnd() {
     if (!isExternalDependence())
       throw new IllegalCallerException(
-          "Can only retrieve depender end of an external dependence relation!");
+              "Can only retrieve depender end of an external dependence relation!");
 
     return getSourceEnd();
   }
@@ -545,7 +574,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getHistoricalDependeeEnd() {
     if (!isHistoricalDependence())
       throw new IllegalCallerException(
-          "Can only retrieve historical dependee end of a historical dependence relation!");
+              "Can only retrieve historical dependee end of a historical dependence relation!");
 
     return getTargetEnd();
   }
@@ -557,7 +586,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getHistoricalDependerEnd() {
     if (!isExternalDependence())
       throw new IllegalCallerException(
-          "Can only retrieve historical depender end of an historical dependence relation!");
+              "Can only retrieve historical depender end of an historical dependence relation!");
 
     return getSourceEnd();
   }
@@ -569,7 +598,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getParticipantEnd() {
     if (!isParticipation())
       throw new IllegalCallerException(
-          "Can only retrieve participant end of a participation relation!");
+              "Can only retrieve participant end of a participation relation!");
 
     return getTargetEnd();
   }
@@ -581,7 +610,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getParticipationEnd() {
     if (!isParticipation())
       throw new IllegalCallerException(
-          "Can only retrieve participation (aka event) end of a participation relation!");
+              "Can only retrieve participation (aka event) end of a participation relation!");
 
     return getSourceEnd();
   }
@@ -604,7 +633,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getCreationEventEnd() {
     if (!isCreation())
       throw new IllegalCallerException(
-          "Can only retrieve creation event end of a creation relation!");
+              "Can only retrieve creation event end of a creation relation!");
 
     return getSourceEnd();
   }
@@ -627,7 +656,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getTerminationEventEnd() {
     if (!isTermination())
       throw new IllegalCallerException(
-          "Can only retrieve creation event end of a creation relation!");
+              "Can only retrieve creation event end of a creation relation!");
 
     return getSourceEnd();
   }
@@ -650,7 +679,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getManifestationEnd() {
     if (!isManifestation())
       throw new IllegalCallerException(
-          "Can only retrieve creation event end of a creation relation!");
+              "Can only retrieve creation event end of a creation relation!");
 
     return getSourceEnd();
   }
@@ -673,7 +702,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getTriggeringSituationEnd() {
     if (!isTriggers())
       throw new IllegalCallerException(
-          "Can only retrieve creation event end of a creation relation!");
+              "Can only retrieve creation event end of a creation relation!");
 
     return getSourceEnd();
   }
@@ -696,7 +725,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getCauseEnd() {
     if (!isBringsAbout())
       throw new IllegalCallerException(
-          "Can only retrieve creation event end of a creation relation!");
+              "Can only retrieve creation event end of a creation relation!");
 
     return getSourceEnd();
   }
@@ -818,7 +847,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getParticipationalWholeEnd() {
     if (!isParticipational())
       throw new IllegalCallerException(
-          "Can only retrieve participational whole end of a participational part-whole relation!");
+              "Can only retrieve participational whole end of a participational part-whole relation!");
 
     return getWholeEnd();
   }
@@ -830,7 +859,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getParticipationalPartEnd() {
     if (!isParticipational())
       throw new IllegalCallerException(
-          "Can only retrieve participational part end of a participational part-whole relation!");
+              "Can only retrieve participational part end of a participational part-whole relation!");
 
     return getPartEnd();
   }
@@ -842,7 +871,7 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getCategorizedEnd() {
     if (!isInstantiation())
       throw new IllegalCallerException(
-          "Can only retrieve categorized end of an instantiation relation!");
+              "Can only retrieve categorized end of an instantiation relation!");
 
     return getTargetEnd();
   }
@@ -854,38 +883,9 @@ public class Relation extends Classifier<Relation, RelationStereotype> {
   public Property getCategorizerEnd() {
     if (!isInstantiation())
       throw new IllegalCallerException(
-          "Can only retrieve categorizer end of an instantiation relation!");
+              "Can only retrieve categorizer end of an instantiation relation!");
 
     return getSourceEnd();
-  }
-
-  public static Relation createRelation(
-      String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
-    return new Relation(id, name, source, target);
-  }
-
-  public static Relation createMaterial(
-      String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
-    return new Relation(id, name, RelationStereotype.MATERIAL, source, target);
-  }
-
-  public static Relation createMaterial(
-      String name, Classifier<?, ?> source, Classifier<?, ?> target) {
-    return createMaterial(null, name, source, target);
-  }
-
-  public static Relation createComparative(
-      String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
-    return new Relation(id, name, RelationStereotype.COMPARATIVE, source, target);
-  }
-
-  public static Relation createDerivation(
-      String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
-    return new Relation(id, name, RelationStereotype.DERIVATION, source, target);
-  }
-
-  public static Relation createDerivation(Classifier<?, ?> source, Classifier<?, ?> target) {
-    return createDerivation(null, null, source, target);
   }
 
   // TODO: Write additional factory methods.

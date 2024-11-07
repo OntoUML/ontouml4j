@@ -2,7 +2,10 @@ package org.ontouml;
 
 import org.ontouml.model.Resource;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 public class Element implements Comparable<Element> {
   String id;
@@ -17,37 +20,45 @@ public class Element implements Comparable<Element> {
   List<Resource> creators;
   List<Resource> contributors;
 
+  // Dor no plugin: Duas formas de manipular, dois estilos de programação diferente. Wrapper é interessante, mas talvez tem perda de performance. Decidir um estilo
+  // TODO: Adicionar padrão Builder para montar objetos programaticamente
   public Element(String id,
                  MultilingualText name,
                  List<MultilingualText> alternativeNames,
+                 MultilingualText description,
                  Date created,
                  Date modified,
                  List<MultilingualText> editorialNotes,
                  List<Resource> creators,
                  List<Resource> contributors) {
-    this.id = id != null ? id : UUID.randomUUID().toString();
-    this.name = name != null ? name : new MultilingualText();
-    this.description = new MultilingualText();
+    this.id = id;
+    this.name = name;
+    this.description = description;
     this.alternativeNames = alternativeNames;
     this.created = created;
     this.modified = modified;
-    this.editorialNotes = editorialNotes == null ? new ArrayList<>() : editorialNotes;
-    this.creators = creators == null ? new ArrayList<>() : creators;
-    this.contributors = contributors == null ? new ArrayList<>() : contributors;
+    this.editorialNotes = editorialNotes;
+    this.creators = creators;
+    this.contributors = contributors;
   }
 
   public Element(String id,
                  MultilingualText name,
                  List<MultilingualText> alternativeNames,
+                 MultilingualText description,
                  Date created,
                  Date modified) {
-    this(id, name, alternativeNames, created, modified, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    this(id, name, alternativeNames, description, created, modified, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
   }
 
   public Element(String id,
                  MultilingualText name,
                  List<MultilingualText> alternativeNames) {
-    this(id, name, alternativeNames, new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+    this(id, name, alternativeNames, new MultilingualText(), new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+  }
+
+  public Element(String id, MultilingualText name, List<MultilingualText> alternativeNames, Date created, Date modified) {
+    this(id, name, alternativeNames, null, created, modified, null, null, null);
   }
 
   public String getId() {
@@ -64,16 +75,16 @@ public class Element implements Comparable<Element> {
     return this.name;
   }
 
+  public void setName(MultilingualText name) {
+    this.name = name;
+  }
+
   public Optional<String> getNameIn(String language) {
     return name.getText(language);
   }
 
   public Optional<String> getFirstName() {
     return name.getText();
-  }
-
-  public void setName(MultilingualText name) {
-    this.name = name;
   }
 
   public void addName(String languageTag, String value) {
@@ -92,10 +103,6 @@ public class Element implements Comparable<Element> {
     this.name.removeAll();
   }
 
-  public void setAlternativeNames(List<MultilingualText> alternativeNames) {
-    this.alternativeNames = alternativeNames;
-  }
-
   public void addAlternativeName(MultilingualText alternativeName) {
     this.alternativeNames.add(alternativeName);
   }
@@ -108,16 +115,16 @@ public class Element implements Comparable<Element> {
     return this.description;
   }
 
+  public void setDescription(MultilingualText description) {
+    this.description = description;
+  }
+
   public Optional<String> getDescriptionIn(String language) {
     return description.getText(language);
   }
 
   public Optional<String> getFirstDescription() {
     return description.getText();
-  }
-
-  public void setDescription(MultilingualText description) {
-    this.description = description;
   }
 
   public void addDescription(String languageTag, String value) {
@@ -152,32 +159,36 @@ public class Element implements Comparable<Element> {
     this.modified = modified;
   }
 
-  public void setEditorialNotes(List<MultilingualText> editorialNotes) {
-    this.editorialNotes = editorialNotes;
-  }
-
-  public void setCreators(List<Resource> creators) {
-    this.creators = creators;
-  }
-
-  public void setContributors(List<Resource> contributors) {
-    this.contributors = contributors;
-  }
-
   public List<MultilingualText> getAlternativeNames() {
     return alternativeNames;
+  }
+
+  public void setAlternativeNames(List<MultilingualText> alternativeNames) {
+    this.alternativeNames = alternativeNames;
   }
 
   public List<MultilingualText> getEditorialNotes() {
     return editorialNotes;
   }
 
+  public void setEditorialNotes(List<MultilingualText> editorialNotes) {
+    this.editorialNotes = editorialNotes;
+  }
+
   public List<Resource> getCreators() {
     return creators;
   }
 
+  public void setCreators(List<Resource> creators) {
+    this.creators = creators;
+  }
+
   public List<Resource> getContributors() {
     return contributors;
+  }
+
+  public void setContributors(List<Resource> contributors) {
+    this.contributors = contributors;
   }
 
   @Override

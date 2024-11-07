@@ -6,10 +6,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.ontouml.model.Class;
-import org.ontouml.model.Literal;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Arrays;
 
 import static org.ontouml.deserialization.DeserializerUtils.*;
 
@@ -34,7 +33,7 @@ public class ClassDeserializer extends JsonDeserializer<Class> {
     Boolean isPowertype = deserializeNullableBooleanField(root, "isPowertype");
     clazz.setPowertype(isPowertype);
 
-    Integer order = deserializeNullableIntegerField(root, "order");
+    String order = deserializeNullableStringField(root, "order");
     clazz.setOrder(order);
 
     String[] restrictedTo = deserializeNullableStringArrayField(root, "restrictedTo", codec);
@@ -42,9 +41,9 @@ public class ClassDeserializer extends JsonDeserializer<Class> {
       clazz.setRestrictedTo(restrictedTo);
     }
 
-    List<Literal> literals = deserializeArrayField(root, "literals", Literal.class, codec);
+    String[] literals = deserializeNullableStringArrayField(root, "literals", codec);
     if (literals != null) {
-      clazz.setLiterals(literals);
+      clazz.setLiterals(Arrays.stream(literals).toList());
     }
 
     return clazz;

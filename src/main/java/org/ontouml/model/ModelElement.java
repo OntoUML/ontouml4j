@@ -6,7 +6,10 @@ import org.ontouml.OntoumlElement;
 import org.ontouml.Project;
 import org.ontouml.serialization.ModelElementSerializer;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
 
 @JsonSerialize(using = ModelElementSerializer.class)
 public abstract class ModelElement extends OntoumlElement {
@@ -18,13 +21,6 @@ public abstract class ModelElement extends OntoumlElement {
 
   public ModelElement(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
     super(id, name, alternativeNames);
-  }
-
-  public void setPropertyAssignments(Map<String, Object> map) {
-    if (map == null)
-      throw new IllegalArgumentException("Cannot set a null map as the property assignments.");
-
-    this.propertyAssignments.putAll(map);
   }
 
   public void addPropertyAssignment(String name, Object value) {
@@ -51,6 +47,13 @@ public abstract class ModelElement extends OntoumlElement {
 
   public Map<String, Object> getPropertyAssignments() {
     return propertyAssignments != null ? new TreeMap<>(propertyAssignments) : new TreeMap<>();
+  }
+
+  public void setPropertyAssignments(Map<String, Object> map) {
+    if (map == null)
+      throw new IllegalArgumentException("Cannot set a null map as the property assignments.");
+
+    this.propertyAssignments.putAll(map);
   }
 
   public boolean hasPropertyAssignments() {
