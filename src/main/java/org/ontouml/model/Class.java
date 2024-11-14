@@ -302,7 +302,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public void setAttributes(Collection<Property> attributes) {
-    if (properties == null) properties = new HashMap<>();
+    if (properties == null) properties = new ArrayList<>();
     else properties.clear();
 
     if (attributes == null) return;
@@ -314,7 +314,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
     if (attribute == null) return;
 
     attribute.setContainer(this);
-    properties.put(attribute.getId(), attribute);
+    properties.add(attribute);
   }
 
   public Property createAttribute(String name, Classifier<?, ?> type) {
@@ -324,7 +324,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   public Property createAttribute(String id, String name, Classifier<?, ?> type) {
     Property attribute = new Property(id, name, type);
     attribute.setContainer(this);
-    properties.put(attribute.getId(), attribute);
+    properties.add(attribute);
 
     return attribute;
   }
@@ -490,10 +490,13 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   private void buildPropertiesReferences(Project project) {
+    List<Property> newProperties = new ArrayList<>();
     this.properties.forEach(
-        (propertyId, value) -> {
-          Optional<Property> propertyInProject = project.getElementById(propertyId, Property.class);
-          propertyInProject.ifPresent(property -> this.properties.put(propertyId, property));
+        property -> {
+          Optional<Property> propertyInProject =
+              project.getElementById(property.getId(), Property.class);
+          propertyInProject.ifPresent(newProperties::add);
         });
+    this.properties = newProperties;
   }
 }

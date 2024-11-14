@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.ontouml.model.Resource;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
+@Setter
 public class Element implements Comparable<Element> {
   String id;
   MultilingualText name;
@@ -25,18 +25,26 @@ public class Element implements Comparable<Element> {
   List<Resource> creators;
   List<Resource> contributors;
 
-  public Element(String id,
-                 MultilingualText name,
-                 List<MultilingualText> alternativeNames) {
-    this(id, name, alternativeNames, new MultilingualText(), new Date(), null, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+  public Element(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
+    this(
+        id,
+        name,
+        alternativeNames,
+        new MultilingualText(),
+        new Date(),
+        null,
+        new ArrayList<>(),
+        new ArrayList<>(),
+        new ArrayList<>());
   }
 
-  public Element(String id, MultilingualText name, List<MultilingualText> alternativeNames, Date created, Date modified) {
+  public Element(
+      String id,
+      MultilingualText name,
+      List<MultilingualText> alternativeNames,
+      Date created,
+      Date modified) {
     this(id, name, alternativeNames, null, created, modified, null, null, null);
-  }
-
-  public String getId() {
-    return id;
   }
 
   public void setId(String id) {
@@ -45,19 +53,14 @@ public class Element implements Comparable<Element> {
     this.id = id;
   }
 
-  public MultilingualText getName() {
-    return this.name;
-  }
-
-  public void setName(MultilingualText name) {
-    this.name = name;
-  }
-
   public Optional<String> getNameIn(String language) {
     return name.getText(language);
   }
 
   public Optional<String> getFirstName() {
+    if (name == null) {
+      return Optional.empty();
+    }
     return name.getText();
   }
 
@@ -83,14 +86,6 @@ public class Element implements Comparable<Element> {
 
   public void removeAllAlternativeNames() {
     this.alternativeNames = new ArrayList<>();
-  }
-
-  public MultilingualText getDescription() {
-    return this.description;
-  }
-
-  public void setDescription(MultilingualText description) {
-    this.description = description;
   }
 
   public Optional<String> getDescriptionIn(String language) {
@@ -121,48 +116,8 @@ public class Element implements Comparable<Element> {
     return this.created;
   }
 
-  public void setCreated(Date created) {
-    this.created = created;
-  }
-
   public Date getModifiedDate() {
     return this.modified;
-  }
-
-  public void setModified(Date modified) {
-    this.modified = modified;
-  }
-
-  public List<MultilingualText> getAlternativeNames() {
-    return alternativeNames;
-  }
-
-  public void setAlternativeNames(List<MultilingualText> alternativeNames) {
-    this.alternativeNames = alternativeNames;
-  }
-
-  public List<MultilingualText> getEditorialNotes() {
-    return editorialNotes;
-  }
-
-  public void setEditorialNotes(List<MultilingualText> editorialNotes) {
-    this.editorialNotes = editorialNotes;
-  }
-
-  public List<Resource> getCreators() {
-    return creators;
-  }
-
-  public void setCreators(List<Resource> creators) {
-    this.creators = creators;
-  }
-
-  public List<Resource> getContributors() {
-    return contributors;
-  }
-
-  public void setContributors(List<Resource> contributors) {
-    this.contributors = contributors;
   }
 
   @Override

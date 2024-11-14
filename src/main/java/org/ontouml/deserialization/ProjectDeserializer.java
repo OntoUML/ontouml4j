@@ -85,7 +85,8 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
       case "Class":
         referenceType = org.ontouml.model.Class.class;
         break;
-      case "Relation":
+      case "BinaryRelation":
+      case "NaryRelation":
         referenceType = Relation.class;
         break;
       case "Generalization":

@@ -72,6 +72,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public Property(String id) {
     this.setId(id);
+    this.setName(new MultilingualText());
   }
 
   @Override

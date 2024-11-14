@@ -1,18 +1,19 @@
 package org.ontouml.model;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
+import lombok.Getter;
+import lombok.Setter;
 import org.ontouml.MultilingualText;
 import org.ontouml.Project;
 
+@Getter
+@Setter
 public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotype>
     extends Decoratable<S> {
   boolean isAbstract;
   boolean isDerived;
-  Map<String, Property> properties = new HashMap<>();
+  List<Property> properties = new ArrayList<>();
 
   public Classifier(String id, MultilingualText name, S ontoumlStereotype) {
     super(id, name, ontoumlStereotype);
@@ -46,10 +47,6 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
     isDerived = derived;
   }
 
-  public List<Property> getProperties() {
-    return properties.values().stream().toList();
-  }
-
   public void setProperties(Collection<String> properties) {
     this.properties.clear();
 
@@ -58,14 +55,14 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
 
   public void addProperty(String propertyId) {
     if (propertyId != null) {
-      properties.put(propertyId, null);
+      properties.add(new Property(propertyId));
     }
   }
 
   public void addProperty(Property property) {
     if (property != null) {
       property.setContainer(this);
-      properties.put(property.getId(), property);
+      properties.add(property);
     }
   }
 
@@ -74,13 +71,13 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
   }
 
   public void resolvePropertyReferences(Project project) {
-    List<Property> properties = project.getAllProperties();
-    properties.forEach(
+    List<Property> newProperties = new ArrayList<>();
+    this.properties.forEach(
         property -> {
-          if (this.properties.containsKey(property.getId())) {
-            this.properties.put(property.getId(), property);
-          }
+          Optional<Property> propertyInProject = project.getPropertyById(property.getId());
+          propertyInProject.ifPresent(newProperties::add);
         });
+    this.properties = newProperties;
   }
 
   public List<Generalization> getGeneralizations() {

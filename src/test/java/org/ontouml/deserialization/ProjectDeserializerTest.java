@@ -1,31 +1,29 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.File;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ontouml.MultilingualText;
 import org.ontouml.Project;
 import org.ontouml.utils.ResourceGetter;
 
-import java.io.File;
-import java.io.IOException;
-import java.time.Instant;
-import java.util.Date;
-import java.util.List;
-
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
-
 class ProjectDeserializerTest {
 
   static ObjectMapper mapper;
-  static ResourceGetter resourceGetter;
+  static ResourceGetter resourceGetter = new ResourceGetter();
   static Project project;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    resourceGetter = new ResourceGetter();
     File jsonFile = resourceGetter.getJsonFromDeserialization("project.allfields.ontouml.json");
 
     try {
