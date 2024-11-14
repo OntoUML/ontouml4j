@@ -1,16 +1,15 @@
 package org.ontouml.deserialization;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.ontouml.OntoumlElement;
 import org.ontouml.Project;
 import org.ontouml.model.*;
 import org.ontouml.view.ConnectorView;
 import org.ontouml.view.Diagram;
 import org.ontouml.view.ElementView;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
 
 public class ReferenceResolver {
   public static void resolveReferences(Project project) {
@@ -174,9 +173,7 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildClassReferences(Project project) {
-    project.getAllClasses().forEach(clazz -> {
-      clazz.buildAllReferences(project);
-    });
+    project.getAllClasses().forEach(clazz -> clazz.buildAllReferences(project));
   }
 
   /**
@@ -185,8 +182,6 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildPropertyReferences(Project project) {
-    project.getAllProperties().forEach(clazz -> {
-      clazz.buildAllReferences(project);
-    });
+    project.getAllProperties().forEach(clazz -> clazz.buildAllReferences(project));
   }
 }

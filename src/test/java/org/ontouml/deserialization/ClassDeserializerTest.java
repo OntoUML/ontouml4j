@@ -1,22 +1,21 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth.assertThat;
+import static com.google.common.truth.Truth8.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
 import com.google.common.truth.Truth8;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.ontouml.Project;
-import org.ontouml.model.Class;
-import org.ontouml.model.*;
-import org.ontouml.utils.ResourceGetter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.ontouml.Project;
+import org.ontouml.model.*;
+import org.ontouml.model.Class;
+import org.ontouml.utils.ResourceGetter;
 
 class ClassDeserializerTest {
 
@@ -127,7 +126,7 @@ class ClassDeserializerTest {
   void shouldDeserializeLiterals() {
     assertThat(clazz.getLiterals()).hasSize(1);
 
-    Literal literal = clazz.getLiterals().get(0);
+    Literal literal = clazz.getLiterals().getFirst();
     Truth.assertThat(literal.getId()).isEqualTo("l1");
     Truth8.assertThat(literal.getFirstName()).hasValue("red");
   }

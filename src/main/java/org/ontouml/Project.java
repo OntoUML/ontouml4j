@@ -2,89 +2,54 @@ package org.ontouml;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.ontouml.deserialization.ProjectDeserializer;
-import org.ontouml.model.ModelElement;
+import org.ontouml.model.*;
+import org.ontouml.model.Class;
 import org.ontouml.model.Package;
-import org.ontouml.model.Resource;
 import org.ontouml.serialization.ProjectSerializer;
 import org.ontouml.view.Diagram;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+// TODO: Implement Anchor
+// TODO: Implement Node
+// TODO: Change elements to a Map
+// TODO: One map for each element kind
+// TODO: Error when an attribute is not referenced in any class
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @JsonSerialize(using = ProjectSerializer.class)
 @JsonDeserialize(using = ProjectDeserializer.class)
-public class Project extends OntoumlElement implements ModelElementContainer, DiagramElementContainer {
-  ProjectMetaProperties metaProperties;
+public class Project extends OntoumlElement
+    implements ModelElementContainer, DiagramElementContainer {
+  ProjectMetaProperties metaProperties = new ProjectMetaProperties();
   private Package root;
-  private List<? extends ModelElement> elements;
+
+  private Map<String, Class> classes = new HashMap<>();
+  private Map<String, Package> packages = new HashMap<>();
+  private Map<String, Relation> relations = new HashMap<>();
+  private Map<String, Property> properties = new HashMap<>();
+  private Map<String, Literal> literals = new HashMap<>();
+  private Map<String, GeneralizationSet> generalizationSets = new HashMap<>();
+  private Map<String, Generalization> generalizations = new HashMap<>();
+  //  private Map<String, String> notes;
+  // TODO: Think about the optimization on the diagram elements as well
   private List<Diagram> diagrams = new ArrayList<>();
 
-  public Project(OntoumlElement container,
-                 String id,
-                 MultilingualText name,
-                 List<MultilingualText> alternativeNames,
-                 MultilingualText description,
-                 Date created, Date modified,
-                 List<MultilingualText> editorialNotes,
-                 List<Resource> creators,
-                 List<Resource> contributors,
-                 Package root,
-                 List<Diagram> diagrams,
-                 ProjectMetaProperties metaProperties) {
-    super(container, id, name, alternativeNames, description, created, modified, editorialNotes, creators, contributors);
-    this.root = root;
-    this.diagrams = diagrams;
-    this.metaProperties = metaProperties != null ? new ProjectMetaProperties() : null;
+  public Project(String id, MultilingualText description, Date created, Date modified) {
+    super(null, id, description, null, description, created, modified, null, null, null);
   }
 
-  public Project(String id, MultilingualText name, Date created, Date modified) {
-    super(null, id, name, new ArrayList<>(), null, created, modified, null, null, null);
-    setProject(this);
-    this.metaProperties = new ProjectMetaProperties();
-  }
-
-  public Project(String id, String name, Date created, Date modified) {
-    super(null, id, new MultilingualText(name), new ArrayList<>(), null, created, modified, null, null, null);
-    setProject(this);
-    this.metaProperties = new ProjectMetaProperties();
-  }
-
-  public Project(MultilingualText name) {
-    this(null, name, null, null, new ArrayList<>());
-    this.metaProperties = new ProjectMetaProperties();
-  }
-
-  public Project() {
-    this(null, (MultilingualText) null, null, null, new ArrayList<>());
-    this.metaProperties = new ProjectMetaProperties();
-  }
-
-  public Project(String id, MultilingualText name, Package root, List<Diagram> diagrams) {
+  public Project(
+      String id, MultilingualText name, Package root, ProjectMetaProperties metaProperties) {
     super(id, name);
     this.root = root;
-    this.diagrams = diagrams;
-    this.metaProperties = new ProjectMetaProperties();
-  }
-
-  public Project(String id,
-                 MultilingualText name,
-                 List<MultilingualText> alternativeNames,
-                 Package root,
-                 List<Diagram> diagrams) {
-    super(id, name, alternativeNames);
-    this.root = root;
-    this.diagrams = diagrams;
-    this.metaProperties = new ProjectMetaProperties();
-  }
-
-  public Project(String id, MultilingualText name, Date created, Date modified, Package root, List<Diagram> diagrams) {
-    super(id, name, created, modified);
-    this.root = root;
-    this.diagrams = diagrams;
-    this.metaProperties = new ProjectMetaProperties();
+    this.metaProperties = metaProperties;
   }
 
   @Override
@@ -144,22 +109,9 @@ public class Project extends OntoumlElement implements ModelElementContainer, Di
     List<OntoumlElement> contents = new ArrayList<>();
 
     contents.addAll(diagrams);
-
-    if (contents.addAll(elements)) ;
+    contents.addAll(getElements());
 
     return contents;
-  }
-
-  public ProjectMetaProperties getMetaProperties() {
-    return this.metaProperties;
-  }
-
-  public void setMetaProperties(ProjectMetaProperties metaProperties) {
-    this.metaProperties = metaProperties;
-  }
-
-  public Package getRoot() {
-    return root;
   }
 
   public void setRoot(Package root) {
@@ -169,10 +121,46 @@ public class Project extends OntoumlElement implements ModelElementContainer, Di
   }
 
   public List<? extends ModelElement> getElements() {
+    List<ModelElement> elements = new ArrayList<>();
+
+    elements.addAll(classes.values());
+    elements.addAll(relations.values());
+    elements.addAll(packages.values());
+    elements.addAll(properties.values());
+    elements.addAll(literals.values());
+    elements.addAll(generalizationSets.values());
+    elements.addAll(generalizations.values());
+
     return elements;
   }
 
-  public void setElements(List<? extends ModelElement> elements) {
-    this.elements = elements;
+  public void setElements(List<ModelElement> elements) {
+    elements.forEach(this::addElement);
+  }
+
+  private void addElement(ModelElement element) {
+    switch (element.getType()) {
+      case "Class":
+        this.classes.put(element.getId(), (Class) element);
+        break;
+      case "Relation":
+        this.relations.put(element.getId(), (Relation) element);
+        break;
+      case "Package":
+        this.packages.put(element.getId(), (Package) element);
+        break;
+      case "Property":
+        this.properties.put(element.getId(), (Property) element);
+        break;
+      case "Literal":
+        this.literals.put(element.getId(), (Literal) element);
+        break;
+      case "GeneralizationSet":
+        this.generalizationSets.put(element.getId(), (GeneralizationSet) element);
+        break;
+      case "Generalization":
+        this.generalizations.put(element.getId(), (Generalization) element);
+        break;
+    }
   }
 }

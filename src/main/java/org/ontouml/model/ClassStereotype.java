@@ -1,5 +1,6 @@
 package org.ontouml.model;
 
+
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -91,6 +92,10 @@ public enum ClassStereotype implements Stereotype {
     this.stereotypeName = name;
   }
 
+  public static Optional<ClassStereotype> findByName(String name) {
+    return Stereotype.findByName(ClassStereotype.class, name);
+  }
+
   public boolean isNonSortal() {
     return NON_SORTALS.contains(this);
   }
@@ -150,9 +155,5 @@ public enum ClassStereotype implements Stereotype {
   @Override
   public String getStereotypeName() {
     return stereotypeName;
-  }
-
-  public static Optional<ClassStereotype> findByName(String name) {
-    return Stereotype.findByName(ClassStereotype.class, name);
   }
 }

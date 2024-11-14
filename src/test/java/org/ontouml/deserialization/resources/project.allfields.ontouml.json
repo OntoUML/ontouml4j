@@ -64,7 +64,7 @@
     },
     {
       "type": "Package",
-      "id": "package1",
+      "id": "class1",
       "name": {
         "en": "Package 1"
       },

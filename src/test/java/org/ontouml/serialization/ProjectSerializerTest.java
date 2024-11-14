@@ -1,18 +1,16 @@
 package org.ontouml.serialization;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.ontouml.Project;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
-
-import static com.google.common.truth.Truth.assertThat;
+import org.ontouml.Project;
 
 public class ProjectSerializerTest {
   ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-  Project project = new Project("1", (String) null, new Date(), null);
+  Project project = new Project();
 
   @Test
   void shouldSerializeId() throws JsonProcessingException {

@@ -12,7 +12,6 @@ import java.util.Arrays;
 
 import static org.ontouml.deserialization.DeserializerUtils.*;
 
-
 public class ClassDeserializer extends JsonDeserializer<Class> {
 
   @Override
@@ -44,6 +43,11 @@ public class ClassDeserializer extends JsonDeserializer<Class> {
     String[] literals = deserializeNullableStringArrayField(root, "literals", codec);
     if (literals != null) {
       clazz.setLiterals(Arrays.stream(literals).toList());
+    }
+
+    String[] properties = deserializeNullableStringArrayField(root, "properties", codec);
+    if (properties != null) {
+      clazz.setProperties(Arrays.stream(properties).toList());
     }
 
     return clazz;

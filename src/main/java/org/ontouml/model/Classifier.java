@@ -1,16 +1,15 @@
 package org.ontouml.model;
 
-
-import org.ontouml.MultilingualText;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import org.ontouml.MultilingualText;
+import org.ontouml.Project;
 
 public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotype>
-        extends Decoratable<S> {
+    extends Decoratable<S> {
   boolean isAbstract;
   boolean isDerived;
   Map<String, Property> properties = new HashMap<>();
@@ -24,11 +23,11 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
   }
 
   public static boolean areAbstract(Collection<? extends Classifier<?, ?>> classifiers) {
-    return classifiers.stream().allMatch(c -> c.isAbstract());
+    return classifiers.stream().allMatch(Classifier::isAbstract);
   }
 
   public static boolean areDerived(Collection<? extends Classifier<?, ?>> classifiers) {
-    return classifiers.stream().allMatch(c -> c.isDerived());
+    return classifiers.stream().allMatch(Classifier::isDerived);
   }
 
   public boolean isAbstract() {
@@ -54,7 +53,7 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
   public void setProperties(Collection<String> properties) {
     this.properties.clear();
 
-    if (properties != null) properties.forEach(p -> addProperty(p));
+    if (properties != null) properties.forEach(this::addProperty);
   }
 
   public void addProperty(String propertyId) {
@@ -71,7 +70,17 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
   }
 
   public boolean hasProperties() {
-    return properties.size() > 0;
+    return !properties.isEmpty();
+  }
+
+  public void resolvePropertyReferences(Project project) {
+    List<Property> properties = project.getAllProperties();
+    properties.forEach(
+        property -> {
+          if (this.properties.containsKey(property.getId())) {
+            this.properties.put(property.getId(), property);
+          }
+        });
   }
 
   public List<Generalization> getGeneralizations() {

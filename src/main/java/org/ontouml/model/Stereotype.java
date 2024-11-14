@@ -1,11 +1,10 @@
 package org.ontouml.model;
 
+
 import java.util.EnumSet;
 import java.util.Optional;
 
 public interface Stereotype {
-
-  String getStereotypeName();
 
   static <S extends Enum<S> & Stereotype> Optional<S> findByName(
       java.lang.Class<S> enumeration, String name) {
@@ -13,4 +12,6 @@ public interface Stereotype {
         .filter(value -> value.getStereotypeName().equals(name))
         .findFirst();
   }
+
+  String getStereotypeName();
 }

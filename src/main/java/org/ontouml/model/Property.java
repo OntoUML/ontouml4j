@@ -2,17 +2,16 @@ package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.ontouml.MultilingualText;
 import org.ontouml.OntoumlElement;
 import org.ontouml.OntoumlUtils;
 import org.ontouml.Project;
 import org.ontouml.deserialization.PropertyDeserializer;
 import org.ontouml.serialization.PropertySerializer;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 
 @JsonSerialize(using = PropertySerializer.class)
 @JsonDeserialize(using = PropertyDeserializer.class)
@@ -248,9 +247,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public void buildAllReferences(Project project) {
     Optional<Classifier> type = project.getElementById(this.propertyTypeId, Classifier.class);
-    if (type.isPresent()) {
-      this.setPropertyType(type.get());
-    }
+      type.ifPresent(this::setPropertyType);
   }
 
 }

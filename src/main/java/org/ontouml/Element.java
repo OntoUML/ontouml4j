@@ -1,12 +1,17 @@
 package org.ontouml;
 
-import org.ontouml.model.Resource;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import org.ontouml.model.Resource;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Element implements Comparable<Element> {
   String id;
   MultilingualText name;
@@ -19,37 +24,6 @@ public class Element implements Comparable<Element> {
 
   List<Resource> creators;
   List<Resource> contributors;
-
-  // Dor no plugin: Duas formas de manipular, dois estilos de programação diferente. Wrapper é interessante, mas talvez tem perda de performance. Decidir um estilo
-  // TODO: Adicionar padrão Builder para montar objetos programaticamente
-  public Element(String id,
-                 MultilingualText name,
-                 List<MultilingualText> alternativeNames,
-                 MultilingualText description,
-                 Date created,
-                 Date modified,
-                 List<MultilingualText> editorialNotes,
-                 List<Resource> creators,
-                 List<Resource> contributors) {
-    this.id = id;
-    this.name = name;
-    this.description = description;
-    this.alternativeNames = alternativeNames;
-    this.created = created;
-    this.modified = modified;
-    this.editorialNotes = editorialNotes;
-    this.creators = creators;
-    this.contributors = contributors;
-  }
-
-  public Element(String id,
-                 MultilingualText name,
-                 List<MultilingualText> alternativeNames,
-                 MultilingualText description,
-                 Date created,
-                 Date modified) {
-    this(id, name, alternativeNames, description, created, modified, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-  }
 
   public Element(String id,
                  MultilingualText name,

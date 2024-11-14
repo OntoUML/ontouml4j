@@ -30,9 +30,6 @@ class ProjectDeserializerTest {
 
     try {
       project = mapper.readValue(jsonFile, Project.class);
-
-      System.out.println(project);
-
     } catch (IOException e) {
       e.printStackTrace();
     }

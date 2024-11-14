@@ -2,6 +2,11 @@ package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import lombok.Getter;
+import lombok.Setter;
 import org.ontouml.MultilingualText;
 import org.ontouml.OntoumlElement;
 import org.ontouml.OntoumlUtils;
@@ -9,12 +14,10 @@ import org.ontouml.Project;
 import org.ontouml.deserialization.ClassDeserializer;
 import org.ontouml.serialization.ClassSerializer;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 @JsonSerialize(using = ClassSerializer.class)
 @JsonDeserialize(using = ClassDeserializer.class)
+@Getter
+@Setter
 public class Class extends Classifier<Class, ClassStereotype> {
 
   public static Integer ORDERLESS = Integer.MAX_VALUE;
@@ -24,7 +27,10 @@ public class Class extends Classifier<Class, ClassStereotype> {
   protected Boolean isPowertype;
   protected Integer order;
   protected Set<Nature> restrictedTo = new TreeSet<>();
-  protected Map<String, Literal> literals = new HashMap<>();
+
+  // TODO: Create a Dummy literal only with the id. When resolving the reference, it replaces with
+  // the new element
+  protected List<Literal> literals = new ArrayList<>();
 
   public Class(String id, MultilingualText name, ClassStereotype ontoumlStereotype) {
     super(id, name, ontoumlStereotype);
@@ -221,19 +227,23 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public void setOrder(String value) {
-    Integer intValue = Integer.parseInt(value);
-    if (value.equals("*")) {
-      intValue = ORDERLESS;
+    if (value != null) {
+      Integer intValue = Integer.parseInt(value);
+      if (value.equals("*")) {
+        intValue = ORDERLESS;
+      }
+      order = intValue;
+    } else {
+      order = ORDERLESS;
     }
-    order = intValue;
   }
 
   public Optional<String> getOrderAsString() {
     if (order == null) return Optional.empty();
     else
       return ORDERLESS.equals(order)
-              ? Optional.of(ORDERLESS_STRING)
-              : Optional.of(order.toString());
+          ? Optional.of(ORDERLESS_STRING)
+          : Optional.of(order.toString());
   }
 
   public Set<Nature> getRestrictedTo() {
@@ -247,10 +257,10 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
   public void setRestrictedTo(String[] array) {
     List<Nature> natures =
-            Stream.of(array)
-                    .map(Nature::findByName)
-                    .flatMap(Optional::stream)
-                    .collect(Collectors.toList());
+        Stream.of(array)
+            .map(Nature::findByName)
+            .flatMap(Optional::stream)
+            .collect(Collectors.toList());
     this.restrictedTo.clear();
     this.restrictedTo.addAll(natures);
   }
@@ -269,7 +279,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public Literal createLiteral(String name) {
-    if (literals == null) literals = new HashMap<>();
+    if (literals == null) literals = new ArrayList<>();
 
     Literal literal = new Literal(name);
     addLiteral(literal);
@@ -277,10 +287,10 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public void addLiteral(Literal literal) {
-    if (literals == null) literals = new HashMap<>();
+    if (literals == null) literals = new ArrayList<>();
 
     literal.setContainer(this);
-    literals.put(literal.getId(), literal);
+    literals.add(literal);
   }
 
   public boolean hasAttributes() {
@@ -297,7 +307,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
     if (attributes == null) return;
 
-    attributes.forEach(a -> addAttribute(a));
+    attributes.forEach(this::addAttribute);
   }
 
   public void addAttribute(Property attribute) {
@@ -324,7 +334,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
     Optional<ClassStereotype> stereotype = ClassStereotype.findByName(stereotypeName);
 
     stereotype.ifPresentOrElse(
-            s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
+        s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
   }
 
   @Override
@@ -343,13 +353,13 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
     TreeSet<Nature> natureSet = new TreeSet<>(natures);
     natureSet.retainAll(restrictedTo);
-    return natureSet.size() > 0;
+    return !natureSet.isEmpty();
   }
 
   public boolean restrictedToContainedIn(List<Nature> natures) {
     if (natures == null) return false;
 
-    return natures.containsAll(restrictedTo);
+    return new HashSet<>(natures).containsAll(restrictedTo);
   }
 
   public boolean restrictedToContains(Nature nature) {
@@ -451,21 +461,15 @@ public class Class extends Classifier<Class, ClassStereotype> {
     return isDatatype() && !hasAttributes();
   }
 
-  public List<Literal> getLiterals() {
-    return literals.values().stream().toList();
-  }
-
   public void setLiterals(Collection<String> literals) {
-//    literals.forEach(l -> l.setContainer(this));
     this.literals.clear();
-    literals.forEach(literal -> {
-      this.literals.put(literal, null);
-    });
+    literals.forEach(
+        literalId -> {
+          Literal newLiteral = new Literal(literalId, new MultilingualText());
+          newLiteral.setContainer(this);
+          this.literals.add(newLiteral);
+        });
     // TODO: Fix literals
-  }
-
-  public List<String> getLiteralIds() {
-    return literals.keySet().stream().toList();
   }
 
   public void buildAllReferences(Project project) {
@@ -474,20 +478,22 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   private void buildLiteralsReferences(Project project) {
-    this.literals.forEach((literalId, value) -> {
-      Optional<Literal> literalInProject = project.getElementById(literalId, Literal.class);
-      literalInProject.ifPresent(literal -> {
-        this.literals.put(literalId, literal);
-      });
-    });
+    List<Literal> resolvedLiterals = new ArrayList<>();
+
+    this.literals.forEach(
+        (literal) -> {
+          Optional<Literal> literalInProject =
+              project.getElementById(literal.getId(), Literal.class);
+          literalInProject.ifPresent(resolvedLiterals::add);
+        });
+    this.literals = resolvedLiterals;
   }
 
   private void buildPropertiesReferences(Project project) {
-    this.properties.forEach((propertyId, value) -> {
-      Optional<Property> propertyInProject = project.getElementById(propertyId, Property.class);
-      propertyInProject.ifPresent(property -> {
-        this.properties.put(propertyId, property);
-      });
-    });
+    this.properties.forEach(
+        (propertyId, value) -> {
+          Optional<Property> propertyInProject = project.getElementById(propertyId, Property.class);
+          propertyInProject.ifPresent(property -> this.properties.put(propertyId, property));
+        });
   }
 }
