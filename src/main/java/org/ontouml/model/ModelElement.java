@@ -1,17 +1,20 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.TreeMap;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.ontouml.MultilingualText;
 import org.ontouml.OntoumlElement;
 import org.ontouml.Project;
 import org.ontouml.serialization.ModelElementSerializer;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
-
 @JsonSerialize(using = ModelElementSerializer.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class ModelElement extends OntoumlElement {
   private Map<String, Object> propertyAssignments = new TreeMap<>();
 

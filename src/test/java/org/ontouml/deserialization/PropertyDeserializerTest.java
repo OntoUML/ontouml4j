@@ -1,56 +1,34 @@
 package org.ontouml.deserialization;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.truth.Truth;
-import com.google.common.truth.Truth8;
-import org.ontouml.model.AggregationKind;
-import org.ontouml.model.Class;
-import org.ontouml.model.Property;
-import org.ontouml.model.PropertyStereotype;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.Truth8.assertThat;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.truth.Truth;
+import java.io.File;
+import java.io.IOException;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.ontouml.model.AggregationKind;
+import org.ontouml.model.Property;
+import org.ontouml.model.PropertyStereotype;
+import org.ontouml.utils.ResourceGetter;
+
 class PropertyDeserializerTest {
 
-  static String json =
-      "{\n"
-          + "   \"id\" : \"p1\",\n"
-          + "   \"name\" : \"birthName\",\n"
-          + "   \"description\" : null,\n"
-          + "   \"type\" : \"Property\",\n"
-          + "   \"propertyAssignments\" : null,\n"
-          + "   \"stereotype\" : null,\n"
-          + "   \"isDerived\" : true,\n"
-          + "   \"isReadOnly\" : true,\n"
-          + "   \"isOrdered\" : true,\n"
-          + "   \"cardinality\" : \"1..*\",\n"
-          + "   \"propertyType\" : {\n"
-          + "     \"id\" : \"c1\",\n"
-          + "     \"type\" : \"Class\"\n"
-          + "   },\n"
-          + "   \"subsettedProperties\" : [ {\n"
-          + "     \"id\" : \"p2\",\n"
-          + "     \"type\" : \"Property\"\n"
-          + "   } ],\n"
-          + "   \"redefinedProperties\" : [ {\n"
-          + "     \"id\" : \"p3\",\n"
-          + "     \"type\" : \"Property\"\n"
-          + "   } ],\n"
-          + "   \"aggregationKind\" : \"COMPOSITE\"\n"
-          + "}";
-
   static ObjectMapper mapper;
+  static ResourceGetter resourceGetter = new ResourceGetter();
   static Property property;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    property = mapper.readValue(json, Property.class);
+    File jsonFile = resourceGetter.getJsonFromDeserialization("property.minimum.ontouml.json");
+    try {
+      property = mapper.readValue(jsonFile, Property.class);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
@@ -59,7 +37,6 @@ class PropertyDeserializerTest {
     Property reference = mapper.readValue(jsonReference, Property.class);
 
     Truth.assertThat(reference.getId()).isEqualTo("p1");
-    Truth8.assertThat(reference.getFirstName()).isEmpty();
     assertThat(reference.getStereotype()).isEmpty();
   }
 
@@ -89,17 +66,15 @@ class PropertyDeserializerTest {
   }
 
   @Test
-  void shouldDeserializePropertyType() {
-    assertThat(property.getPropertyType()).isPresent();
-    Truth.assertThat(property.getPropertyType().get()).isInstanceOf(Class.class);
-    Truth.assertThat(property.getPropertyType().get().getId()).isEqualTo("c1");
+  void shouldDeserializePropertyTypeId() {
+    assertThat(property.getPropertyTypeId()).isEqualTo("class2");
   }
 
   @Test
   void shouldDeserializeSubsettedProperties() {
     assertThat(property.getSubsettedProperties()).hasSize(1);
 
-    Property subsetted = property.getSubsettedProperties().get(0);
+    Property subsetted = property.getSubsettedProperties().getFirst();
     Truth.assertThat(subsetted.getId()).isEqualTo("p2");
   }
 
@@ -107,7 +82,7 @@ class PropertyDeserializerTest {
   void shouldDeserializeRedefinedProperties() {
     assertThat(property.getRedefinedProperties()).hasSize(1);
 
-    Property redefined = property.getRedefinedProperties().get(0);
+    Property redefined = property.getRedefinedProperties().getFirst();
     Truth.assertThat(redefined.getId()).isEqualTo("p3");
   }
 

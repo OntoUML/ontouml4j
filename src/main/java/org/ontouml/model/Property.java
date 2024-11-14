@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.ontouml.MultilingualText;
 import org.ontouml.OntoumlElement;
 import org.ontouml.OntoumlUtils;
@@ -15,6 +19,10 @@ import org.ontouml.serialization.PropertySerializer;
 
 @JsonSerialize(using = PropertySerializer.class)
 @JsonDeserialize(using = PropertyDeserializer.class)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public final class Property extends Decoratable<PropertyStereotype> {
   private Cardinality cardinality = new Cardinality();
   private String propertyTypeId;
@@ -27,10 +35,10 @@ public final class Property extends Decoratable<PropertyStereotype> {
   private boolean isReadOnly;
 
   public Property(
-          String id,
-          MultilingualText name,
-          PropertyStereotype ontoumlStereotype,
-          Classifier<?, ?> type) {
+      String id,
+      MultilingualText name,
+      PropertyStereotype ontoumlStereotype,
+      Classifier<?, ?> type) {
     super(id, name, ontoumlStereotype);
     setPropertyType(type);
   }
@@ -62,16 +70,8 @@ public final class Property extends Decoratable<PropertyStereotype> {
     }
   }
 
-  public Property() {
-    this(null);
-  }
-
-  public String getPropertyTypeId() {
-    return propertyTypeId;
-  }
-
-  public void setPropertyTypeId(String propertyTypeId) {
-    this.propertyTypeId = propertyTypeId;
+  public Property(String id) {
+    this.setId(id);
   }
 
   @Override
@@ -84,16 +84,12 @@ public final class Property extends Decoratable<PropertyStereotype> {
     Optional<PropertyStereotype> stereotype = PropertyStereotype.findByName(stereotypeName);
 
     stereotype.ifPresentOrElse(
-            s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
+        s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
   }
 
   @Override
   public List<OntoumlElement> getContents() {
     return Collections.emptyList();
-  }
-
-  public Cardinality getCardinality() {
-    return cardinality;
   }
 
   public void setCardinality(Cardinality cardinality) {
@@ -115,6 +111,15 @@ public final class Property extends Decoratable<PropertyStereotype> {
     return new ArrayList<>(subsettedProperties);
   }
 
+  public void setSubsettedProperties(String[] subsettedProperties) {
+    this.subsettedProperties.clear();
+    if (subsettedProperties != null) {
+      for (String id : subsettedProperties) {
+        this.subsettedProperties.add(new Property(id));
+      }
+    }
+  }
+
   public void setSubsettedProperties(List<Property> subsettedProperties) {
     this.subsettedProperties.clear();
     if (subsettedProperties != null)
@@ -124,7 +129,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
   public void addSubsettedProperty(Property property) {
     if (property == null)
       throw new NullPointerException(
-              "Cannot add a null value to the list of subsetted properties.");
+          "Cannot add a null value to the list of subsetted properties.");
 
     subsettedProperties.add(property);
   }
@@ -144,6 +149,15 @@ public final class Property extends Decoratable<PropertyStereotype> {
     return new ArrayList<>(redefinedProperties);
   }
 
+  public void setRedefinedProperties(String[] redefinedProperties) {
+    this.redefinedProperties.clear();
+    if (redefinedProperties != null) {
+      for (String id : redefinedProperties) {
+        this.redefinedProperties.add(new Property(id));
+      }
+    }
+  }
+
   public void setRedefinedProperties(List<Property> redefinedProperties) {
     this.redefinedProperties.clear();
     if (redefinedProperties != null)
@@ -153,7 +167,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
   public void addRedefinedProperty(Property property) {
     if (property == null)
       throw new NullPointerException(
-              "Cannot add a null value to the list of redefined properties.");
+          "Cannot add a null value to the list of redefined properties.");
 
     redefinedProperties.add(property);
   }
@@ -171,10 +185,6 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public Optional<AggregationKind> getAggregationKind() {
     return Optional.ofNullable(aggregationKind);
-  }
-
-  public void setAggregationKind(AggregationKind aggregationKind) {
-    this.aggregationKind = aggregationKind;
   }
 
   public boolean isDerived() {
@@ -205,10 +215,6 @@ public final class Property extends Decoratable<PropertyStereotype> {
     return Optional.ofNullable(propertyType);
   }
 
-  public void setPropertyType(Classifier<?, ?> propertyType) {
-    this.propertyType = propertyType;
-  }
-
   public boolean isPropertyTypeClass() {
     Optional<Classifier<?, ?>> type = getPropertyType();
     return type.isPresent() && type.get() instanceof Class;
@@ -234,7 +240,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public boolean isAggregationEnd() {
     return aggregationKind == AggregationKind.COMPOSITE
-            || aggregationKind == AggregationKind.SHARED;
+        || aggregationKind == AggregationKind.SHARED;
   }
 
   public boolean isAttribute() {
@@ -247,7 +253,6 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public void buildAllReferences(Project project) {
     Optional<Classifier> type = project.getElementById(this.propertyTypeId, Classifier.class);
-      type.ifPresent(this::setPropertyType);
+    type.ifPresent(this::setPropertyType);
   }
-
 }

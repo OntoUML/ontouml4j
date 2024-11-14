@@ -1,13 +1,16 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.util.ArrayList;
+import java.util.Optional;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.ontouml.MultilingualText;
 import org.ontouml.serialization.DecoratableSerializer;
 
-import java.util.ArrayList;
-import java.util.Optional;
-
 @JsonSerialize(using = DecoratableSerializer.class)
+@NoArgsConstructor
+@AllArgsConstructor
 public abstract class Decoratable<S extends Stereotype> extends ModelElement {
   private String customStereotype;
   private S ontoumlStereotype;
