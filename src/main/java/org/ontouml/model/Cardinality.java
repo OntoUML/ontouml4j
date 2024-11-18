@@ -10,7 +10,7 @@ public class Cardinality {
 
   public Cardinality(String lowerBound, String upperBound) {
     String cardinalityString =
-            lowerBound.equals(upperBound) ? lowerBound : lowerBound + ".." + upperBound;
+        lowerBound.equals(upperBound) ? lowerBound : lowerBound + ".." + upperBound;
     setValue(cardinalityString);
   }
 
@@ -22,13 +22,13 @@ public class Cardinality {
     setValue("1");
   }
 
+  public Optional<String> getValue() {
+    return Optional.ofNullable(cardinality);
+  }
+
   public void setValue(String cardinality) {
     this.cardinality = cardinality;
     setBounds();
-  }
-
-  public Optional<String> getValue() {
-    return Optional.ofNullable(cardinality);
   }
 
   public Optional<String> getLowerBound() {
@@ -98,8 +98,8 @@ public class Cardinality {
   public boolean isValid() {
     try {
       return isLowerBoundValid()
-              && isUpperBoundValid()
-              && getLowerBoundAsInt() <= getUpperBoundAsInt();
+          && isUpperBoundValid()
+          && getLowerBoundAsInt() <= getUpperBoundAsInt();
     } catch (Exception ignored) {
       return false;
     }

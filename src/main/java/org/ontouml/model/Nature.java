@@ -1,15 +1,14 @@
 package org.ontouml.model;
 
-import lombok.Getter;
-
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import lombok.Getter;
 
 @Getter
 public enum Nature {
-   FUNCTIONAL_COMPLEX("functional-complex"),
+  FUNCTIONAL_COMPLEX("functional-complex"),
   COLLECTIVE("collective"),
   QUANTITY("quantity"),
   RELATOR("relator"),
@@ -43,7 +42,11 @@ public enum Nature {
     this.name = name;
   }
 
-    public boolean isEndurant() {
+  public static Optional<Nature> findByName(String name) {
+    return Stream.of(Nature.values()).filter(nature -> nature.getName().equals(name)).findFirst();
+  }
+
+  public boolean isEndurant() {
     return ENDURANT_NATURES.contains(this);
   }
 
@@ -61,9 +64,5 @@ public enum Nature {
 
   public boolean isExtrinsicMoment() {
     return EXTRINSIC_MOMENT_NATURES.contains(this);
-  }
-
-  public static Optional<Nature> findByName(String name) {
-    return Stream.of(Nature.values()).filter(nature -> nature.getName().equals(name)).findFirst();
   }
 }

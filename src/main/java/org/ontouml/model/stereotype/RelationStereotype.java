@@ -67,13 +67,13 @@ public enum RelationStereotype implements Stereotype {
     this.stereotypeName = name;
   }
 
+  public static Optional<RelationStereotype> findByName(String name) {
+    return Stereotype.findByName(RelationStereotype.class, name);
+  }
+
   @Override
   public String getStereotypeName() {
     return stereotypeName;
-  }
-
-  public static Optional<RelationStereotype> findByName(String name) {
-    return Stereotype.findByName(RelationStereotype.class, name);
   }
 
   public boolean isExistentialDependency() {
@@ -84,4 +84,3 @@ public enum RelationStereotype implements Stereotype {
     return !ALLOWS_HIGHER_ARITY.contains(this);
   }
 }
-

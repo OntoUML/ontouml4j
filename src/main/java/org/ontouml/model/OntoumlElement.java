@@ -1,9 +1,8 @@
 package org.ontouml.model;
 
+import java.util.Date;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Date;
 
 /**
  * description: An identified element of an OntoUML ontology according to the OntoUML Metamodel,

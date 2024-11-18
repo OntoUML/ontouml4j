@@ -1,12 +1,11 @@
 package org.ontouml.model;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.Stereotype;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 /**
  * A model element that can be decorated with a stereotype to identify its ontological properties
@@ -21,14 +20,14 @@ public abstract class Decoratable<S extends Stereotype> extends ModelElement {
 
   /** Determines a custom stereotype, not necessarily compliant to UFO. */
   private String customStereotype;
+
   /** determines the type of model element according to Unified Foundational Ontology (UFO). */
   private S ontoumlStereotype;
 
   /**
-   * Determines whether the model element is derived from a different one, i.e., whether a different element serves as
-   * its truthmaker.
-   * Examples include the comparative relation "is heavier than" between two physical objects which is derived from
-   * their "Weight" quality.
+   * Determines whether the model element is derived from a different one, i.e., whether a different
+   * element serves as its truthmaker. Examples include the comparative relation "is heavier than"
+   * between two physical objects which is derived from their "Weight" quality.
    */
   private boolean isDerived;
 

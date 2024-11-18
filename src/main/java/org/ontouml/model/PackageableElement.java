@@ -7,6 +7,4 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public abstract class PackageableElement extends ModelElement {
-
-}
+public abstract class PackageableElement extends ModelElement {}

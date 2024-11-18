@@ -12,12 +12,12 @@ public enum PropertyStereotype implements Stereotype {
     this.stereotypeName = name;
   }
 
+  public static Optional<PropertyStereotype> findByName(String name) {
+    return Stereotype.findByName(PropertyStereotype.class, name);
+  }
+
   @Override
   public String getStereotypeName() {
     return stereotypeName;
-  }
-
-  public static Optional<PropertyStereotype> findByName(String name) {
-    return Stereotype.findByName(PropertyStereotype.class, name);
   }
 }

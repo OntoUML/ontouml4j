@@ -2,8 +2,8 @@ package org.ontouml.model;
 
 import java.util.*;
 
-//@JsonSerialize(using = MultilingualTextSerializer.class)
-//@JsonDeserialize(using = MultilingualTextDeserializer.class)
+// @JsonSerialize(using = MultilingualTextSerializer.class)
+// @JsonDeserialize(using = MultilingualTextDeserializer.class)
 public class MultilingualText {
   private static String defaultLanguage = "en";
   private static String[] languagePreference = new String[] {defaultLanguage};
@@ -27,6 +27,20 @@ public class MultilingualText {
   }
 
   public MultilingualText() {}
+
+  public static void setDefaultLanguage(String language) {
+    if (language == null)
+      throw new NullPointerException("Cannot set a null value as the default language.");
+
+    MultilingualText.defaultLanguage = language;
+  }
+
+  public static void setLanguagePreference(String[] languagePreference) {
+    if (languagePreference == null)
+      throw new NullPointerException("Cannot set a null preference array.");
+
+    MultilingualText.languagePreference = languagePreference;
+  }
 
   public Map<String, String> getMap() {
     return Map.copyOf(textMap);
@@ -83,20 +97,6 @@ public class MultilingualText {
 
   public void removeAll() {
     textMap.clear();
-  }
-
-  public static void setDefaultLanguage(String language) {
-    if (language == null)
-      throw new NullPointerException("Cannot set a null value as the default language.");
-
-    MultilingualText.defaultLanguage = language;
-  }
-
-  public static void setLanguagePreference(String[] languagePreference) {
-    if (languagePreference == null)
-      throw new NullPointerException("Cannot set a null preference array.");
-
-    MultilingualText.languagePreference = languagePreference;
   }
 
   @Override

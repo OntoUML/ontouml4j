@@ -1,19 +1,18 @@
 package org.ontouml.model;
 
+import java.util.ArrayList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.Stereotype;
 
-import java.util.ArrayList;
-
 /**
- * A model element that represents the generalization of a specific classifier into a general classifier. When read in
- * the inverse direction, a generalization is referred to as a specialization.
- * Examples include the generalization of a specific class "Student" into a general class "Person," and the
- * generalization of a specific relation "close friends with" into a general relation "friends with".
- * A generalization can only connect two classifiers of the same type, i.e., it can either connect two class elements
- * or two relation elements.
+ * A model element that represents the generalization of a specific classifier into a general
+ * classifier. When read in the inverse direction, a generalization is referred to as a
+ * specialization. Examples include the generalization of a specific class "Student" into a general
+ * class "Person," and the generalization of a specific relation "close friends with" into a general
+ * relation "friends with". A generalization can only connect two classifiers of the same type,
+ * i.e., it can either connect two class elements or two relation elements.
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -22,8 +21,8 @@ public class Generalization extends ModelElement {
   private Classifier<?, ?> general;
   private Classifier<?, ?> specific;
 
-    public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
-          String id, MultilingualText name, Classifier<T, S> specific, Classifier<T, S> general) {
+  public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
+      String id, MultilingualText name, Classifier<T, S> specific, Classifier<T, S> general) {
     super(id, name, new ArrayList<>());
     setGeneral(general);
     setSpecific(specific);

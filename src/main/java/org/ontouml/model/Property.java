@@ -1,14 +1,13 @@
 package org.ontouml.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.PropertyStereotype;
 import org.ontouml.model.utils.AggregationKind;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * A decoratable element that represents an attribute of a class, or one end of a relation. Examples
@@ -91,7 +90,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
     return "Property";
   }
 
-    @Override
+  @Override
   public void setStereotype(String stereotypeName) {
     Optional<PropertyStereotype> stereotype = PropertyStereotype.findByName(stereotypeName);
 
@@ -109,6 +108,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
   public void setCardinality(String cardinality) {
     this.cardinality.setValue(cardinality);
   }
+
   public Optional<Classifier<?, ?>> getPropertyType() {
     return Optional.ofNullable(propertyType);
   }
