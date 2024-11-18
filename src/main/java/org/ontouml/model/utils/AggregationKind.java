@@ -22,7 +22,4 @@ public enum AggregationKind {
         .findFirst();
   }
 
-  public String getName() {
-    return name;
-  }
 }
