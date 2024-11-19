@@ -1,6 +1,7 @@
 package org.ontouml.model;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -14,6 +15,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class NamedElement extends OntoumlElement {
+
   /** Identifies the agents who contributed to the creation of the named element. */
   List<Resource> creators;
 
@@ -49,6 +51,57 @@ public abstract class NamedElement extends OntoumlElement {
     super(id);
     this.name = name;
     this.alternativeNames = alternativeNames;
+  }
+  
+  public Optional<String> getNameIn(String language) {
+    return name.getText(language);
+  }
+
+  public Optional<String> getFirstName() {
+    if (name == null) {
+      return Optional.empty();
+    }
+    return name.getText();
+  }
+
+  public void addName(String languageTag, String value) {
+    this.name.putText(languageTag, value);
+  }
+
+  public void addName(String value) {
+    this.name.putText(value);
+  }
+
+  public void removeNameIn(String languageTag) {
+    this.name.removeTextIn(languageTag);
+  }
+
+  public void removeAllNames() {
+    this.name.removeAll();
+  }
+
+  public Optional<String> getDescriptionIn(String language) {
+    return description.getText(language);
+  }
+
+  public Optional<String> getFirstDescription() {
+    return description.getText();
+  }
+
+  public void addDescription(String languageTag, String value) {
+    this.description.putText(languageTag, value);
+  }
+
+  public void addDescription(String value) {
+    this.description.putText(value);
+  }
+
+  public void removeDescription(String languageTag) {
+    this.description.removeTextIn(languageTag);
+  }
+
+  public void removeAllDescriptions() {
+    this.description.removeAll();
   }
 
   @Override

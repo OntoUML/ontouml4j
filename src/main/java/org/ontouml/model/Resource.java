@@ -1,12 +1,15 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.ontouml.deserialization.ResourceDeserializer;
+
 import java.net.URI;
 
 // import org.ontouml.deserialization.ResourceDeserializer;
 
 @JsonSerialize
-// @JsonDeserialize(using = ResourceDeserializer.class)
+@JsonDeserialize(using = ResourceDeserializer.class)
 public class Resource {
   MultilingualText name;
   URI uri;

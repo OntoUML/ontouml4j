@@ -3,6 +3,7 @@ package org.ontouml.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -32,6 +33,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * connected to the same classifiers or classifiers that are in the same generalization chain.
    * Subsetting can also be represented through a generalization between relations.
    */
+  @Builder.Default
   private List<Property> subsettedProperties = new ArrayList<>();
 
   /**
@@ -43,6 +45,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>Redefinition can only occur on the relation ends when both sides of the involved relations
    * are connected to the same classifiers or classifiers that are in the same generalization chain.
    */
+  @Builder.Default
   private List<Property> redefinedProperties = new ArrayList<>();
 
   /**
@@ -68,6 +71,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>This regular expression is not enforced to accommodate theoretical ranges as expression,
    * such as, "a..b".
    */
+  @Builder.Default
   private Cardinality cardinality = new Cardinality();
 
   /** Not used in JSON. Must be determined by ontouml4j library */

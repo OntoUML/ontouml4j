@@ -2,6 +2,7 @@ package org.ontouml.model.view;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -21,6 +22,7 @@ public class NaryRelationView extends View {
    *
    * <p>Restriction - minimum of 3 members
    */
+  @Builder.Default
   private List<View> members = new ArrayList<>();
 
   /**

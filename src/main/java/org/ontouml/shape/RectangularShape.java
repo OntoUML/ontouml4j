@@ -1,5 +1,6 @@
 package org.ontouml.shape;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -9,8 +10,14 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 public abstract class RectangularShape extends Shape {
+
+  @Builder.Default
   Point topLeft = new Point(0, 0);
+
+  @Builder.Default
   int width = 20;
+
+  @Builder.Default
   int height = 10;
 
   public RectangularShape(String id, int width, int height) {
