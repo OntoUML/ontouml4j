@@ -237,4 +237,8 @@ public final class Property extends Decoratable<PropertyStereotype> {
     Optional<Classifier> type = project.getElementById(this.propertyTypeId, Classifier.class);
     type.ifPresent(this::setPropertyType);
   }
+
+  public Optional<String> getCardinalityValue() {
+    return cardinality.getValue();
+  }
 }
