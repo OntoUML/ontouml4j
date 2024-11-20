@@ -24,7 +24,7 @@ public class GeneralizationDeserializer extends JsonDeserializer<Generalization>
     String general = DeserializerUtils.deserializeNullableStringField(root, "general");
     gen.setGeneralId(general);
 
-    String specific = DeserializerUtils.deserializeNullableStringField(root, "general");
+    String specific = DeserializerUtils.deserializeNullableStringField(root, "specific");
     gen.setSpecificId(specific);
 
     return gen;
