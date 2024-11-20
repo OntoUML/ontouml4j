@@ -3,6 +3,7 @@ package org.ontouml.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.PackageDeserializer;
@@ -19,16 +20,23 @@ import org.ontouml.deserialization.PackageDeserializer;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = PackageDeserializer.class)
-public class Package extends ModelElement {
+public class Package extends PackageableElement {
 
   /** List the ids of the contents of a package */
-  List<String> contentIds = new ArrayList<>();
+  @Builder.Default List<String> contentIds = new ArrayList<>();
 
   /** Identifies the contents of a package element. */
-  List<PackageableElement> contents = new ArrayList<>();
+  @Builder.Default List<PackageableElement> contents = new ArrayList<>();
 
   @Override
   public String getType() {
     return "Package";
+  }
+
+  public void buildAllReferences(Project project) {
+    for (String id : contentIds) {
+      Optional<OntoumlElement> element = project.getElementById(id);
+      element.ifPresent(item -> this.contents.add((PackageableElement) item));
+    }
   }
 }

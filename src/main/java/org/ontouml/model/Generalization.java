@@ -1,10 +1,13 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.GeneralizationDeserializer;
 import org.ontouml.model.stereotype.Stereotype;
 
 /**
@@ -18,8 +21,22 @@ import org.ontouml.model.stereotype.Stereotype;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class Generalization extends ModelElement {
+@JsonDeserialize(using = GeneralizationDeserializer.class)
+@NoArgsConstructor
+public class Generalization extends PackageableElement {
+  String generalId;
+  String specificId;
+
+  /**
+   * Identifies the general classifier in a generalization element. E.g., in the generalization of
+   * "Student" into "Person", "Person" is the general classifier.
+   */
   private Classifier<?, ?> general;
+
+  /**
+   * Identifies the general classifier in a generalization element. E.g., in the generalization of
+   * "Student" into "Person", "Student" is the specific classifier.
+   */
   private Classifier<?, ?> specific;
 
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
@@ -55,5 +72,25 @@ public class Generalization extends ModelElement {
   @Override
   public String getType() {
     return "Generalization";
+  }
+
+  public void buildAllReferences(Project project) {
+    Optional<Classifier> general = project.getElementById(generalId, Classifier.class);
+
+    general.ifPresent(
+        gen -> {
+          if (gen instanceof Classifier) {
+            setGeneral((Classifier<?, ?>) gen);
+          }
+        });
+
+    Optional<ModelElement> specific = project.getElementById(specificId, ModelElement.class);
+
+    specific.ifPresent(
+        spec -> {
+          if (spec instanceof Classifier) {
+            setSpecific((Classifier<?, ?>) spec);
+          }
+        });
   }
 }

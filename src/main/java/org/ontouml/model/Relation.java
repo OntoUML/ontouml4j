@@ -2,6 +2,7 @@ package org.ontouml.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.RelationStereotype;
 
@@ -13,4 +14,5 @@ import org.ontouml.model.stereotype.RelationStereotype;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public abstract class Relation extends Classifier<Relation, RelationStereotype> {}

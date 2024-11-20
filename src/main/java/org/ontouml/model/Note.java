@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class Note extends ModelElement {
+public class Note extends PackageableElement {
 
   /** Determines the contents of a note using a language string. */
   private String text;

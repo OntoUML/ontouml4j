@@ -8,7 +8,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class Anchor extends ModelElement {
+public class Anchor extends PackageableElement {
   /** Identifies the note the anchor connects. */
   private Note note;
 

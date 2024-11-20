@@ -1,13 +1,13 @@
 package org.ontouml.model;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.OntoumlUtils;
+import org.ontouml.deserialization.GeneralizationSetDeserializer;
 
 /**
  * A model element that contains an annotation about the ontology or some of its elements. A note
@@ -17,7 +17,9 @@ import org.ontouml.OntoumlUtils;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-public class GeneralizationSet extends ModelElement {
+@NoArgsConstructor
+@JsonDeserialize(using = GeneralizationSetDeserializer.class)
+public class GeneralizationSet extends PackageableElement {
   /**
    * Determines whether the specific classifiers in the generalization set have disjoint extensions.
    * Examples include the generalization set involving "Child" and "Adult" generalized into
@@ -35,7 +37,9 @@ public class GeneralizationSet extends ModelElement {
   private boolean isComplete;
 
   /** Identifies all generalizations that are involved by the generalization set. */
-  private Set<Generalization> generalizations;
+  private Set<Generalization> generalizations = new HashSet<>();
+
+  private List<String> generalizationIds = new ArrayList<>();
 
   /**
    * Identifies the high-order class that classifies (i.e., is instantiated by) every specific class
@@ -45,6 +49,7 @@ public class GeneralizationSet extends ModelElement {
    * involving exclusively classes.
    */
   private Class categorizer;
+  private String categorizerId;
 
   public boolean isDisjoint() {
     return isDisjoint;
@@ -85,5 +90,20 @@ public class GeneralizationSet extends ModelElement {
   @Override
   public String getType() {
     return "GeneralizationSet";
+  }
+
+   public void buildAllReferences(Project project) {
+    Optional<Class> categorizer = project.getElementById(categorizerId, Class.class);
+    categorizer.ifPresent(this::setCategorizer);
+
+    this.generalizationIds.forEach(generalizationId -> {
+      Optional<Generalization> generalization = project.getElementById(generalizationId, Generalization.class);
+      generalization.ifPresent(this::addGeneralization);
+    });
+  }
+
+  @Override
+  public String toString() {
+    return "GeneralizationSet{" + "name=" + getName() + ", generalizations=" + generalizations + '}';
   }
 }

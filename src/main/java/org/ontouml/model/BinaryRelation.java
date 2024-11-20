@@ -1,8 +1,11 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.BinaryRelationDeserializer;
 import org.ontouml.model.stereotype.RelationStereotype;
 
 import java.util.Optional;
@@ -18,6 +21,8 @@ import java.util.Optional;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@NoArgsConstructor
+@JsonDeserialize(using = BinaryRelationDeserializer.class)
 public class BinaryRelation extends Relation {
   @Override
   public String getType() {

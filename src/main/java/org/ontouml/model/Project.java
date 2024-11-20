@@ -39,6 +39,8 @@ public class Project extends NamedElement {
   @Builder.Default private Map<String, Generalization> generalizations = new HashMap<>();
   @Builder.Default private List<View> diagrams = new ArrayList<>();
 
+  private Map<String, OntoumlElement> allElements;
+
   @Override
   public String getType() {
     return "Project";
@@ -109,6 +111,22 @@ public class Project extends NamedElement {
     return this.generalizationSets.values();
   }
 
+  public Map<String, OntoumlElement> getAllElements() {
+    return this.getElementMap();
+  }
+
+  /**
+   * This method is less efficient because it does not take into account the class of the element
+   *
+   * @param id - The id of the element
+   */
+  public Optional<OntoumlElement> getElementById(String id) {
+    if (this.allElements == null) {
+      this.allElements = this.getElementMap();
+    }
+    return Optional.ofNullable(this.allElements.get(id));
+  }
+
   public <T extends OntoumlElement> Optional<T> getElementById(String id, java.lang.Class<T> type) {
     if (type == Class.class) {
       return Optional.ofNullable(type.cast(this.classes.get(id)));
@@ -128,7 +146,10 @@ public class Project extends NamedElement {
       Map<String, Classifier> classififers = new HashMap<>(this.classes);
       classififers.putAll(this.relations);
       return Optional.ofNullable(type.cast(classififers.get(id)));
-    } else {
+    } else if (type == ModelElement.class) {
+      return Optional.ofNullable(type.cast(this.getElementMap().get(id)));
+    }
+    else {
       return Optional.empty();
     }
   }

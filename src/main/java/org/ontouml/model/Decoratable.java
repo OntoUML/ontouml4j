@@ -20,7 +20,7 @@ import org.ontouml.model.stereotype.Stereotype;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class Decoratable<S extends Stereotype> extends ModelElement {
+public abstract class Decoratable<S extends Stereotype> extends PackageableElement {
 
   /** Determines a custom stereotype, not necessarily compliant to UFO. */
   private String customStereotype;

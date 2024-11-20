@@ -25,8 +25,8 @@ public class ReferenceResolver {
         }
 
         for (GeneralizationSet gs : project.getAllGeneralizationSets()) {
-          resolveCategorizer(elementMap, gs);
-          resolveGeneralizations(elementMap, gs);
+//          resolveCategorizer(elementMap, gs);
+//          resolveGeneralizations(elementMap, gs);
         }
 
 //        for (Diagram diagram : project.getDiagrams()) {
@@ -44,6 +44,9 @@ public class ReferenceResolver {
 
         buildPropertyReferences(project);
         buildClassifierReferences(project);
+        buildPackageReferences(project);
+        buildGeneralizationReferences(project);
+        buildGeneralizationSetReferences(project);
   }
 
 //    private static void resolveOwner(Map<String, OntoumlElement> elementMap, Diagram diagram) {
@@ -187,5 +190,29 @@ public class ReferenceResolver {
    */
   private static void buildPropertyReferences(Project project) {
         project.getAllProperties().forEach(clazz -> clazz.buildAllReferences(project));
+  }
+
+  /**
+   * This method is responsible for building the references for all elements in the Packages
+   * @param project - the parsed project
+   */
+  private static void buildPackageReferences(Project project) {
+    project.getPackages().values().forEach(pkg -> pkg.buildAllReferences(project));
+  }
+
+   /**
+   * This method is responsible for building the references for all elements in the Generalization
+   * @param project - the parsed project
+   */
+  private static void buildGeneralizationReferences(Project project) {
+    project.getGeneralizations().values().forEach(gen -> gen.buildAllReferences(project));
+  }
+
+     /**
+   * This method is responsible for building the references for all elements in the Generalization
+   * @param project - the parsed project
+   */
+  private static void buildGeneralizationSetReferences(Project project) {
+    project.getGeneralizationSets().values().forEach(gen -> gen.buildAllReferences(project));
   }
 }
