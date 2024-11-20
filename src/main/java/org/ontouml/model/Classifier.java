@@ -1,8 +1,13 @@
 package org.ontouml.model;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.Stereotype;
 
@@ -13,8 +18,10 @@ import org.ontouml.model.stereotype.Stereotype;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotype>
-    extends PackageableElement {
+    extends Decoratable<S> {
 
   /**
    * Determines whether the classifier can have direct instances using a boolean. Abstract
@@ -28,5 +35,42 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
    * attributes when contained by classes, and relation ends when contained by relations. In the
    * case of relations, the properties array must be ordered.
    */
-  private List<String> properties;
+  List<Property> properties = new ArrayList<>();
+
+  public Classifier(String id, MultilingualText name, S ontoumlStereotype) {
+    super(id, name, ontoumlStereotype);
+  }
+
+  public Classifier(String id, MultilingualText name, String stereotypeName) {
+    super(id, name, stereotypeName);
+  }
+
+  public void setProperties(Collection<String> properties) {
+    this.properties.clear();
+
+    if (properties != null) properties.forEach(this::addProperty);
+  }
+
+  public void addProperty(String propertyId) {
+    if (propertyId != null) {
+      properties.add(new Property(propertyId));
+    }
+  }
+
+  public void addProperty(Property property) {
+    if (property != null) {
+      property.setContainer(this);
+      properties.add(property);
+    }
+  }
+
+  public void resolvePropertyReferences(Project project) {
+    List<Property> newProperties = new ArrayList<>();
+    this.properties.forEach(
+        property -> {
+          Optional<Property> propertyInProject = project.getPropertyById(property.getId());
+          propertyInProject.ifPresent(newProperties::add);
+        });
+    this.properties = newProperties;
+  }
 }

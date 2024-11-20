@@ -1,6 +1,7 @@
 package org.ontouml.model;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -41,6 +42,14 @@ public class Generalization extends ModelElement {
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
       Classifier<T, S> specific, Classifier<T, S> general) {
     this(null, (MultilingualText) null, specific, general);
+  }
+  
+  public Optional<Classifier<?, ?>> getGeneral() {
+    return Optional.ofNullable(general);
+  }
+
+  public Optional<Classifier<?, ?>> getSpecific() {
+    return Optional.ofNullable(specific);
   }
 
   @Override

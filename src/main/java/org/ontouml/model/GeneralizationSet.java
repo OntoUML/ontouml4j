@@ -1,9 +1,13 @@
 package org.ontouml.model;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.OntoumlUtils;
 
 /**
  * A model element that contains an annotation about the ontology or some of its elements. A note
@@ -31,7 +35,7 @@ public class GeneralizationSet extends ModelElement {
   private boolean isComplete;
 
   /** Identifies all generalizations that are involved by the generalization set. */
-  private List<String> generalizations;
+  private Set<Generalization> generalizations;
 
   /**
    * Identifies the high-order class that classifies (i.e., is instantiated by) every specific class
@@ -41,6 +45,43 @@ public class GeneralizationSet extends ModelElement {
    * involving exclusively classes.
    */
   private Class categorizer;
+
+  public boolean isDisjoint() {
+    return isDisjoint;
+  }
+
+  public void setDisjoint(boolean disjoint) {
+    isDisjoint = disjoint;
+  }
+
+  public boolean isComplete() {
+    return isComplete;
+  }
+
+  public void setComplete(boolean complete) {
+    isComplete = complete;
+  }
+
+  public Optional<Class> getCategorizer() {
+    return Optional.ofNullable(categorizer);
+  }
+
+  public Set<Generalization> getGeneralizations() {
+    return new HashSet<>(generalizations);
+  }
+
+  public void setGeneralizations(Collection<Generalization> generalizations) {
+    this.generalizations.clear();
+    OntoumlUtils.addIfNotNull(this.generalizations, generalizations);
+  }
+
+  public void addGeneralization(Generalization generalization) {
+    if (generalization == null)
+      throw new NullPointerException("Cannot add a null generalization to the generalization set.");
+
+    this.generalizations.add(generalization);
+  }
+
 
   @Override
   public String getType() {

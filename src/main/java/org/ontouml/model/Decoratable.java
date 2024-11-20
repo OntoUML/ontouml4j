@@ -2,8 +2,10 @@ package org.ontouml.model;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.Stereotype;
 
@@ -16,6 +18,8 @@ import org.ontouml.model.stereotype.Stereotype;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class Decoratable<S extends Stereotype> extends ModelElement {
 
   /** Determines a custom stereotype, not necessarily compliant to UFO. */

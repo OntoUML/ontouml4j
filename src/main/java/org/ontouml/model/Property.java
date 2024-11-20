@@ -1,12 +1,12 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.PropertyDeserializer;
 import org.ontouml.model.stereotype.PropertyStereotype;
 import org.ontouml.model.utils.AggregationKind;
 
@@ -18,9 +18,13 @@ import org.ontouml.model.utils.AggregationKind;
  * within each property. For example, the value assigned to a property in an instance must be itself
  * an instance of the classifier in property type.
  */
+// @JsonSerialize(using = PropertySerializer.class)
+@JsonDeserialize(using = PropertyDeserializer.class)
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public final class Property extends Decoratable<PropertyStereotype> {
 
   /**
@@ -33,8 +37,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * connected to the same classifiers or classifiers that are in the same generalization chain.
    * Subsetting can also be represented through a generalization between relations.
    */
-  @Builder.Default
-  private List<Property> subsettedProperties = new ArrayList<>();
+  @Builder.Default private List<Property> subsettedProperties = new ArrayList<>();
 
   /**
    * Identifies the properties (relation ends) that provide redefinition constraints to the
@@ -45,8 +48,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>Redefinition can only occur on the relation ends when both sides of the involved relations
    * are connected to the same classifiers or classifiers that are in the same generalization chain.
    */
-  @Builder.Default
-  private List<Property> redefinedProperties = new ArrayList<>();
+  @Builder.Default private List<Property> redefinedProperties = new ArrayList<>();
 
   /**
    * Determines whether the property (a relation end) is a whole in a parthood (mereological)
@@ -71,8 +73,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>This regular expression is not enforced to accommodate theoretical ranges as expression,
    * such as, "a..b".
    */
-  @Builder.Default
-  private Cardinality cardinality = new Cardinality();
+  @Builder.Default private Cardinality cardinality = new Cardinality();
 
   /** Not used in JSON. Must be determined by ontouml4j library */
   private boolean isDerived;
@@ -88,6 +89,49 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   /** Identifies the classifier instantiated by the values assigned to the property. */
   private Classifier<?, ?> propertyType;
+
+  private String propertyTypeId;
+
+  public Property(
+      String id,
+      MultilingualText name,
+      PropertyStereotype ontoumlStereotype,
+      Classifier<?, ?> type) {
+    super(id, name, ontoumlStereotype);
+    setPropertyType(type);
+  }
+
+  public Property(String id, MultilingualText name, String stereotypeName, Classifier<?, ?> type) {
+    super(id, name, stereotypeName);
+    setPropertyType(type);
+  }
+
+  public Property(String id, MultilingualText name, Classifier<?, ?> type) {
+    this(id, name, (PropertyStereotype) null, type);
+  }
+
+  public Property(String id, String name, Classifier<?, ?> type) {
+    this(id, new MultilingualText(name), (PropertyStereotype) null, type);
+  }
+
+  public Property(String name, Classifier<?, ?> type) {
+    this(null, name, type);
+  }
+
+  public Property(Classifier<?, ?> type) {
+    this(null, null, (PropertyStereotype) null, type);
+
+    if (type != null && type.getFirstName().isPresent()) {
+      String propertyName = type.getFirstName().get().trim().toLowerCase();
+
+      addName(propertyName);
+    }
+  }
+
+  public Property(String id) {
+    this.setId(id);
+    this.setName(new MultilingualText());
+  }
 
   @Override
   public String getType() {
@@ -151,5 +195,46 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public boolean isRelationEnd() {
     return getContainer() instanceof Relation;
+  }
+
+  public void setSubsettedProperties(String[] subsettedProperties) {
+    this.subsettedProperties.clear();
+    if (subsettedProperties != null) {
+      for (String id : subsettedProperties) {
+        this.subsettedProperties.add(new Property(id));
+      }
+    }
+  }
+
+  public void setRedefinedProperties(String[] redefinedProperties) {
+    this.redefinedProperties.clear();
+    if (redefinedProperties != null) {
+      for (String id : redefinedProperties) {
+        this.redefinedProperties.add(new Property(id));
+      }
+    }
+  }
+
+  public void replaceSubsettedProperty(Property toReplace, Property replaceFor) {
+    int i = subsettedProperties.indexOf(toReplace);
+    if (i >= 0) {
+      subsettedProperties.set(i, replaceFor);
+    }
+  }
+
+  public void replaceRedefinedProperty(Property toReplace, Property replaceFor) {
+    int i = redefinedProperties.indexOf(toReplace);
+    if (i >= 0) {
+      redefinedProperties.set(i, replaceFor);
+    }
+  }
+
+  public Optional<AggregationKind> getAggregationKind() {
+    return Optional.ofNullable(aggregationKind);
+  }
+
+  public void buildAllReferences(Project project) {
+    Optional<Classifier> type = project.getElementById(this.propertyTypeId, Classifier.class);
+    type.ifPresent(this::setPropertyType);
   }
 }

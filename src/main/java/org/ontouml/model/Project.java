@@ -1,10 +1,7 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.ProjectDeserializer;
@@ -20,7 +17,7 @@ import org.ontouml.model.view.View;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-//@JsonSerialize(using = ProjectSerializer.class)
+// @JsonSerialize(using = ProjectSerializer.class)
 @JsonDeserialize(using = ProjectDeserializer.class)
 public class Project extends NamedElement {
   /** Contains the OntoUML elements that are part of the project. */
@@ -60,5 +57,78 @@ public class Project extends NamedElement {
             generalizations.put(element.getId(), (Generalization) element);
           }
         });
+  }
+
+  public List<OntoumlElement> getElements() {
+    List<OntoumlElement> elements = new ArrayList<>();
+
+    elements.addAll(classes.values().stream().toList());
+    elements.addAll(packages.values().stream().toList());
+    elements.addAll(relations.values().stream().toList());
+    elements.addAll(properties.values().stream().toList());
+    elements.addAll(literals.values().stream().toList());
+    elements.addAll(generalizationSets.values().stream().toList());
+    elements.addAll(generalizations.values().stream().toList());
+
+    return elements;
+  }
+
+  public Optional<Class> getClassById(String id) {
+    return Optional.ofNullable(this.classes.get(id));
+  }
+
+  public Map<String, OntoumlElement> getElementMap() {
+    Map<String, OntoumlElement> elementMap = new HashMap<>();
+
+    elementMap.putAll(classes);
+    elementMap.putAll(packages);
+    elementMap.putAll(relations);
+    elementMap.putAll(properties);
+    elementMap.putAll(literals);
+    elementMap.putAll(generalizationSets);
+    elementMap.putAll(generalizations);
+
+    return elementMap;
+  }
+
+  public Iterable<? extends Property> getAllProperties() {
+    return this.properties.values();
+  }
+
+  public Iterable<? extends Generalization> getAllGeneralizations() {
+    return this.generalizations.values();
+  }
+
+  public Iterable<? extends GeneralizationSet> getAllGeneralizationSets() {
+    return this.generalizationSets.values();
+  }
+
+  public <T extends OntoumlElement> Optional<T> getElementById(String id, java.lang.Class<T> type) {
+    if (type == Class.class) {
+      return Optional.ofNullable(type.cast(this.classes.get(id)));
+    } else if (type == Package.class) {
+      return Optional.ofNullable(type.cast(this.packages.get(id)));
+    } else if (type == Relation.class) {
+      return Optional.ofNullable(type.cast(this.relations.get(id)));
+    } else if (type == Property.class) {
+      return Optional.ofNullable(type.cast(this.properties.get(id)));
+    } else if (type == Literal.class) {
+      return Optional.ofNullable(type.cast(this.literals.get(id)));
+    } else if (type == GeneralizationSet.class) {
+      return Optional.ofNullable(type.cast(this.generalizationSets.get(id)));
+    } else if (type == Generalization.class) {
+      return Optional.ofNullable(type.cast(this.generalizations.get(id)));
+    } else if (type == Classifier.class) {
+      Map<String, Classifier> classififers = new HashMap<>(this.classes);
+      classififers.putAll(this.relations);
+      return Optional.ofNullable(type.cast(classififers.get(id)));
+    }
+    else {
+      return Optional.empty();
+    }
+  }
+
+  public Optional<Property> getPropertyById(String id) {
+    return Optional.ofNullable(this.properties.get(id));
   }
 }

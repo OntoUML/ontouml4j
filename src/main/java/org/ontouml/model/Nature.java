@@ -1,5 +1,7 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
@@ -64,5 +66,18 @@ public enum Nature {
 
   public boolean isExtrinsicMoment() {
     return EXTRINSIC_MOMENT_NATURES.contains(this);
+  }
+
+  @JsonCreator
+  public static Nature forValue(String value) {
+    return Stream.of(Nature.values())
+        .filter(nature -> nature.name.equalsIgnoreCase(value))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Invalid Nature value: " + value));
+  }
+
+  @JsonValue
+  public String toValue() {
+    return name;
   }
 }

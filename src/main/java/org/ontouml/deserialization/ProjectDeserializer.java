@@ -35,7 +35,7 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
     NamedElementDeserializer.deserialize(project, root, codec);
     deserializeMetaProperties(codec, project, root);
 
-//    this.deserializeContents(project, root);
+    this.deserializeContents(project, root);
 
 //    List<Diagram> diagrams =
 //        DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);

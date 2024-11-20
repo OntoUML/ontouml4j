@@ -3,6 +3,9 @@ package org.ontouml.model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.model.stereotype.RelationStereotype;
+
+import java.util.Optional;
 
 /**
  * A relation that defines the properties of a set of binary relations of the subject domain.
@@ -19,5 +22,14 @@ public class BinaryRelation extends Relation {
   @Override
   public String getType() {
     return "BinaryRelation";
+  }
+
+  @Override
+  public void setStereotype(String stereotypeName) {
+        Optional<RelationStereotype> stereotype = RelationStereotype.findByName(stereotypeName);
+
+    stereotype.ifPresentOrElse(
+        s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
+
   }
 }

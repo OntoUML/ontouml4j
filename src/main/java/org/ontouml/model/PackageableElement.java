@@ -1,10 +1,10 @@
 package org.ontouml.model;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
 @SuperBuilder
+@AllArgsConstructor
 public abstract class PackageableElement extends ModelElement {}
