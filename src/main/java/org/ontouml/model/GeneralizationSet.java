@@ -82,7 +82,6 @@ public class GeneralizationSet extends ModelElement {
     this.generalizations.add(generalization);
   }
 
-
   @Override
   public String getType() {
     return "GeneralizationSet";

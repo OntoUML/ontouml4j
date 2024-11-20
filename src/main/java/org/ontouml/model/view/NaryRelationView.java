@@ -22,8 +22,7 @@ public class NaryRelationView extends View {
    *
    * <p>Restriction - minimum of 3 members
    */
-  @Builder.Default
-  private List<View> members = new ArrayList<>();
+  @Builder.Default private List<View> members = new ArrayList<>();
 
   /**
    * Identifies the diamond shape that renders the joining of all paths of the n-ary relation in the

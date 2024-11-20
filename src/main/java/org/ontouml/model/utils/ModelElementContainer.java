@@ -1,17 +1,16 @@
 package org.ontouml.model.utils;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.ontouml.model.*;
 import org.ontouml.model.Class;
 import org.ontouml.model.Package;
 import org.ontouml.model.stereotype.ClassStereotype;
 import org.ontouml.model.stereotype.PropertyStereotype;
 import org.ontouml.model.stereotype.RelationStereotype;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 public interface ModelElementContainer extends ElementContainer {
 

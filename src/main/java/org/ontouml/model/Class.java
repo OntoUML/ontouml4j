@@ -22,7 +22,7 @@ import org.ontouml.model.stereotype.ClassStereotype;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonDeserialize(using =  ClassDeserializer.class)
+@JsonDeserialize(using = ClassDeserializer.class)
 public class Class extends Classifier<Class, ClassStereotype> {
 
   /** Identifies the literals of an enumeration class. */
@@ -196,15 +196,16 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
   public void setRestrictedTo(Collection<String> restrictedTo) {
     this.restrictedTo.clear();
-    restrictedTo.forEach(item -> {
-      Nature nature = Nature.forValue(item);
-      if (nature != null) {
-        this.restrictedTo.add(nature);
-      }
-    });
+    restrictedTo.forEach(
+        item -> {
+          Nature nature = Nature.forValue(item);
+          if (nature != null) {
+            this.restrictedTo.add(nature);
+          }
+        });
   }
 
-    public void buildAllReferences(Project project) {
+  public void buildAllReferences(Project project) {
     this.buildLiteralsReferences(project);
     this.buildPropertiesReferences(project);
   }

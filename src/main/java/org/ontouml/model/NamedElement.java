@@ -52,7 +52,7 @@ public abstract class NamedElement extends OntoumlElement {
     this.name = name;
     this.alternativeNames = alternativeNames;
   }
-  
+
   public Optional<String> getNameIn(String language) {
     return name.getText(language);
   }

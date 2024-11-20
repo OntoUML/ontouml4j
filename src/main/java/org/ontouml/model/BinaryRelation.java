@@ -26,10 +26,9 @@ public class BinaryRelation extends Relation {
 
   @Override
   public void setStereotype(String stereotypeName) {
-        Optional<RelationStereotype> stereotype = RelationStereotype.findByName(stereotypeName);
+    Optional<RelationStereotype> stereotype = RelationStereotype.findByName(stereotypeName);
 
     stereotype.ifPresentOrElse(
         s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
-
   }
 }

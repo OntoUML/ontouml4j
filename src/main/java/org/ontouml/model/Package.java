@@ -1,8 +1,11 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.PackageDeserializer;
 
 /**
  * A model element that can group other model elements that are referred to as "packageable
@@ -14,9 +17,15 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@NoArgsConstructor
+@JsonDeserialize(using = PackageDeserializer.class)
 public class Package extends ModelElement {
+
+  /** List the ids of the contents of a package */
+  List<String> contentIds = new ArrayList<>();
+
   /** Identifies the contents of a package element. */
-  List<String> contents;
+  List<PackageableElement> contents = new ArrayList<>();
 
   @Override
   public String getType() {

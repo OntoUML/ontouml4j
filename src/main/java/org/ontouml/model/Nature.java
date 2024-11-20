@@ -48,6 +48,14 @@ public enum Nature {
     return Stream.of(Nature.values()).filter(nature -> nature.getName().equals(name)).findFirst();
   }
 
+  @JsonCreator
+  public static Nature forValue(String value) {
+    return Stream.of(Nature.values())
+        .filter(nature -> nature.name.equalsIgnoreCase(value))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Invalid Nature value: " + value));
+  }
+
   public boolean isEndurant() {
     return ENDURANT_NATURES.contains(this);
   }
@@ -66,14 +74,6 @@ public enum Nature {
 
   public boolean isExtrinsicMoment() {
     return EXTRINSIC_MOMENT_NATURES.contains(this);
-  }
-
-  @JsonCreator
-  public static Nature forValue(String value) {
-    return Stream.of(Nature.values())
-        .filter(nature -> nature.name.equalsIgnoreCase(value))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("Invalid Nature value: " + value));
   }
 
   @JsonValue

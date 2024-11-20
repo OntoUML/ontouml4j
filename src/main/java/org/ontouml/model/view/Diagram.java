@@ -1,12 +1,11 @@
 package org.ontouml.model.view;
 
+import java.util.List;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.ModelElement;
 import org.ontouml.model.NamedElement;
-
-import java.util.List;
 
 /**
  * A named element that contains the visual representation (i.e., the concrete syntax) of an OntoUML

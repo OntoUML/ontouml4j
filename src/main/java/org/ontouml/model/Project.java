@@ -20,10 +20,16 @@ import org.ontouml.model.view.View;
 // @JsonSerialize(using = ProjectSerializer.class)
 @JsonDeserialize(using = ProjectDeserializer.class)
 public class Project extends NamedElement {
+
   /** Contains the OntoUML elements that are part of the project. */
   @Builder.Default ProjectMetaProperties metaProperties = new ProjectMetaProperties();
 
+  /**
+   * Identifies the root package of a project (the package containing all other model elements of
+   * the project) if present.
+   */
   private Package root;
+
   @Builder.Default private Map<String, Class> classes = new HashMap<>();
   @Builder.Default private Map<String, Package> packages = new HashMap<>();
   @Builder.Default private Map<String, Relation> relations = new HashMap<>();
@@ -36,6 +42,20 @@ public class Project extends NamedElement {
   @Override
   public String getType() {
     return "Project";
+  }
+
+  public List<OntoumlElement> getElements() {
+    List<OntoumlElement> elements = new ArrayList<>();
+
+    elements.addAll(classes.values().stream().toList());
+    elements.addAll(packages.values().stream().toList());
+    elements.addAll(relations.values().stream().toList());
+    elements.addAll(properties.values().stream().toList());
+    elements.addAll(literals.values().stream().toList());
+    elements.addAll(generalizationSets.values().stream().toList());
+    elements.addAll(generalizations.values().stream().toList());
+
+    return elements;
   }
 
   public void setElements(List<ModelElement> elements) {
@@ -57,20 +77,6 @@ public class Project extends NamedElement {
             generalizations.put(element.getId(), (Generalization) element);
           }
         });
-  }
-
-  public List<OntoumlElement> getElements() {
-    List<OntoumlElement> elements = new ArrayList<>();
-
-    elements.addAll(classes.values().stream().toList());
-    elements.addAll(packages.values().stream().toList());
-    elements.addAll(relations.values().stream().toList());
-    elements.addAll(properties.values().stream().toList());
-    elements.addAll(literals.values().stream().toList());
-    elements.addAll(generalizationSets.values().stream().toList());
-    elements.addAll(generalizations.values().stream().toList());
-
-    return elements;
   }
 
   public Optional<Class> getClassById(String id) {
@@ -122,8 +128,7 @@ public class Project extends NamedElement {
       Map<String, Classifier> classififers = new HashMap<>(this.classes);
       classififers.putAll(this.relations);
       return Optional.ofNullable(type.cast(classififers.get(id)));
-    }
-    else {
+    } else {
       return Optional.empty();
     }
   }

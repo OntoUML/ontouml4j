@@ -21,5 +21,4 @@ public enum AggregationKind {
         .filter(nature -> nature.getName().equals(name))
         .findFirst();
   }
-
 }

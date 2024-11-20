@@ -43,7 +43,7 @@ public class Generalization extends ModelElement {
       Classifier<T, S> specific, Classifier<T, S> general) {
     this(null, (MultilingualText) null, specific, general);
   }
-  
+
   public Optional<Classifier<?, ?>> getGeneral() {
     return Optional.ofNullable(general);
   }
