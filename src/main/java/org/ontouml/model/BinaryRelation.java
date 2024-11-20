@@ -1,6 +1,9 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -9,10 +12,6 @@ import org.ontouml.deserialization.BinaryRelationDeserializer;
 import org.ontouml.model.stereotype.ClassStereotype;
 import org.ontouml.model.stereotype.RelationStereotype;
 import org.ontouml.model.stereotype.Stereotype;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * A relation that defines the properties of a set of binary relations of the subject domain.

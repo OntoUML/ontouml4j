@@ -19,7 +19,7 @@ public abstract class ModelElement extends NamedElement {
    * Determines custom properties of the model element using key-value pairs. In UML, for instance,
    * this custom properties are represented through tagged values.
    */
-  Map<String, java.lang.Object> customProperties;
+  Map<String, Object> customProperties;
 
   public ModelElement(String id, MultilingualText name) {
     super(id, name);

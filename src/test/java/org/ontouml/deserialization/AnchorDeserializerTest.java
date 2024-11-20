@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.ontouml.model.Note;
+import org.ontouml.model.Anchor;
 import org.ontouml.model.Project;
 import org.ontouml.utils.ResourceGetter;
 
-public class NoteDeserializerTest {
+public class AnchorDeserializerTest {
   static ObjectMapper mapper;
   static ResourceGetter resourceGetter;
-  static Note note;
+  static Anchor anchor;
 
   @BeforeAll
   static void setUp() throws IOException {
@@ -24,20 +24,32 @@ public class NoteDeserializerTest {
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     resourceGetter = new ResourceGetter();
 
-    File jsonFile = resourceGetter.getJsonFromDeserialization("note.allfields.ontouml.json");
+    File jsonFile = resourceGetter.getJsonFromDeserialization("anchor.allfields.ontouml.json");
     Project project = mapper.readValue(jsonFile, Project.class);
-    Optional<Note> note1 = project.getElementById("note_1", Note.class);
-    note1.ifPresent(aNote -> note = aNote);
+    Optional<Anchor> anchor1 = project.getElementById("anchor_1", Anchor.class);
+    anchor1.ifPresent(aAnchor -> anchor = aAnchor);
   }
 
   @Test
   void shouldDeserializeId() {
-    assertThat(note.getId()).isEqualTo("note_1");
+    assertThat(anchor.getId()).isEqualTo("anchor_1");
   }
 
   @Test
   void shouldDeserializeName() {
-    assertThat(note.getFirstName().isPresent() ? note.getFirstName().get() : null)
-        .isEqualTo("My Note");
+    assertThat(anchor.getFirstName().isPresent() ? anchor.getFirstName().get() : null)
+        .isEqualTo("My Anchor");
+  }
+
+  @Test
+  void shouldDeserializeNote() {
+    assertThat(anchor.getNote()).isNotNull();
+    assertThat(anchor.getNote().getId()).isEqualTo("note_1");
+  }
+
+  @Test
+  void shouldDeserializeElement() {
+    assertThat(anchor.getElement()).isNotNull();
+    assertThat(anchor.getElement().getId()).isEqualTo("class_1");
   }
 }

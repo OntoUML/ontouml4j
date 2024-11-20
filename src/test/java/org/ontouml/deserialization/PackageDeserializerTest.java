@@ -100,11 +100,11 @@ public class PackageDeserializerTest {
     assertThat(element.getId()).isEqualTo("pk2");
     assertThat(element.getFirstName()).hasValue("Subpackage");
   }
-  
-//
-//  @Test
-//  void shouldResolveContainer() {
-//    PackageableElement element = pkg.getContents().get(0);
-//    assertThat(element.getContainer()).isEqualTo(pkg);
-//  }
+
+  //
+  //  @Test
+  //  void shouldResolveContainer() {
+  //    PackageableElement element = pkg.getContents().get(0);
+  //    assertThat(element.getContainer()).isEqualTo(pkg);
+  //  }
 }

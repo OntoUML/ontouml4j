@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.Map;
 
 public class ModelElementDeserializer {
-    public static void deserialize(ModelElement element, JsonNode root, ObjectCodec codec)
+  public static void deserialize(ModelElement element, JsonNode root, ObjectCodec codec)
       throws IOException {
 
     JsonNode node = root.get("customProperties");

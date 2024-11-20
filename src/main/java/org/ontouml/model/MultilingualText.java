@@ -1,9 +1,8 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.ontouml.deserialization.MultilingualTextDeserializer;
-
 import java.util.*;
+import org.ontouml.deserialization.MultilingualTextDeserializer;
 
 // @JsonSerialize(using = MultilingualTextSerializer.class)
 @JsonDeserialize(using = MultilingualTextDeserializer.class)

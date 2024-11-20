@@ -1,18 +1,17 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth8.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
+import java.io.File;
+import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Property;
 import org.ontouml.model.stereotype.PropertyStereotype;
 import org.ontouml.model.utils.AggregationKind;
 import org.ontouml.utils.ResourceGetter;
-
-import java.io.File;
-import java.io.IOException;
-
-import static com.google.common.truth.Truth8.assertThat;
 
 class PropertyDeserializerTest {
 

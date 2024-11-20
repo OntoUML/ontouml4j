@@ -1,16 +1,15 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth8;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.MultilingualText;
 
-import java.io.IOException;
-
-import static com.google.common.truth.Truth.assertThat;
-
 public class MultilingualTextDeserializerTest {
-    @Test
+  @Test
   void deserializeObject() throws IOException {
     ObjectMapper mapper = new ObjectMapper();
 

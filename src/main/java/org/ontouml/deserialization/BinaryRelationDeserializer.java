@@ -6,8 +6,9 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
 import org.ontouml.model.BinaryRelation;
+
+import java.io.IOException;
 
 public class BinaryRelationDeserializer extends JsonDeserializer<BinaryRelation> {
   @Override

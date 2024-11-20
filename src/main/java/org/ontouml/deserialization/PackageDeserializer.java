@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.List;
-import org.ontouml.model.*;
 import org.ontouml.model.Package;
 
 public class PackageDeserializer extends JsonDeserializer<Package> {

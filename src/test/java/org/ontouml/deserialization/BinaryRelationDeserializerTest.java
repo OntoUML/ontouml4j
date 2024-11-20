@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.ontouml.model.*;
+import org.ontouml.model.BinaryRelation;
 import org.ontouml.model.Class;
+import org.ontouml.model.Classifier;
 import org.ontouml.model.Project;
+import org.ontouml.model.Property;
 import org.ontouml.model.stereotype.RelationStereotype;
 import org.ontouml.utils.ResourceGetter;
 
@@ -30,7 +32,8 @@ class BinaryRelationDeserializerTest {
 
     try {
       project = mapper.readValue(jsonFile, Project.class);
-      Optional<BinaryRelation> optionalBinaryRelation = project.getElementById("r1", BinaryRelation.class);
+      Optional<BinaryRelation> optionalBinaryRelation =
+          project.getElementById("r1", BinaryRelation.class);
       optionalBinaryRelation.ifPresent(value -> relation = value);
     } catch (IOException e) {
       e.printStackTrace();

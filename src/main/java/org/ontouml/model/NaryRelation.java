@@ -1,11 +1,10 @@
 package org.ontouml.model;
 
+import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.RelationStereotype;
-
-import java.util.Optional;
 
 /**
  * A relation that defines the properties of a set of relations of the subject domain that connect

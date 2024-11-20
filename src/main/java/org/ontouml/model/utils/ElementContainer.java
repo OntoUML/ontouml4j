@@ -1,9 +1,10 @@
 package org.ontouml.model.utils;
 
+import org.ontouml.model.OntoumlElement;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.ontouml.model.OntoumlElement;
 
 public interface ElementContainer {
   List<OntoumlElement> getContents();

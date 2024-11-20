@@ -83,4 +83,3 @@ class GeneralizationSetDeserializerTest {
     assertThat(categorizer.get().getId()).isEqualTo("class_1");
   }
 }
-

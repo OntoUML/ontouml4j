@@ -29,6 +29,7 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
    * case of relations, the properties array must be ordered.
    */
   List<Property> properties = new ArrayList<>();
+
   /**
    * Determines whether the classifier can have direct instances using a boolean. Abstract
    * classifiers can only have instances when these are instances of some other classifier that is

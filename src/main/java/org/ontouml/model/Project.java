@@ -38,6 +38,7 @@ public class Project extends NamedElement {
   @Builder.Default private Map<String, GeneralizationSet> generalizationSets = new HashMap<>();
   @Builder.Default private Map<String, Generalization> generalizations = new HashMap<>();
   @Builder.Default private Map<String, Note> notes = new HashMap<>();
+  @Builder.Default private Map<String, Anchor> anchors = new HashMap<>();
   @Builder.Default private List<View> diagrams = new ArrayList<>();
 
   private Map<String, OntoumlElement> allElements;
@@ -58,6 +59,7 @@ public class Project extends NamedElement {
     elements.addAll(generalizationSets.values().stream().toList());
     elements.addAll(generalizations.values().stream().toList());
     elements.addAll(notes.values().stream().toList());
+    elements.addAll(anchors.values().stream().toList());
 
     return elements;
   }
@@ -81,6 +83,8 @@ public class Project extends NamedElement {
             generalizations.put(element.getId(), (Generalization) element);
           } else if (element instanceof Note) {
             notes.put(element.getId(), (Note) element);
+          } else if (element instanceof Anchor) {
+            anchors.put(element.getId(), (Anchor) element);
           }
         });
   }
@@ -100,6 +104,7 @@ public class Project extends NamedElement {
     elementMap.putAll(generalizationSets);
     elementMap.putAll(generalizations);
     elementMap.putAll(notes);
+    elementMap.putAll(anchors);
 
     return elementMap;
   }
@@ -151,6 +156,8 @@ public class Project extends NamedElement {
       return Optional.ofNullable(type.cast(this.generalizations.get(id)));
     } else if (type == Note.class) {
       return Optional.ofNullable(type.cast(this.notes.get(id)));
+    } else if (type == Anchor.class) {
+      return Optional.ofNullable(type.cast(this.anchors.get(id)));
     } else if (type == Classifier.class) {
       Map<String, Classifier> classififers = new HashMap<>(this.classes);
       classififers.putAll(this.relations);
@@ -164,5 +171,9 @@ public class Project extends NamedElement {
 
   public Optional<Property> getPropertyById(String id) {
     return Optional.ofNullable(this.properties.get(id));
+  }
+
+  public Optional<Relation> getRelationById(String id) {
+    return Optional.ofNullable(this.relations.get(id));
   }
 }

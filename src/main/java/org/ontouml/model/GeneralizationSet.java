@@ -49,6 +49,7 @@ public class GeneralizationSet extends PackageableElement {
    * involving exclusively classes.
    */
   private Class categorizer;
+
   private String categorizerId;
 
   public boolean isDisjoint() {
@@ -92,18 +93,25 @@ public class GeneralizationSet extends PackageableElement {
     return "GeneralizationSet";
   }
 
-   public void buildAllReferences(Project project) {
+  public void buildAllReferences(Project project) {
     Optional<Class> categorizer = project.getElementById(categorizerId, Class.class);
     categorizer.ifPresent(this::setCategorizer);
 
-    this.generalizationIds.forEach(generalizationId -> {
-      Optional<Generalization> generalization = project.getElementById(generalizationId, Generalization.class);
-      generalization.ifPresent(this::addGeneralization);
-    });
+    this.generalizationIds.forEach(
+        generalizationId -> {
+          Optional<Generalization> generalization =
+              project.getElementById(generalizationId, Generalization.class);
+          generalization.ifPresent(this::addGeneralization);
+        });
   }
 
   @Override
   public String toString() {
-    return "GeneralizationSet{" + "name=" + getName() + ", generalizations=" + generalizations + '}';
+    return "GeneralizationSet{"
+        + "name="
+        + getName()
+        + ", generalizations="
+        + generalizations
+        + '}';
   }
 }

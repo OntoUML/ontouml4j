@@ -1,10 +1,8 @@
 package org.ontouml.deserialization;
 
-import static com.google.common.truth.Truth8.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.truth.Truth;
-import com.google.common.truth.Truth8;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -36,24 +34,25 @@ class GeneralizationDeserializerTest {
 
     } catch (IOException e) {
       e.printStackTrace();
+      throw new IOException("failed to read project");
     }
   }
 
   @Test
   void shouldDeserializeId() {
-    Truth.assertThat(gen.getId()).isEqualTo("generalization_1");
+    assertThat(gen.getId()).isEqualTo("generalization_1");
   }
 
   @Test
   void shouldDeserializeName() {
-    Truth8.assertThat(gen.getNameIn("en")).hasValue("My Generalization");
-    Truth8.assertThat(gen.getNameIn("pt")).hasValue("Minha Generalização");
+    assertThat(gen.getNameIn("en")).hasValue("My Generalization");
+    assertThat(gen.getNameIn("pt")).hasValue("Minha Generalização");
   }
 
   @Test
   void shouldDeserializeDescription() {
-    Truth8.assertThat(gen.getDescriptionIn("en")).hasValue("My description.");
-    Truth8.assertThat(gen.getDescriptionIn("pt")).hasValue("Minha descrição.");
+    assertThat(gen.getDescriptionIn("en")).hasValue("My description.");
+    assertThat(gen.getDescriptionIn("pt")).hasValue("Minha descrição.");
   }
 
   @Test
@@ -61,8 +60,8 @@ class GeneralizationDeserializerTest {
     Optional<Classifier<?, ?>> general = gen.getGeneral();
 
     assertThat(general).isPresent();
-    Truth.assertThat(general.get().getId()).isEqualTo("class_1");
-    Truth8.assertThat(general.get().getFirstName()).isEmpty();
+    assertThat(general.get().getId()).isEqualTo("class_1");
+    assertThat(general.get().getFirstName()).isEmpty();
   }
 
   @Test
@@ -70,7 +69,7 @@ class GeneralizationDeserializerTest {
     Optional<Classifier<?, ?>> specific = gen.getSpecific();
 
     assertThat(specific).isPresent();
-    Truth.assertThat(specific.get().getId()).isEqualTo("class_2");
-    Truth8.assertThat(specific.get().getFirstName()).isEmpty();
+    assertThat(specific.get().getId()).isEqualTo("class_2");
+    assertThat(specific.get().getFirstName()).isEmpty();
   }
 }

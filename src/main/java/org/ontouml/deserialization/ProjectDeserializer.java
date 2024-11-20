@@ -103,6 +103,9 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
       case "Note":
         referenceType = Note.class;
         break;
+      case "Anchor":
+        referenceType = Anchor.class;
+        break;
       default:
         return;
     }

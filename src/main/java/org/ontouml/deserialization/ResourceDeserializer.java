@@ -20,7 +20,8 @@ public class ResourceDeserializer extends JsonDeserializer<Resource> {
   }
 
   @Override
-  public Resource deserialize(JsonParser parser, DeserializationContext deserializationContext) throws IOException, JacksonException {
+  public Resource deserialize(JsonParser parser, DeserializationContext deserializationContext)
+      throws IOException, JacksonException {
     ObjectCodec codec = parser.getCodec();
     JsonNode node = codec.readTree(parser);
     Resource resource = new Resource();
@@ -43,7 +44,8 @@ public class ResourceDeserializer extends JsonDeserializer<Resource> {
     if (uriNode == null && nameNode == null) {
       return null;
     }
-    System.out.println("Deserialized Resource name: " + resource.getName() + " " + resource.getUri());
+    System.out.println(
+        "Deserialized Resource name: " + resource.getName() + " " + resource.getUri());
     return resource;
   }
 }
