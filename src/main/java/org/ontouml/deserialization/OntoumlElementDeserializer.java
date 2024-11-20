@@ -24,7 +24,7 @@ public class OntoumlElementDeserializer {
     JsonNode modifiedNode = root.get("modified");
     if (modifiedNode != null) {
       Date modified = modifiedNode.traverse(codec).readValueAs(Date.class);
-      element.setCreated(modified);
+      element.setModified(modified);
       System.out.println("Deserialized modified:" + modified.toString());
     }
   }
