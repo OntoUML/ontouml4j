@@ -132,7 +132,7 @@ public class Project extends NamedElement {
       return Optional.ofNullable(type.cast(this.classes.get(id)));
     } else if (type == Package.class) {
       return Optional.ofNullable(type.cast(this.packages.get(id)));
-    } else if (type == Relation.class) {
+    } else if (type == Relation.class || type == BinaryRelation.class || type == NaryRelation.class) {
       return Optional.ofNullable(type.cast(this.relations.get(id)));
     } else if (type == Property.class) {
       return Optional.ofNullable(type.cast(this.properties.get(id)));
