@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.ontouml"},{"l":"org.ontouml.deserialization"},{"l":"org.ontouml.model"},{"l":"org.ontouml.model.stereotype"},{"l":"org.ontouml.model.utils"},{"l":"org.ontouml.model.view"},{"l":"org.ontouml.shape"},{"l":"org.ontouml.utils"}];updateSearchResults();

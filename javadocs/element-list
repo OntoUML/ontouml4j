@@ -1,0 +1,8 @@
+org.ontouml
+org.ontouml.deserialization
+org.ontouml.model
+org.ontouml.model.stereotype
+org.ontouml.model.utils
+org.ontouml.model.view
+org.ontouml.shape
+org.ontouml.utils
