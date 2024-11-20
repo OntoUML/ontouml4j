@@ -18,7 +18,7 @@ public class ClassifierDeserializer {
     classifier.setAbstract(isAbstract);
 
     boolean isDerived = deserializeBooleanField(root, "isDerived");
-//    classifier.setDerived(isDerived);
+    classifier.setDerived(isDerived);
 
     JsonNode propertiesNode = root.get("properties");
     if (propertiesNode != null && propertiesNode.isArray()) {

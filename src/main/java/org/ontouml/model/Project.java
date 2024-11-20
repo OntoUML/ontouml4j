@@ -37,6 +37,7 @@ public class Project extends NamedElement {
   @Builder.Default private Map<String, Literal> literals = new HashMap<>();
   @Builder.Default private Map<String, GeneralizationSet> generalizationSets = new HashMap<>();
   @Builder.Default private Map<String, Generalization> generalizations = new HashMap<>();
+  @Builder.Default private Map<String, Note> notes = new HashMap<>();
   @Builder.Default private List<View> diagrams = new ArrayList<>();
 
   private Map<String, OntoumlElement> allElements;
@@ -56,6 +57,7 @@ public class Project extends NamedElement {
     elements.addAll(literals.values().stream().toList());
     elements.addAll(generalizationSets.values().stream().toList());
     elements.addAll(generalizations.values().stream().toList());
+    elements.addAll(notes.values().stream().toList());
 
     return elements;
   }
@@ -77,6 +79,8 @@ public class Project extends NamedElement {
             generalizationSets.put(element.getId(), (GeneralizationSet) element);
           } else if (element instanceof Generalization) {
             generalizations.put(element.getId(), (Generalization) element);
+          } else if (element instanceof Note) {
+            notes.put(element.getId(), (Note) element);
           }
         });
   }
@@ -95,6 +99,7 @@ public class Project extends NamedElement {
     elementMap.putAll(literals);
     elementMap.putAll(generalizationSets);
     elementMap.putAll(generalizations);
+    elementMap.putAll(notes);
 
     return elementMap;
   }
@@ -132,7 +137,9 @@ public class Project extends NamedElement {
       return Optional.ofNullable(type.cast(this.classes.get(id)));
     } else if (type == Package.class) {
       return Optional.ofNullable(type.cast(this.packages.get(id)));
-    } else if (type == Relation.class || type == BinaryRelation.class || type == NaryRelation.class) {
+    } else if (type == Relation.class
+        || type == BinaryRelation.class
+        || type == NaryRelation.class) {
       return Optional.ofNullable(type.cast(this.relations.get(id)));
     } else if (type == Property.class) {
       return Optional.ofNullable(type.cast(this.properties.get(id)));
@@ -142,14 +149,15 @@ public class Project extends NamedElement {
       return Optional.ofNullable(type.cast(this.generalizationSets.get(id)));
     } else if (type == Generalization.class) {
       return Optional.ofNullable(type.cast(this.generalizations.get(id)));
+    } else if (type == Note.class) {
+      return Optional.ofNullable(type.cast(this.notes.get(id)));
     } else if (type == Classifier.class) {
       Map<String, Classifier> classififers = new HashMap<>(this.classes);
       classififers.putAll(this.relations);
       return Optional.ofNullable(type.cast(classififers.get(id)));
     } else if (type == ModelElement.class) {
       return Optional.ofNullable(type.cast(this.getElementMap().get(id)));
-    }
-    else {
+    } else {
       return Optional.empty();
     }
   }

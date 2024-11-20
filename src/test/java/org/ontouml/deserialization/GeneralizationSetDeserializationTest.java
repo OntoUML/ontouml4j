@@ -1,8 +1,14 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
-import com.google.common.truth.Truth8;
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Class;
@@ -10,14 +16,6 @@ import org.ontouml.model.Generalization;
 import org.ontouml.model.GeneralizationSet;
 import org.ontouml.model.Project;
 import org.ontouml.utils.ResourceGetter;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static com.google.common.truth.Truth.assertThat;
 
 class GeneralizationSetDeserializerTest {
 
@@ -81,8 +79,8 @@ class GeneralizationSetDeserializerTest {
   void shouldDeserializeCategorizer() {
     Optional<Class> categorizer = gs.getCategorizer();
 
-    Truth8.assertThat(categorizer).isPresent();
-    Truth.assertThat(categorizer.get().getId()).isEqualTo("class_1");
+    assertThat(categorizer).isPresent();
+    assertThat(categorizer.get().getId()).isEqualTo("class_1");
   }
 }
 

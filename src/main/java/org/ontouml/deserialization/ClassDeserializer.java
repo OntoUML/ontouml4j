@@ -25,6 +25,7 @@ public class ClassDeserializer extends JsonDeserializer<Class> {
     OntoumlElementDeserializer.deserialize(clazz, root, codec);
     NamedElementDeserializer.deserialize(clazz, root, codec);
     DecoratableDeserializer.deserialize(clazz, root, codec);
+    ModelElementDeserializer.deserialize(clazz, root, codec);
     ClassifierDeserializer.deserialize(clazz, root, codec);
 
     Boolean isPowertype = deserializeNullableBooleanField(root, "isPowertype");

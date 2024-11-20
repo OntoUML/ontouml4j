@@ -7,13 +7,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.*;
-import org.ontouml.model.Package;
-
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
+import org.ontouml.model.*;
+import org.ontouml.model.Package;
 
 public class ProjectDeserializer extends JsonDeserializer<Project> {
   HashMap<String, ModelElement> elements = new HashMap<>();
@@ -37,9 +36,9 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
 
     this.deserializeContents(project, root);
 
-//    List<Diagram> diagrams =
-//        DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
-//    project.setDiagrams(diagrams);
+    //    List<Diagram> diagrams =
+    //        DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
+    //    project.setDiagrams(diagrams);
 
     try {
       ReferenceResolver.resolveReferences(project);
@@ -100,6 +99,9 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
         break;
       case "Literal":
         referenceType = Literal.class;
+        break;
+      case "Note":
+        referenceType = Note.class;
         break;
       default:
         return;
