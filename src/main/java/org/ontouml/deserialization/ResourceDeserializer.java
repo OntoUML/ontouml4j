@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.MultilingualText;
+import org.ontouml.model.MultilingualText;
 import org.ontouml.model.Resource;
 
 import java.io.IOException;

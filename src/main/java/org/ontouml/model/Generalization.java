@@ -1,26 +1,46 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.ontouml.MultilingualText;
-import org.ontouml.OntoumlElement;
-import org.ontouml.deserialization.GeneralizationDeserializer;
-import org.ontouml.serialization.GeneralizationSerializer;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.GeneralizationDeserializer;
+import org.ontouml.model.stereotype.Stereotype;
 
-@JsonSerialize(using = GeneralizationSerializer.class)
+/**
+ * A model element that represents the generalization of a specific classifier into a general
+ * classifier. When read in the inverse direction, a generalization is referred to as a
+ * specialization. Examples include the generalization of a specific class "Student" into a general
+ * class "Person," and the generalization of a specific relation "close friends with" into a general
+ * relation "friends with". A generalization can only connect two classifiers of the same type,
+ * i.e., it can either connect two class elements or two relation elements.
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
 @JsonDeserialize(using = GeneralizationDeserializer.class)
-public class Generalization extends ModelElement {
+@NoArgsConstructor
+public class Generalization extends PackageableElement {
+  String generalId;
+  String specificId;
 
+  /**
+   * Identifies the general classifier in a generalization element. E.g., in the generalization of
+   * "Student" into "Person", "Person" is the general classifier.
+   */
   private Classifier<?, ?> general;
+
+  /**
+   * Identifies the general classifier in a generalization element. E.g., in the generalization of
+   * "Student" into "Person", "Student" is the specific classifier.
+   */
   private Classifier<?, ?> specific;
 
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
-          String id, MultilingualText name, Classifier<T, S> specific, Classifier<T, S> general) {
+      String id, MultilingualText name, Classifier<T, S> specific, Classifier<T, S> general) {
     super(id, name, new ArrayList<>());
     setGeneral(general);
     setSpecific(specific);
@@ -41,8 +61,12 @@ public class Generalization extends ModelElement {
     this(null, (MultilingualText) null, specific, general);
   }
 
-  public Generalization() {
-    super(null, null, null);
+  public Optional<Classifier<?, ?>> getGeneral() {
+    return Optional.ofNullable(general);
+  }
+
+  public Optional<Classifier<?, ?>> getSpecific() {
+    return Optional.ofNullable(specific);
   }
 
   @Override
@@ -50,32 +74,23 @@ public class Generalization extends ModelElement {
     return "Generalization";
   }
 
-  @Override
-  public List<OntoumlElement> getContents() {
-    return Collections.emptyList();
-  }
+  public void buildAllReferences(Project project) {
+    Optional<Classifier> general = project.getElementById(generalId, Classifier.class);
 
-  public Optional<Classifier<?, ?>> getGeneral() {
-    return Optional.ofNullable(general);
-  }
+    general.ifPresent(
+        gen -> {
+          if (gen instanceof Classifier) {
+            setGeneral((Classifier<?, ?>) gen);
+          }
+        });
 
-  public void setGeneral(Classifier<?, ?> general) {
-    this.general = general;
-  }
+    Optional<ModelElement> specific = project.getElementById(specificId, ModelElement.class);
 
-  public Optional<Classifier<?, ?>> getSpecific() {
-    return Optional.ofNullable(specific);
-  }
-
-  public void setSpecific(Classifier<?, ?> specific) {
-    this.specific = specific;
-  }
-
-  public boolean involvesClasses() {
-    return specific instanceof Class && general instanceof Class;
-  }
-
-  public boolean involvesRelations() {
-    return specific instanceof Relation && general instanceof Relation;
+    specific.ifPresent(
+        spec -> {
+          if (spec instanceof Classifier) {
+            setSpecific((Classifier<?, ?>) spec);
+          }
+        });
   }
 }

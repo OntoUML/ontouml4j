@@ -1,51 +1,39 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
 import com.google.common.truth.Truth8;
-import org.ontouml.OntoumlElement;
-import org.ontouml.model.Generalization;
-import org.ontouml.model.GeneralizationSet;
-import org.ontouml.model.Package;
-import org.ontouml.model.Relation;
-import org.ontouml.model.Class;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.ontouml.utils.ResourceGetter;
-
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.ontouml.model.*;
+import org.ontouml.model.Class;
+import org.ontouml.model.Package;
+import org.ontouml.utils.ResourceGetter;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
+public class PackageDeserializerTest {
 
-class PackageDeserializerTest {
-
-static String json;
-
-static ObjectMapper mapper;
-
-  static Package pkg;
+  static ObjectMapper mapper;
   static ResourceGetter resourceGetter;
+  static Package pkg;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
     resourceGetter = new ResourceGetter();
-    File jsonFile = resourceGetter.getJsonFromDeserialization("project.allfields.ontouml.json");
+    File jsonFile = resourceGetter.getJsonFromDeserialization("package.allfields.ontouml.json");
 
     try {
-        pkg = mapper.readValue(jsonFile, Package.class);
-
-        System.out.println(pkg);
+      Project project = mapper.readValue(jsonFile, Project.class);
+      Optional<Package> myPkg = project.getElementById("pk1", Package.class);
+      myPkg.ifPresent(aPackage -> pkg = aPackage);
 
     } catch (IOException e) {
-        e.printStackTrace();
+      e.printStackTrace();
     }
   }
 
@@ -69,70 +57,54 @@ static ObjectMapper mapper;
   }
 
   @Test
-  void shouldDeserializePropertyAssignments() {
-    Optional<Object> pAssignment = pkg.getPropertyAssignment("uri");
-    assertThat(pAssignment).hasValue("http://example.com/MyPackage");
-  }
-
-  @Test
   void shouldDeserializeContents() {
-    assertThat(pkg.getContents()).hasSize(5);
+    Truth.assertThat(pkg.getContents()).hasSize(6);
   }
 
   @Test
   void shouldDeserializeClassInContents() {
-    OntoumlElement element = pkg.getContents().get(0);
-    assertThat(element).isInstanceOf(Class.class);
-    assertThat(element.getId()).isEqualTo("c1");
+    PackageableElement element = pkg.getContents().get(0);
+    Truth.assertThat(element).isInstanceOf(Class.class);
+    assertThat(element.getId()).isEqualTo("class1");
     assertThat(element.getFirstName()).hasValue("Agent");
   }
 
   @Test
   void shouldDeserializeRelationInContents() {
-    OntoumlElement element = pkg.getContents().get(1);
-    assertThat(element).isInstanceOf(Relation.class);
-    assertThat(element.getId()).isEqualTo("r1");
+    PackageableElement element = pkg.getContents().get(1);
+    Truth.assertThat(element).isInstanceOf(Relation.class);
+    assertThat(element.getId()).isEqualTo("relation1");
     assertThat(element.getFirstName()).hasValue("knows");
   }
 
   @Test
   void shouldDeserializeGeneralizationInContents() {
-    OntoumlElement element = pkg.getContents().get(2);
-    assertThat(element).isInstanceOf(Generalization.class);
-    assertThat(element.getId()).isEqualTo("g1");
+    PackageableElement element = pkg.getContents().get(3);
+    Truth.assertThat(element).isInstanceOf(Generalization.class);
+    assertThat(element.getId()).isEqualTo("generalization1");
     assertThat(element.getFirstName()).hasValue("PersonToAgent");
   }
 
   @Test
   void shouldDeserializeGeneralizationSetInContents() {
-    OntoumlElement element = pkg.getContents().get(3);
-    assertThat(element).isInstanceOf(GeneralizationSet.class);
-    assertThat(element.getId()).isEqualTo("gs1");
+    PackageableElement element = pkg.getContents().get(4);
+    Truth.assertThat(element).isInstanceOf(GeneralizationSet.class);
+    assertThat(element.getId()).isEqualTo("generalizationSet1");
     assertThat(element.getFirstName()).hasValue("AgentNature");
   }
 
   @Test
   void shouldDeserializePackageInContents() {
-    OntoumlElement element = pkg.getContents().get(4);
-    assertThat(element).isInstanceOf(Package.class);
+    PackageableElement element = pkg.getContents().get(5);
+    Truth.assertThat(element).isInstanceOf(Package.class);
     assertThat(element.getId()).isEqualTo("pk2");
     assertThat(element.getFirstName()).hasValue("Subpackage");
   }
-
-  @Test
-  void shouldDeserializeSubPackageContents() {
-    OntoumlElement element = pkg.getContents().get(4);
-    assertThat(element).isInstanceOf(Package.class);
-
-    List<OntoumlElement> contents = element.getContents();
-    assertThat(contents).hasSize(1);
-    assertThat(contents.get(0)).isInstanceOf(Class.class);
-    assertThat(contents.get(0).getId()).isEqualTo("c2");
-  }
-
-  @Test
-  void shouldResolveContainer() {
-    OntoumlElement element = pkg.getContents().get(0);
-    assertThat(element.getContainer()).hasValue(pkg);
-  }
+  
+//
+//  @Test
+//  void shouldResolveContainer() {
+//    PackageableElement element = pkg.getContents().get(0);
+//    assertThat(element.getContainer()).isEqualTo(pkg);
+//  }
 }

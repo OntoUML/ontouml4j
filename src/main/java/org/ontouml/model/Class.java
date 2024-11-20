@@ -1,332 +1,58 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import lombok.Getter;
-import lombok.Setter;
-import org.ontouml.MultilingualText;
-import org.ontouml.OntoumlElement;
-import org.ontouml.OntoumlUtils;
-import org.ontouml.Project;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.ClassDeserializer;
-import org.ontouml.serialization.ClassSerializer;
+import org.ontouml.model.stereotype.ClassStereotype;
 
-@JsonSerialize(using = ClassSerializer.class)
+/**
+ * A classifier that defines the properties of a set of "individualized" entities (i.e.,
+ * non-relational) of the subject domain. Examples include "Person", "Enrollment", and "Grade". The
+ * instances of a class may include entities such as objects (e.g., people, organizations,
+ * vehicles), reified properties (e.g., leafs' colors, agents' intentions, enrollments), and bare
+ * values (e.g., a number or a literal).
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonDeserialize(using = ClassDeserializer.class)
-@Getter
-@Setter
 public class Class extends Classifier<Class, ClassStereotype> {
 
-  public static Integer ORDERLESS = Integer.MAX_VALUE;
-  public static String ORDERLESS_STRING = "*";
+  /** Identifies the literals of an enumeration class. */
+  List<Literal> literals = new ArrayList<>();
 
-  protected Boolean isExtensional;
-  protected Boolean isPowertype;
-  protected Integer order;
-  protected Set<Nature> restrictedTo = new TreeSet<>();
+  /**
+   * Determines the possible ontological natures of the instances of a class using an array of
+   * enumerated strings. Examples include the class "Vehicle" restricted to having
+   * "functional-complex" instances and the class "Insured Item" restricted to "functional-complex"
+   * and "relator" (e.g., employment insurance).
+   */
+  List<Nature> restrictedTo = new ArrayList<>();
 
-  // TODO: Create a Dummy literal only with the id. When resolving the reference, it replaces with
-  // the new element
-  protected List<Literal> literals = new ArrayList<>();
+  /**
+   * Determines whether the high-order class is a "Cardelli powertype" using a boolean. In other
+   * words, determines whether the high-order class is defined as the one whose instances are its
+   * base type plus all possible specializations of it.
+   */
+  boolean isPowertype;
 
-  public Class(String id, MultilingualText name, ClassStereotype ontoumlStereotype) {
-    super(id, name, ontoumlStereotype);
-  }
-
-  public Class(String id, MultilingualText name, String stereotypeName) {
-    this(id, name, (ClassStereotype) null);
-    setStereotype(stereotypeName);
-  }
-
-  public Class(String id, String name, ClassStereotype stereotype) {
-    this(id, new MultilingualText(name), stereotype);
-  }
-
-  public Class(String id, String name, String stereotype) {
-    this(id, new MultilingualText(name), stereotype);
-  }
-
-  public Class(String name, ClassStereotype stereotype) {
-    this(null, name, stereotype);
-  }
-
-  public Class(String name, String stereotype) {
-    this(null, name, stereotype);
-  }
-
-  public Class(ClassStereotype stereotype) {
-    this(null, (MultilingualText) null, stereotype);
-  }
-
-  public Class(String name) {
-    this(null, name, (ClassStereotype) null);
-  }
-
-  public Class() {
-    this(null, (MultilingualText) null, (ClassStereotype) null);
-  }
-
-  public static Class createKind(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.KIND);
-    clazz.setRestrictedTo(Nature.FUNCTIONAL_COMPLEX);
-    return clazz;
-  }
-
-  public static Class createKind(String name) {
-    return createKind(null, name);
-  }
-
-  public static Class createCollective(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.COLLECTIVE);
-    clazz.setRestrictedTo(Nature.COLLECTIVE);
-    return clazz;
-  }
-
-  public static Class createQuantity(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.QUANTITY);
-    clazz.setRestrictedTo(Nature.QUANTITY);
-    return clazz;
-  }
-
-  public static Class createRelator(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.RELATOR);
-    clazz.setRestrictedTo(Nature.RELATOR);
-    return clazz;
-  }
-
-  public static Class createMode(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.MODE);
-    clazz.setRestrictedTo(Nature.INTRINSIC_MODE, Nature.EXTRINSIC_MODE);
-    return clazz;
-  }
-
-  public static Class createMode(String name) {
-    return createMode(null, name);
-  }
-
-  public static Class createQuality(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.QUALITY);
-    clazz.setRestrictedTo(Nature.QUALITY);
-    return clazz;
-  }
-
-  public static Class createSubkind(String id, String name) {
-    return new Class(id, name, ClassStereotype.SUBKIND);
-  }
-
-  public static Class createRole(String id, String name) {
-    return new Class(id, name, ClassStereotype.ROLE);
-  }
-
-  public static Class createPhase(String id, String name) {
-    return new Class(id, name, ClassStereotype.PHASE);
-  }
-
-  public static Class createHistoricalRole(String id, String name) {
-    return new Class(id, name, ClassStereotype.HISTORICAL_ROLE);
-  }
-
-  public static Class createMixin(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.MIXIN);
-    clazz.setAbstract(true);
-    clazz.setRestrictedTo(Nature.SUBSTANTIAL_NATURES);
-    return clazz;
-  }
-
-  public static Class createCategory(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.CATEGORY);
-    clazz.setAbstract(true);
-    clazz.setRestrictedTo(Nature.SUBSTANTIAL_NATURES);
-    return clazz;
-  }
-
-  public static Class createRoleMixin(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.ROLE_MIXIN);
-    clazz.setAbstract(true);
-    clazz.setRestrictedTo(Nature.SUBSTANTIAL_NATURES);
-    return clazz;
-  }
-
-  public static Class createPhaseMixin(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.PHASE_MIXIN);
-    clazz.setAbstract(true);
-    clazz.setRestrictedTo(Nature.SUBSTANTIAL_NATURES);
-    return clazz;
-  }
-
-  public static Class createHistoricalRoleMixin(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.HISTORICAL_ROLE_MIXIN);
-    clazz.setAbstract(true);
-    clazz.setRestrictedTo(Nature.SUBSTANTIAL_NATURES);
-    return clazz;
-  }
-
-  public static Class createEvent(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.EVENT);
-    clazz.setRestrictedTo(Nature.EVENT);
-    return clazz;
-  }
-
-  public static Class createSituation(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.SITUATION);
-    clazz.setRestrictedTo(Nature.TYPE);
-    return clazz;
-  }
-
-  public static Class createType(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.TYPE);
-    clazz.setRestrictedTo(Nature.FUNCTIONAL_COMPLEX);
-    return clazz;
-  }
-
-  public static Class createAbstract(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.ABSTRACT);
-    clazz.setRestrictedTo(Nature.ABSTRACT);
-    return clazz;
-  }
-
-  public static Class createDatatype(String id, String name) {
-    Class clazz = new Class(id, name, ClassStereotype.DATATYPE);
-    clazz.setRestrictedTo(Nature.ABSTRACT);
-    return clazz;
-  }
-
-  public static Class createEnumeration(String id, String name, String... literals) {
-    Class enumeration = new Class(id, name, ClassStereotype.ENUMERATION);
-    enumeration.setRestrictedTo(Nature.ABSTRACT);
-    enumeration.createLiterals(literals);
-    return enumeration;
-  }
+  /**
+   * Determines the instantiation order of a class using a string. Examples include ordered classes
+   * such as first-order classes (order "1"), second-order classes (order "2"), and third-order
+   * classes (order "3"), as well as orderless classes (order "*").
+   */
+  String order;
 
   @Override
   public String getType() {
     return "Class";
-  }
-
-  public Optional<Boolean> isExtensional() {
-    return Optional.ofNullable(isExtensional);
-  }
-
-  public void setExtensional(Boolean value) {
-    isExtensional = value;
-  }
-
-  public Optional<Boolean> isPowertype() {
-    return Optional.ofNullable(isPowertype);
-  }
-
-  public void setPowertype(Boolean value) {
-    isPowertype = value;
-  }
-
-  public Optional<Integer> getOrder() {
-    return Optional.ofNullable(order);
-  }
-
-  public void setOrder(String value) {
-    if (value != null) {
-      Integer intValue = Integer.parseInt(value);
-      if (value.equals("*")) {
-        intValue = ORDERLESS;
-      }
-      order = intValue;
-    } else {
-      order = ORDERLESS;
-    }
-  }
-
-  public Optional<String> getOrderAsString() {
-    if (order == null) return Optional.empty();
-    else
-      return ORDERLESS.equals(order)
-          ? Optional.of(ORDERLESS_STRING)
-          : Optional.of(order.toString());
-  }
-
-  public Set<Nature> getRestrictedTo() {
-    return restrictedTo;
-  }
-
-  public void setRestrictedTo(Collection<Nature> restrictedTo) {
-    this.restrictedTo.clear();
-    this.restrictedTo.addAll(restrictedTo);
-  }
-
-  public void setRestrictedTo(String[] array) {
-    List<Nature> natures =
-        Stream.of(array)
-            .map(Nature::findByName)
-            .flatMap(Optional::stream)
-            .collect(Collectors.toList());
-    this.restrictedTo.clear();
-    this.restrictedTo.addAll(natures);
-  }
-
-  public void setRestrictedTo(Nature... restrictedTo) {
-    this.restrictedTo.clear();
-    this.restrictedTo.addAll(Arrays.asList(restrictedTo));
-  }
-
-  public boolean hasLiterals() {
-    return literals != null && literals.size() > 0;
-  }
-
-  public List<Literal> createLiterals(String[] names) {
-    return Stream.of(names).map(name -> createLiteral(name)).collect(Collectors.toList());
-  }
-
-  public Literal createLiteral(String name) {
-    if (literals == null) literals = new ArrayList<>();
-
-    Literal literal = new Literal(name);
-    addLiteral(literal);
-    return literal;
-  }
-
-  public void addLiteral(Literal literal) {
-    if (literals == null) literals = new ArrayList<>();
-
-    literal.setContainer(this);
-    literals.add(literal);
-  }
-
-  public boolean hasAttributes() {
-    return hasProperties();
-  }
-
-  public List<Property> getAttributes() {
-    return getProperties();
-  }
-
-  public void setAttributes(Collection<Property> attributes) {
-    if (properties == null) properties = new ArrayList<>();
-    else properties.clear();
-
-    if (attributes == null) return;
-
-    attributes.forEach(this::addAttribute);
-  }
-
-  public void addAttribute(Property attribute) {
-    if (attribute == null) return;
-
-    attribute.setContainer(this);
-    properties.add(attribute);
-  }
-
-  public Property createAttribute(String name, Classifier<?, ?> type) {
-    return createAttribute(null, name, type);
-  }
-
-  public Property createAttribute(String id, String name, Classifier<?, ?> type) {
-    Property attribute = new Property(id, name, type);
-    attribute.setContainer(this);
-    properties.add(attribute);
-
-    return attribute;
   }
 
   @Override
@@ -335,17 +61,6 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
     stereotype.ifPresentOrElse(
         s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
-  }
-
-  @Override
-  public List<OntoumlElement> getContents() {
-    List<OntoumlElement> contents = new ArrayList<>();
-
-    if (hasAttributes()) OntoumlUtils.addIfNotNull(contents, getAttributes());
-
-    if (hasLiterals()) OntoumlUtils.addIfNotNull(contents, getLiterals());
-
-    return contents;
   }
 
   public boolean restrictedToOverlaps(List<Nature> natures) {
@@ -461,6 +176,14 @@ public class Class extends Classifier<Class, ClassStereotype> {
     return isDatatype() && !hasAttributes();
   }
 
+  public boolean hasAttributes() {
+    return hasProperties();
+  }
+
+  public boolean hasProperties() {
+    return !properties.isEmpty();
+  }
+
   public void setLiterals(Collection<String> literals) {
     this.literals.clear();
     literals.forEach(
@@ -469,7 +192,17 @@ public class Class extends Classifier<Class, ClassStereotype> {
           newLiteral.setContainer(this);
           this.literals.add(newLiteral);
         });
-    // TODO: Fix literals
+  }
+
+  public void setRestrictedTo(Collection<String> restrictedTo) {
+    this.restrictedTo.clear();
+    restrictedTo.forEach(
+        item -> {
+          Nature nature = Nature.forValue(item);
+          if (nature != null) {
+            this.restrictedTo.add(nature);
+          }
+        });
   }
 
   public void buildAllReferences(Project project) {

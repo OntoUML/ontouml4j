@@ -72,7 +72,7 @@
       "type": "BinaryRelation",
       "id": "r1",
       "name": {
-        "en": "My Relation",
+        "en": "My BinaryRelation",
         "pt": "Minha Relação"
       },
       "description": {

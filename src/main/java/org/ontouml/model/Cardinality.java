@@ -22,13 +22,13 @@ public class Cardinality {
     setValue("1");
   }
 
+  public Optional<String> getValue() {
+    return Optional.ofNullable(cardinality);
+  }
+
   public void setValue(String cardinality) {
     this.cardinality = cardinality;
     setBounds();
-  }
-
-  public Optional<String> getValue() {
-    return Optional.ofNullable(cardinality);
   }
 
   public Optional<String> getLowerBound() {

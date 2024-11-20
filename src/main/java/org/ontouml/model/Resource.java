@@ -2,10 +2,10 @@ package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.ontouml.MultilingualText;
+import java.net.URI;
 import org.ontouml.deserialization.ResourceDeserializer;
 
-import java.net.URI;
+// import org.ontouml.deserialization.ResourceDeserializer;
 
 @JsonSerialize
 @JsonDeserialize(using = ResourceDeserializer.class)
@@ -14,13 +14,12 @@ public class Resource {
   URI uri;
 
   public Resource(MultilingualText name, URI uri) {
-//    super(UUID.randomUUID().toString(), name);
+    //    super(UUID.randomUUID().toString(), name);
     this.name = name;
     this.uri = uri;
   }
 
-  public Resource() {
-  }
+  public Resource() {}
 
   public MultilingualText getName() {
     return name;
@@ -38,13 +37,13 @@ public class Resource {
     this.uri = uri;
   }
 
-//  @Override
-//  public List<OntoumlElement> getContents() {
-//    return List.of();
-//  }
-//
-//  @Override
-//  public String getType() {
-//    return "resource";
-//  }
+  //  @Override
+  //  public List<OntoumlElement> getContents() {
+  //    return List.of();
+  //  }
+  //
+  //  @Override
+  //  public String getType() {
+  //    return "resource";
+  //  }
 }

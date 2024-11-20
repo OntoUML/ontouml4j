@@ -3,17 +3,17 @@ package org.ontouml.deserialization;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.OntoumlElement;
-import org.ontouml.Project;
-import org.ontouml.model.Class;
-import org.ontouml.model.Package;
-import org.ontouml.model.*;
-import org.ontouml.view.*;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.ontouml.model.*;
+import org.ontouml.model.Class;
+import org.ontouml.model.Package;
+import org.ontouml.model.view.*;
+import org.ontouml.shape.Path;
+import org.ontouml.shape.Rectangle;
+import org.ontouml.shape.Text;
 
 public class DeserializerUtils {
 
@@ -94,7 +94,8 @@ public class DeserializerUtils {
     else if (referenceType.equals(Literal.class)) return "Literal".equals(typeFieldValue);
     else if (referenceType.equals(Project.class)) return "Project".equals(typeFieldValue);
     else if (referenceType.equals(ClassView.class)) return "ClassView".equals(typeFieldValue);
-    else if (referenceType.equals(RelationView.class)) return "RelationView".equals(typeFieldValue);
+    else if (referenceType.equals(BinaryRelationView.class)) return "BinaryRelationView".equals(typeFieldValue);
+    else if (referenceType.equals(NaryRelationView.class)) return "NaryRelationView".equals(typeFieldValue);
     else if (referenceType.equals(GeneralizationView.class))
       return "GeneralizationView".equals(typeFieldValue);
     else if (referenceType.equals(GeneralizationSetView.class))
@@ -108,44 +109,28 @@ public class DeserializerUtils {
   }
 
   public static java.lang.Class<? extends OntoumlElement> getClass(String typeName) {
-    switch (typeName) {
-      case "ClassView":
-        return ClassView.class;
-      case "RelationView":
-        return RelationView.class;
-      case "GeneralizationView":
-        return GeneralizationView.class;
-      case "GeneralizationSetView":
-        return GeneralizationSetView.class;
-      case "PackageView":
-        return PackageView.class;
-      case "Path":
-        return Path.class;
-      case "Rectangle":
-        return Rectangle.class;
-      case "Text":
-        return Text.class;
-      case "Class":
-        return Class.class;
-      case "Relation":
-        return Relation.class;
-      case "Generalization":
-        return Generalization.class;
-      case "GeneralizationSet":
-        return GeneralizationSet.class;
-      case "Package":
-        return Package.class;
-      case "Property":
-        return Property.class;
-      case "Literal":
-        return Literal.class;
-      case "Project":
-        return Project.class;
-      case "Diagram":
-        return Diagram.class;
-    }
+    return switch (typeName) {
+      case "ClassView" -> ClassView.class;
+      case "BinaryRelationView" -> BinaryRelationView.class;
+      case "NaryRelationView" -> NaryRelationView.class;
+      case "GeneralizationView" -> GeneralizationView.class;
+      case "GeneralizationSetView" -> GeneralizationSetView.class;
+      case "PackageView" -> PackageView.class;
+      case "Path" -> Path.class;
+      case "Rectangle" -> Rectangle.class;
+      case "Text" -> Text.class;
+      case "Class" -> Class.class;
+      case "Relation" -> Relation.class;
+      case "Generalization" -> Generalization.class;
+      case "GeneralizationSet" -> GeneralizationSet.class;
+      case "Package" -> Package.class;
+      case "Property" -> Property.class;
+      case "Literal" -> Literal.class;
+      case "Project" -> Project.class;
+      case "Diagram" -> Diagram.class;
+      default -> null;
+    };
 
-    return null;
   }
 
   /**
@@ -159,7 +144,7 @@ public class DeserializerUtils {
           throws IOException {
 
     boolean isObject = node.isObject();
-    if (node == null || !node.isObject()) return null;
+    if (!node.isObject()) return null;
 
     JsonNode typeNode = node.get("type");
     if (typeNode == null || !typeNode.isTextual()) return null;

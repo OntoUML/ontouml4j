@@ -5,10 +5,10 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.io.IOException;
-import java.util.List;
-import org.ontouml.model.AggregationKind;
 import org.ontouml.model.Property;
+import org.ontouml.model.utils.AggregationKind;
+
+import java.io.IOException;
 
 public class PropertyDeserializer extends JsonDeserializer<Property> {
 
@@ -19,12 +19,10 @@ public class PropertyDeserializer extends JsonDeserializer<Property> {
     JsonNode root = parser.readValueAsTree();
 
     Property property = new Property();
-    ElementDeserializer.deserialize(property, root, codec);
+    OntoumlElementDeserializer.deserialize(property, root, codec);
+    NamedElementDeserializer.deserialize(property, root, codec);
     ModelElementDeserializer.deserialize(property, root, codec);
     DecoratableDeserializer.deserialize(property, root, codec);
-
-    boolean isDerived = DeserializerUtils.deserializeBooleanField(root, "isDerived");
-    property.setDerived(isDerived);
 
     boolean isReadOnly = DeserializerUtils.deserializeBooleanField(root, "isReadOnly");
     property.setReadOnly(isReadOnly);

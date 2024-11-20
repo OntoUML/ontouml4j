@@ -5,10 +5,8 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.Classifier;
-import org.ontouml.model.Generalization;
-
 import java.io.IOException;
+import org.ontouml.model.Generalization;
 
 public class GeneralizationDeserializer extends JsonDeserializer<Generalization> {
 
@@ -19,14 +17,15 @@ public class GeneralizationDeserializer extends JsonDeserializer<Generalization>
     JsonNode root = parser.readValueAsTree();
 
     Generalization gen = new Generalization();
-    ElementDeserializer.deserialize(gen, root, codec);
+    OntoumlElementDeserializer.deserialize(gen, root, codec);
+    NamedElementDeserializer.deserialize(gen, root, codec);
     ModelElementDeserializer.deserialize(gen, root, codec);
 
-    Classifier<?, ?> general = DeserializerUtils.deserializeClassifierField(root, "general", codec);
-    gen.setGeneral(general);
+    String general = DeserializerUtils.deserializeNullableStringField(root, "general");
+    gen.setGeneralId(general);
 
-    Classifier<?, ?> specific = DeserializerUtils.deserializeClassifierField(root, "specific", codec);
-    gen.setSpecific(specific);
+    String specific = DeserializerUtils.deserializeNullableStringField(root, "specific");
+    gen.setSpecificId(specific);
 
     return gen;
   }

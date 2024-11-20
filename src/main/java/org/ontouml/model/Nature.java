@@ -1,12 +1,16 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
+import lombok.Getter;
 
+@Getter
 public enum Nature {
-   FUNCTIONAL_COMPLEX("functional-complex"),
+  FUNCTIONAL_COMPLEX("functional-complex"),
   COLLECTIVE("collective"),
   QUANTITY("quantity"),
   RELATOR("relator"),
@@ -40,8 +44,16 @@ public enum Nature {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
+  public static Optional<Nature> findByName(String name) {
+    return Stream.of(Nature.values()).filter(nature -> nature.getName().equals(name)).findFirst();
+  }
+
+  @JsonCreator
+  public static Nature forValue(String value) {
+    return Stream.of(Nature.values())
+        .filter(nature -> nature.name.equalsIgnoreCase(value))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException("Invalid Nature value: " + value));
   }
 
   public boolean isEndurant() {
@@ -64,7 +76,8 @@ public enum Nature {
     return EXTRINSIC_MOMENT_NATURES.contains(this);
   }
 
-  public static Optional<Nature> findByName(String name) {
-    return Stream.of(Nature.values()).filter(nature -> nature.getName().equals(name)).findFirst();
+  @JsonValue
+  public String toValue() {
+    return name;
   }
 }

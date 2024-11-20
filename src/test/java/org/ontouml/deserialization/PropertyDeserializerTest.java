@@ -1,18 +1,18 @@
 package org.ontouml.deserialization;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
-import java.io.File;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.ontouml.model.AggregationKind;
 import org.ontouml.model.Property;
-import org.ontouml.model.PropertyStereotype;
+import org.ontouml.model.stereotype.PropertyStereotype;
+import org.ontouml.model.utils.AggregationKind;
 import org.ontouml.utils.ResourceGetter;
+
+import java.io.File;
+import java.io.IOException;
+
+import static com.google.common.truth.Truth8.assertThat;
 
 class PropertyDeserializerTest {
 
@@ -47,17 +47,17 @@ class PropertyDeserializerTest {
 
   @Test
   void shouldDeserializeIsDerived() {
-    assertThat(property.isDerived()).isTrue();
+    Truth.assertThat(property.isDerived()).isTrue();
   }
 
   @Test
   void shouldDeserializeIsReadOnly() {
-    assertThat(property.isReadOnly()).isTrue();
+    Truth.assertThat(property.isReadOnly()).isTrue();
   }
 
   @Test
   void shouldDeserializeIsOrdered() {
-    assertThat(property.isOrdered()).isTrue();
+    Truth.assertThat(property.isOrdered()).isTrue();
   }
 
   @Test
@@ -67,12 +67,12 @@ class PropertyDeserializerTest {
 
   @Test
   void shouldDeserializePropertyTypeId() {
-    assertThat(property.getPropertyTypeId()).isEqualTo("class2");
+    Truth.assertThat(property.getPropertyTypeId()).isEqualTo("class2");
   }
 
   @Test
   void shouldDeserializeSubsettedProperties() {
-    assertThat(property.getSubsettedProperties()).hasSize(1);
+    Truth.assertThat(property.getSubsettedProperties()).hasSize(1);
 
     Property subsetted = property.getSubsettedProperties().getFirst();
     Truth.assertThat(subsetted.getId()).isEqualTo("p2");
@@ -80,7 +80,7 @@ class PropertyDeserializerTest {
 
   @Test
   void shouldDeserializeRedefinedProperties() {
-    assertThat(property.getRedefinedProperties()).hasSize(1);
+    Truth.assertThat(property.getRedefinedProperties()).hasSize(1);
 
     Property redefined = property.getRedefinedProperties().getFirst();
     Truth.assertThat(redefined.getId()).isEqualTo("p3");

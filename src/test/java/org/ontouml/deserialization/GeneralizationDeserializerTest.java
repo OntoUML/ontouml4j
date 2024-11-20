@@ -1,61 +1,53 @@
 package org.ontouml.deserialization;
 
+import static com.google.common.truth.Truth8.assertThat;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
 import com.google.common.truth.Truth8;
-import org.ontouml.model.Classifier;
-import org.ontouml.model.Generalization;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
+import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-
-import static com.google.common.truth.Truth8.assertThat;
-import static com.google.common.truth.Truth.assertThat;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.ontouml.model.Classifier;
+import org.ontouml.model.Generalization;
+import org.ontouml.model.Project;
+import org.ontouml.utils.ResourceGetter;
 
 class GeneralizationDeserializerTest {
 
-  static String json =
-      "{\n"
-          + "  \"id\" : \"g1\",\n"
-          + "  \"type\" : \"Generalization\",\n"
-          + "  \"name\" : {\n"
-          + "    \"en\" : \"My Generalization\",\n"
-          + "    \"pt\" : \"Minha Generalization\"\n"
-          + "  },\n"
-          + "  \"description\" : {\n"
-          + "    \"pt\" : \"Minha descrição.\",\n"
-          + "    \"en\" : \"My description.\"\n"
-          + "  },\n"
-          + "  \"general\" : {\n"
-          + "    \"id\" : \"c1\",\n"
-          + "    \"type\" : \"Class\"\n"
-          + "  },\n"
-          + "  \"specific\" : {\n"
-          + "    \"id\" : \"c2\",\n"
-          + "    \"type\" : \"Class\"\n"
-          + "  }\n"
-          + "}";
-
+  static ResourceGetter resourceGetter;
   static ObjectMapper mapper;
   static Generalization gen;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    gen = mapper.readValue(json, Generalization.class);
+    resourceGetter = new ResourceGetter();
+    File jsonFile =
+        resourceGetter.getJsonFromDeserialization("generalization.allfields.ontouml.json");
+
+    try {
+      Project project = mapper.readValue(jsonFile, Project.class);
+      Optional<Generalization> myGeneralization =
+          project.getElementById("generalization_1", Generalization.class);
+      myGeneralization.ifPresent(myGen -> gen = myGen);
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   @Test
   void shouldDeserializeId() {
-    Truth.assertThat(gen.getId()).isEqualTo("g1");
+    Truth.assertThat(gen.getId()).isEqualTo("generalization_1");
   }
 
   @Test
   void shouldDeserializeName() {
     Truth8.assertThat(gen.getNameIn("en")).hasValue("My Generalization");
-    Truth8.assertThat(gen.getNameIn("pt")).hasValue("Minha Generalization");
+    Truth8.assertThat(gen.getNameIn("pt")).hasValue("Minha Generalização");
   }
 
   @Test
@@ -69,7 +61,7 @@ class GeneralizationDeserializerTest {
     Optional<Classifier<?, ?>> general = gen.getGeneral();
 
     assertThat(general).isPresent();
-    Truth.assertThat(general.get().getId()).isEqualTo("c1");
+    Truth.assertThat(general.get().getId()).isEqualTo("class_1");
     Truth8.assertThat(general.get().getFirstName()).isEmpty();
   }
 
@@ -78,7 +70,7 @@ class GeneralizationDeserializerTest {
     Optional<Classifier<?, ?>> specific = gen.getSpecific();
 
     assertThat(specific).isPresent();
-    Truth.assertThat(specific.get().getId()).isEqualTo("c2");
+    Truth.assertThat(specific.get().getId()).isEqualTo("class_2");
     Truth8.assertThat(specific.get().getFirstName()).isEmpty();
   }
 }

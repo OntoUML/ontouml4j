@@ -21,23 +21,21 @@ public class ClassDeserializer extends JsonDeserializer<Class> {
 
     Class clazz = new Class();
 
-    ElementDeserializer.deserialize(clazz, root, codec);
-    ModelElementDeserializer.deserialize(clazz, root, codec);
+    OntoumlElementDeserializer.deserialize(clazz, root, codec);
+    NamedElementDeserializer.deserialize(clazz, root, codec);
     DecoratableDeserializer.deserialize(clazz, root, codec);
+    ModelElementDeserializer.deserialize(clazz, root, codec);
     ClassifierDeserializer.deserialize(clazz, root, codec);
 
-    Boolean isExtensional = deserializeNullableBooleanField(root, "isExtensional");
-    clazz.setExtensional(isExtensional);
-
     Boolean isPowertype = deserializeNullableBooleanField(root, "isPowertype");
-    clazz.setPowertype(isPowertype);
+    clazz.setPowertype(Boolean.TRUE.equals(isPowertype));
 
     String order = deserializeNullableStringField(root, "order");
     clazz.setOrder(order);
 
     String[] restrictedTo = deserializeNullableStringArrayField(root, "restrictedTo", codec);
     if (restrictedTo != null) {
-      clazz.setRestrictedTo(restrictedTo);
+      clazz.setRestrictedTo(Arrays.stream(restrictedTo).toList());
     }
 
     String[] literals = deserializeNullableStringArrayField(root, "literals", codec);

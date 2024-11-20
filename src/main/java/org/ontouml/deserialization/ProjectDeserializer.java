@@ -11,14 +11,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
-import org.ontouml.MultilingualText;
-import org.ontouml.Project;
 import org.ontouml.model.*;
 import org.ontouml.model.Package;
-import org.ontouml.view.Diagram;
 
 public class ProjectDeserializer extends JsonDeserializer<Project> {
-
   HashMap<String, ModelElement> elements = new HashMap<>();
   ObjectCodec codec;
   JsonNode root;
@@ -34,14 +30,15 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
 
     Project project = new Project();
 
-    ElementDeserializer.deserialize(project, root, codec);
+    OntoumlElementDeserializer.deserialize(project, root, codec);
+    NamedElementDeserializer.deserialize(project, root, codec);
     deserializeMetaProperties(codec, project, root);
 
     this.deserializeContents(project, root);
 
-    List<Diagram> diagrams =
-        DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
-    project.setDiagrams(diagrams);
+    //    List<Diagram> diagrams =
+    //        DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
+    //    project.setDiagrams(diagrams);
 
     try {
       ReferenceResolver.resolveReferences(project);
@@ -86,8 +83,10 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
         referenceType = org.ontouml.model.Class.class;
         break;
       case "BinaryRelation":
+        referenceType = BinaryRelation.class;
+        break;
       case "NaryRelation":
-        referenceType = Relation.class;
+        referenceType = NaryRelation.class;
         break;
       case "Generalization":
         referenceType = Generalization.class;
@@ -100,6 +99,9 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
         break;
       case "Literal":
         referenceType = Literal.class;
+        break;
+      case "Note":
+        referenceType = Note.class;
         break;
       default:
         return;

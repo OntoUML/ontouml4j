@@ -1,17 +1,22 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.ontouml.MultilingualText;
-import org.ontouml.OntoumlElement;
-import org.ontouml.deserialization.LiteralDeserializer;
-import org.ontouml.serialization.LiteralSerializer;
-
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.LiteralDeserializer;
 
-@JsonSerialize(using = LiteralSerializer.class)
+/**
+ * A model element that represents a specific value within an enumerated set of values. Examples
+ * include each letter in an A to F letter grading scale, listed in a class "Letter Grade" decorated
+ * with the stereotype "enumeration".
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@NoArgsConstructor
+@SuperBuilder
 @JsonDeserialize(using = LiteralDeserializer.class)
 public class Literal extends ModelElement {
 
@@ -23,17 +28,8 @@ public class Literal extends ModelElement {
     this(null, new MultilingualText(name));
   }
 
-  public Literal() {
-    this(null);
-  }
-
   @Override
   public String getType() {
     return "Literal";
-  }
-
-  @Override
-  public List<OntoumlElement> getContents() {
-    return Collections.emptyList();
   }
 }

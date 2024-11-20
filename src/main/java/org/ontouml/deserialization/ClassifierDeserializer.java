@@ -11,7 +11,6 @@ import java.util.List;
 import static org.ontouml.deserialization.DeserializerUtils.deserializeBooleanField;
 
 public class ClassifierDeserializer {
-
   public static void deserialize(Classifier<?, ?> classifier, JsonNode root, ObjectCodec codec)
           throws IOException {
 

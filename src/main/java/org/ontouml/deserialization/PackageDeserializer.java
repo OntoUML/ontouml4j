@@ -2,19 +2,14 @@ package org.ontouml.deserialization;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.Generalization;
-import org.ontouml.model.GeneralizationSet;
-import org.ontouml.model.ModelElement;
-import org.ontouml.model.Class;
-import org.ontouml.model.Relation;
-import org.ontouml.model.Package;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import org.ontouml.model.*;
+import org.ontouml.model.Package;
 
 public class PackageDeserializer extends JsonDeserializer<Package> {
 
@@ -24,7 +19,8 @@ public class PackageDeserializer extends JsonDeserializer<Package> {
     JsonNode root = parser.readValueAsTree();
 
     Package pkg = new Package();
-    ElementDeserializer.deserialize(pkg, root, codec);
+    OntoumlElementDeserializer.deserialize(pkg, root, codec);
+    NamedElementDeserializer.deserialize(pkg, root, codec);
     ModelElementDeserializer.deserialize(pkg, root, codec);
     deserializeContents(pkg, root, codec);
 
@@ -35,46 +31,13 @@ public class PackageDeserializer extends JsonDeserializer<Package> {
     JsonNode contentsNode = root.get("contents");
 
     if (contentsNode != null && contentsNode.isArray()) {
-
-      List<ModelElement> contents = new ArrayList<>();
-      contentsNode
-          .elements()
-          .forEachRemaining(
-              contentNode -> {
-                if (!contentNode.isObject()) return;
-
-                String type = contentNode.get("type").asText();
-                java.lang.Class<? extends ModelElement> referenceType;
-
-                switch (type) {
-                  case "Package":
-                    referenceType = Package.class;
-                    break;
-                  case "Class":
-                    referenceType = Class.class;
-                    break;
-                  case "Relation":
-                    referenceType = Relation.class;
-                    break;
-                  case "Generalization":
-                    referenceType = Generalization.class;
-                    break;
-                  case "GeneralizationSet":
-                    referenceType = GeneralizationSet.class;
-                    break;
-                  default:
-                    return;
-                }
-
-                try {
-                  ModelElement content = contentNode.traverse(codec).readValueAs(referenceType);
-                  contents.add(content);
-                } catch (IOException e) {
-                  e.printStackTrace();
-                }
-              });
-
-      pkg.setContents(contents);
+      try {
+        List<String> contentIds =
+            contentsNode.traverse(codec).readValueAs(new TypeReference<List<String>>() {});
+        pkg.setContentIds(contentIds);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
   }
 }

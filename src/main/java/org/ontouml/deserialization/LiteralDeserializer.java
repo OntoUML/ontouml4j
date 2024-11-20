@@ -17,7 +17,8 @@ public class LiteralDeserializer extends JsonDeserializer<Literal> {
     JsonNode root = parser.readValueAsTree();
 
     Literal literal = new Literal();
-    ElementDeserializer.deserialize(literal, root, codec);
+    OntoumlElementDeserializer.deserialize(literal, root, codec);
+    NamedElementDeserializer.deserialize(literal, root, codec);
     ModelElementDeserializer.deserialize(literal, root, codec);
 
     return literal;

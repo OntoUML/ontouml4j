@@ -3,22 +3,24 @@ package org.ontouml.serialization;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import org.ontouml.OntoumlElement;
-
 import java.io.IOException;
+import org.ontouml.model.OntoumlElement;
 
 public class OntoumlElementSerializer extends JsonSerializer<OntoumlElement> {
 
   @Override
-  public void serialize(OntoumlElement element, JsonGenerator jsonGen, SerializerProvider provider)
+  public void serialize(
+      OntoumlElement ontoumlElement,
+      JsonGenerator jsonGen,
+      SerializerProvider serializerProvider)
       throws IOException {
     jsonGen.writeStartObject();
-    serializeFields(element, jsonGen);
+    serializeFields(ontoumlElement, jsonGen);
     jsonGen.writeEndObject();
   }
 
-  static void serializeFields(OntoumlElement element, JsonGenerator jsonGen) throws IOException {
-    ElementSerializer.serializeFields(element, jsonGen);
+   static void serializeFields(OntoumlElement element, JsonGenerator jsonGen) throws IOException {
+//    NamedElementSerializer.serializeFields(element, jsonGen);
     serializeType(element, jsonGen);
   }
 

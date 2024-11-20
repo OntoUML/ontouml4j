@@ -1,22 +1,22 @@
 package org.ontouml.deserialization;
 
-import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.ontouml.model.MultilingualText;
+import org.ontouml.model.Project;
+import org.ontouml.utils.ResourceGetter;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import org.ontouml.MultilingualText;
-import org.ontouml.Project;
-import org.ontouml.utils.ResourceGetter;
 
-class ProjectDeserializerTest {
+import static com.google.common.truth.Truth.assertThat;
 
+
+public class ProjectDeserializerTest {
   static ObjectMapper mapper;
   static ResourceGetter resourceGetter = new ResourceGetter();
   static Project project;
@@ -51,25 +51,10 @@ class ProjectDeserializerTest {
             .hasValue("Il miglior progetto in modellazione concettuale.");
   }
 
-//  @Test
-//  void shouldDeserializeModel() {
-//    Optional<Package> model = project.getModel();
-//    assertThat(model).isPresent();
-//    Truth.assertThat(model.get().getId()).isEqualTo("pk1");
-//    Truth8.assertThat(model.get().getFirstName()).hasValue("Model");
-//  }
-
-//  @Test
-//  void shouldDeserializeModelContents() {
-//    Package model = project.getModel().orElse(new Package());
-//    Stream<String> idStream = model.getContents().stream().map(Element::getId);
-//    assertThat(idStream).containsExactly("c1", "c2", "r1", "g1", "gs1");
-//  }
-
-  @Test
+   @Test
   void shouldDeserializeDates() {
-    assertThat(project.getCreatedDate()).isEqualTo(Date.from(Instant.parse("2024-09-03T00:00:00Z")));
-    assertThat(project.getModifiedDate()).isEqualTo(Date.from(Instant.parse("2024-09-04T00:00:00Z")));
+    assertThat(project.getCreated()).isEqualTo(Date.from(Instant.parse("2024-09-03T00:00:00Z")));
+    assertThat(project.getModified()).isEqualTo(Date.from(Instant.parse("2024-09-04T00:00:00Z")));
   }
 
   @Test
