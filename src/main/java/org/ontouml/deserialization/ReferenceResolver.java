@@ -11,7 +11,7 @@ import org.ontouml.model.view.View;
 /** This class is responsible for resolving the references inside elements after they are read. */
 public class ReferenceResolver {
   public static void resolveReferences(Project project) {
-    Map<String, OntoumlElement> elementMap = project.getElementMap();
+    Map<String, ModelElement> elementMap = project.getElementMap();
 
     for (Property property : project.getAllProperties()) {
       resolvePropertyType(elementMap, property);
@@ -89,7 +89,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveGeneralizations(
-      Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
+      Map<String, ModelElement> elementMap, GeneralizationSet gs) {
 
     Set<Generalization> sources = new HashSet<>();
 
@@ -100,7 +100,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveCategorizer(
-      Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
+      Map<String, ModelElement> elementMap, GeneralizationSet gs) {
     Optional<Class> reference = gs.getCategorizer();
 
     if (reference.isEmpty()) return;
@@ -110,7 +110,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveGeneral(
-      Map<String, OntoumlElement> elementMap, Generalization generalization) {
+      Map<String, ModelElement> elementMap, Generalization generalization) {
     Optional<Classifier<?, ?>> reference = generalization.getGeneral();
 
     if (reference.isEmpty()) return;
@@ -120,7 +120,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveSpecific(
-      Map<String, OntoumlElement> elementMap, Generalization generalization) {
+      Map<String, ModelElement> elementMap, Generalization generalization) {
     Optional<Classifier<?, ?>> reference = generalization.getSpecific();
 
     if (reference.isEmpty()) return;
@@ -129,8 +129,7 @@ public class ReferenceResolver {
     generalization.setSpecific(source);
   }
 
-  private static void resolvePropertyType(
-      Map<String, OntoumlElement> elementMap, Property property) {
+  private static void resolvePropertyType(Map<String, ModelElement> elementMap, Property property) {
     Optional<Classifier<?, ?>> reference = property.getPropertyType();
 
     if (reference.isEmpty()) return;
@@ -140,7 +139,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveSubsettedProperties(
-      Map<String, OntoumlElement> elementMap, Property property) {
+      Map<String, ModelElement> elementMap, Property property) {
     for (Property reference : property.getSubsettedProperties()) {
       Property source = resolve(elementMap, reference, Property.class);
       property.replaceSubsettedProperty(reference, source);
@@ -148,17 +147,17 @@ public class ReferenceResolver {
   }
 
   private static void resolveRedefinedProperties(
-      Map<String, OntoumlElement> elementMap, Property property) {
+      Map<String, ModelElement> elementMap, Property property) {
     for (Property reference : property.getRedefinedProperties()) {
       Property source = resolve(elementMap, reference, Property.class);
       property.replaceRedefinedProperty(reference, source);
     }
   }
 
-  private static <T extends OntoumlElement> T resolve(
-      Map<String, OntoumlElement> elementMap, T reference, java.lang.Class<T> referenceType) {
+  private static <T extends ModelElement> T resolve(
+      Map<String, ModelElement> elementMap, T reference, java.lang.Class<T> referenceType) {
 
-    OntoumlElement source = elementMap.get(reference.getId());
+    ModelElement source = elementMap.get(reference.getId());
 
     if (source == null)
       throw new NullPointerException("Referenced element in property type does not exist!");

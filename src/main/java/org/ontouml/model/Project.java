@@ -44,15 +44,15 @@ public class Project extends NamedElement {
   @Builder.Default private Map<String, Anchor> anchors = new HashMap<>();
   @Builder.Default private List<View> diagrams = new ArrayList<>();
 
-  private Map<String, OntoumlElement> allElements;
+  private Map<String, ModelElement> allElements;
 
   @Override
   public String getType() {
     return "Project";
   }
 
-  public List<OntoumlElement> getElements() {
-    List<OntoumlElement> elements = new ArrayList<>();
+  public List<ModelElement> getElements() {
+    List<ModelElement> elements = new ArrayList<>();
 
     elements.addAll(classes.values().stream().toList());
     elements.addAll(packages.values().stream().toList());
@@ -96,8 +96,8 @@ public class Project extends NamedElement {
     return Optional.ofNullable(this.classes.get(id));
   }
 
-  public Map<String, OntoumlElement> getElementMap() {
-    Map<String, OntoumlElement> elementMap = new HashMap<>();
+  public Map<String, ModelElement> getElementMap() {
+    Map<String, ModelElement> elementMap = new HashMap<>();
 
     elementMap.putAll(classes);
     elementMap.putAll(packages);
@@ -124,7 +124,7 @@ public class Project extends NamedElement {
     return this.generalizationSets.values();
   }
 
-  public Map<String, OntoumlElement> getAllElements() {
+  public Map<String, ModelElement> getAllElements() {
     return this.getElementMap();
   }
 
@@ -133,7 +133,7 @@ public class Project extends NamedElement {
    *
    * @param id - The id of the element
    */
-  public Optional<OntoumlElement> getElementById(String id) {
+  public Optional<ModelElement> getElementById(String id) {
     if (this.allElements == null) {
       this.allElements = this.getElementMap();
     }

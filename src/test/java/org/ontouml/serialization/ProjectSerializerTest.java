@@ -74,4 +74,17 @@ public class ProjectSerializerTest {
     assertThat(json).contains("\"it\" : \"Il miglior progetto in modellazione concettuale.\"");
     assertThat(json).contains("\"en\" : \"The best conceptual modeling project.\"");
   }
+
+  @Test
+  void shouldSerializeDesignedForTasks() throws JsonProcessingException, URISyntaxException {
+    project
+        .getMetaProperties()
+        .setDesignedForTasks(
+            List.of(new Resource(new MultilingualText("Task"), new URI("https://localhost:8080"))));
+    String json = mapper.writeValueAsString(project);
+
+    assertThat(json).contains("\"description\" : {");
+    assertThat(json).contains("\"it\" : \"Il miglior progetto in modellazione concettuale.\"");
+    assertThat(json).contains("\"en\" : \"The best conceptual modeling project.\"");
+  }
 }
