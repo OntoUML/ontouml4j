@@ -1,9 +1,11 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 import java.util.Optional;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.serialization.NamedElementSerializer;
 
 /**
  * An identified element of an OntoUML ontology according to the OntoUML Metamodel, which includes
@@ -14,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = NamedElementSerializer.class)
 public abstract class NamedElement extends OntoumlElement {
 
   /** Identifies the agents who contributed to the creation of the named element. */

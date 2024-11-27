@@ -1,6 +1,6 @@
 # OntoUML4J
 
-OntoUML4J is a Java library for working with OntoUML models. This library provides a set of classes and methods to create, manipulate, and analyze OntoUML models programmatically.
+OntoUML4J is a Java library for manipulating OntoUML models. This library provides a set of classes and methods to create, manipulate, and analyze OntoUML models programmatically.
 
 <!-- ## Table of Contents
 - [Installation](#installation)
@@ -18,7 +18,7 @@ To include OntoUML4J in your project, add the following dependency to your `pom.
 
 ```xml
 <dependency>
-    <groupId>org.ontouml</groupId>
+    <groupId>io.github.matheuslenke</groupId>
     <artifactId>ontouml4j</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -26,7 +26,8 @@ To include OntoUML4J in your project, add the following dependency to your `pom.
 
 ## Usage
 
-Here is an example of how to use OntoUML4J in your project:
+This package is designed to support manipulating OntoUML models and their serialization into [ontouml-schema](https://github.com/OntoUML/ontouml-schema) compliant JSON files.
+
 
 ```java
 import org.ontouml.model.MultilingualText;

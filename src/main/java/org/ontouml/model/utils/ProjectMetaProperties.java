@@ -1,11 +1,16 @@
 package org.ontouml.model.utils;
 
+import java.net.URI;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import org.ontouml.model.MultilingualText;
 import org.ontouml.model.Resource;
 
-import java.net.URI;
-import java.util.List;
-
+@SuperBuilder
+@Getter
+@Setter
 public class ProjectMetaProperties {
   Resource publisher;
   List<Resource> designedForTasks;

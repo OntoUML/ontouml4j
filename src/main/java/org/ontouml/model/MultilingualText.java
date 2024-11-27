@@ -1,10 +1,12 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
 import org.ontouml.deserialization.MultilingualTextDeserializer;
+import org.ontouml.serialization.MultilingualTextSerializer;
 
-// @JsonSerialize(using = MultilingualTextSerializer.class)
+@JsonSerialize(using = MultilingualTextSerializer.class)
 @JsonDeserialize(using = MultilingualTextDeserializer.class)
 public class MultilingualText {
   private static String defaultLanguage = "en";

@@ -25,7 +25,7 @@ public enum RelationStereotype implements Stereotype {
   BRINGS_ABOUT("bringsAbout"),
   TRIGGERS("triggers");
 
-  public static Collection<RelationStereotype> EXISTENTIAL_DEPENDENCY_ON_SOURCE =
+  public static final Collection<RelationStereotype> EXISTENTIAL_DEPENDENCY_ON_SOURCE =
       Set.of(
           BRINGS_ABOUT,
           CREATION,
@@ -35,7 +35,7 @@ public enum RelationStereotype implements Stereotype {
           TERMINATION,
           TRIGGERS);
 
-  public static Collection<RelationStereotype> EXISTENTIAL_DEPENDENCY_ON_TARGET =
+  public static final Collection<RelationStereotype> EXISTENTIAL_DEPENDENCY_ON_TARGET =
       Set.of(
           BRINGS_ABOUT,
           CHARACTERIZATION,
@@ -45,7 +45,7 @@ public enum RelationStereotype implements Stereotype {
           MEDIATION,
           PARTICIPATIONAL);
 
-  public static Collection<RelationStereotype> EXISTENTIAL_DEPENDENCY =
+  public static final Collection<RelationStereotype> EXISTENTIAL_DEPENDENCY =
       Set.of(
           BRINGS_ABOUT,
           CHARACTERIZATION,
@@ -59,7 +59,7 @@ public enum RelationStereotype implements Stereotype {
           TERMINATION,
           TRIGGERS);
 
-  public static Collection<RelationStereotype> ALLOWS_HIGHER_ARITY = Set.of(MATERIAL);
+  public static final Collection<RelationStereotype> ALLOWS_HIGHER_ARITY = Set.of(MATERIAL);
 
   public final String stereotypeName;
 

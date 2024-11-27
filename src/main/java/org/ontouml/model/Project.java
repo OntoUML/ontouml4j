@@ -1,12 +1,14 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.ProjectDeserializer;
 import org.ontouml.model.utils.ProjectMetaProperties;
 import org.ontouml.model.view.View;
+import org.ontouml.serialization.ProjectSerializer;
 
 /**
  * A named element that serves as the container of an entire OntoUML ontology, including the
@@ -17,7 +19,8 @@ import org.ontouml.model.view.View;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-// @JsonSerialize(using = ProjectSerializer.class)
+@Getter
+@JsonSerialize(using = ProjectSerializer.class)
 @JsonDeserialize(using = ProjectDeserializer.class)
 public class Project extends NamedElement {
 

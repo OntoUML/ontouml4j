@@ -4,12 +4,11 @@ import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.io.IOException;
+import java.util.List;
 import org.ontouml.model.MultilingualText;
 import org.ontouml.model.NamedElement;
 import org.ontouml.model.Resource;
-
-import java.io.IOException;
-import java.util.List;
 
 public class NamedElementDeserializer {
 
