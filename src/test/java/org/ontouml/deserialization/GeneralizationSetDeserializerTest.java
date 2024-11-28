@@ -17,7 +17,7 @@ import org.ontouml.model.GeneralizationSet;
 import org.ontouml.model.Project;
 import org.ontouml.utils.ResourceGetter;
 
-class GeneralizationSetDeserializerTest {
+public class GeneralizationSetDeserializerTest {
 
   static ResourceGetter resourceGetter;
   ObjectMapper mapper;
