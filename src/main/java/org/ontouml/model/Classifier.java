@@ -1,15 +1,14 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.Stereotype;
+import org.ontouml.serialization.ClassifierSerializer;
 
 /**
  * A decoratable element (either a class or a relation) that defines properties exhibited by its
@@ -20,6 +19,7 @@ import org.ontouml.model.stereotype.Stereotype;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = ClassifierSerializer.class)
 public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotype>
     extends Decoratable<S> {
 
@@ -28,7 +28,7 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
    * attributes when contained by classes, and relation ends when contained by relations. In the
    * case of relations, the properties array must be ordered.
    */
-  List<Property> properties = new ArrayList<>();
+  @Builder.Default List<Property> properties = new ArrayList<>();
 
   /**
    * Determines whether the classifier can have direct instances using a boolean. Abstract

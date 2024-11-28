@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @AllArgsConstructor
+// @JsonSerialize(using = PackageableElementSerializer.class)
 public abstract class PackageableElement extends ModelElement {
   public PackageableElement(
       String id, MultilingualText name, List<MultilingualText> alternativeNames) {

@@ -48,4 +48,13 @@ public class Serializer {
     if (list != null && !list.isEmpty()) jsonGen.writeObjectField(fieldName, list);
     else jsonGen.writeNullField(fieldName);
   }
+
+  public static void writeEmptyableArrayField(
+      String fieldName, Collection<?> list, JsonGenerator jsonGen) throws IOException {
+    if (list != null && !list.isEmpty()) jsonGen.writeObjectField(fieldName, list);
+    else {
+      jsonGen.writeArrayFieldStart(fieldName);
+      jsonGen.writeEndArray();
+    }
+  }
 }

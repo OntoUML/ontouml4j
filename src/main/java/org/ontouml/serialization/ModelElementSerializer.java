@@ -18,7 +18,7 @@ public class ModelElementSerializer extends JsonSerializer<ModelElement> {
     jsonGen.writeEndObject();
   }
 
-  private void serializeFields(ModelElement element, JsonGenerator jsonGen) {
+  public void serializeFields(ModelElement element, JsonGenerator jsonGen) {
     element
         .getCustomProperties()
         .forEach(

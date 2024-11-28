@@ -1,5 +1,6 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.Stereotype;
+import org.ontouml.serialization.DecoratableSerializer;
 
 /**
  * A model element that can be decorated with a stereotype to identify its ontological properties
@@ -20,6 +22,7 @@ import org.ontouml.model.stereotype.Stereotype;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = DecoratableSerializer.class)
 public abstract class Decoratable<S extends Stereotype> extends PackageableElement {
 
   /** Determines a custom stereotype, not necessarily compliant to UFO. */

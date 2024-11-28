@@ -92,6 +92,9 @@ public abstract class NamedElement extends OntoumlElement {
   }
 
   public void addDescription(String languageTag, String value) {
+    if (this.description == null) {
+      this.description = new MultilingualText();
+    }
     this.description.putText(languageTag, value);
   }
 
