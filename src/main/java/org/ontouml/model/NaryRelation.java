@@ -1,10 +1,12 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.model.stereotype.RelationStereotype;
+import org.ontouml.serialization.NaryRelationSerializer;
 
 /**
  * A relation that defines the properties of a set of relations of the subject domain that connect
@@ -14,6 +16,7 @@ import org.ontouml.model.stereotype.RelationStereotype;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@JsonSerialize(using = NaryRelationSerializer.class)
 public class NaryRelation extends Relation {
   @Override
   public String getType() {

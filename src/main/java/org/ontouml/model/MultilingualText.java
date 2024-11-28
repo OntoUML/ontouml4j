@@ -12,7 +12,7 @@ public class MultilingualText {
   private static String defaultLanguage = "en";
   private static String[] languagePreference = new String[] {defaultLanguage};
 
-  private SortedMap<String, String> textMap = new TreeMap<>();
+  private final SortedMap<String, String> textMap = new TreeMap<>();
 
   public MultilingualText(MultilingualText base) {
     textMap.putAll(base.textMap);

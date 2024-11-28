@@ -1,6 +1,7 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -12,6 +13,7 @@ import org.ontouml.deserialization.BinaryRelationDeserializer;
 import org.ontouml.model.stereotype.ClassStereotype;
 import org.ontouml.model.stereotype.RelationStereotype;
 import org.ontouml.model.stereotype.Stereotype;
+import org.ontouml.serialization.BinaryRelationSerializer;
 
 /**
  * A relation that defines the properties of a set of binary relations of the subject domain.
@@ -26,7 +28,98 @@ import org.ontouml.model.stereotype.Stereotype;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = BinaryRelationDeserializer.class)
+@JsonSerialize(using = BinaryRelationSerializer.class)
 public class BinaryRelation extends Relation {
+
+  public BinaryRelation(String id, MultilingualText name, RelationStereotype ontoumlStereotype) {
+    super(id, name, ontoumlStereotype);
+  }
+
+  public BinaryRelation(String id, MultilingualText name, String stereotypeName) {
+    super(id, name, stereotypeName);
+  }
+
+  public BinaryRelation(
+      String id,
+      MultilingualText name,
+      RelationStereotype ontoumlStereotype,
+      Classifier<?, ?> source,
+      Classifier<?, ?> target) {
+    this(id, name, ontoumlStereotype);
+    createMemberEnd(source);
+    createMemberEnd(target);
+  }
+
+  public BinaryRelation(
+      String id,
+      MultilingualText name,
+      String stereotypeName,
+      Classifier<?, ?> source,
+      Classifier<?, ?> target) {
+    this(id, name, stereotypeName);
+    createMemberEnd(source);
+    createMemberEnd(target);
+  }
+
+  public BinaryRelation(
+      String id,
+      MultilingualText name,
+      RelationStereotype ontoumlStereotype,
+      List<Classifier<?, ?>> participants) {
+    this(id, name, ontoumlStereotype);
+    participants.forEach(this::createMemberEnd);
+  }
+
+  public BinaryRelation(
+      String id,
+      MultilingualText name,
+      String stereotypeName,
+      List<Classifier<?, ?>> participants) {
+    this(id, name, stereotypeName);
+    participants.forEach(this::createMemberEnd);
+  }
+
+  public BinaryRelation(
+      String id,
+      String name,
+      RelationStereotype ontoumlStereotype,
+      Classifier<?, ?> source,
+      Classifier<?, ?> target) {
+    this(id, new MultilingualText(name), ontoumlStereotype, source, target);
+  }
+
+  public BinaryRelation(
+      String id,
+      String name,
+      String stereotypeName,
+      Classifier<?, ?> source,
+      Classifier<?, ?> target) {
+    this(id, new MultilingualText(name), stereotypeName, source, target);
+  }
+
+  public BinaryRelation(String id, String name, Classifier<?, ?> source, Classifier<?, ?> target) {
+    this(id, new MultilingualText(name), (String) null, source, target);
+  }
+
+  public BinaryRelation(
+      RelationStereotype ontoumlStereotype, Classifier<?, ?> source, Classifier<?, ?> target) {
+    this(null, (MultilingualText) null, ontoumlStereotype, source, target);
+  }
+
+  public BinaryRelation(String stereotypeName, Classifier<?, ?> source, Classifier<?, ?> target) {
+    this(null, (MultilingualText) null, stereotypeName, source, target);
+  }
+
+  public BinaryRelation(Classifier<?, ?> source, Classifier<?, ?> target) {
+    this(null, (MultilingualText) null, (RelationStereotype) null, source, target);
+  }
+
+  public void createMemberEnd(Classifier<?, ?> classifier) {
+    Property end = new Property(classifier);
+    end.setContainer(this);
+    properties.add(end);
+  }
+
   @Override
   public String getType() {
     return "BinaryRelation";

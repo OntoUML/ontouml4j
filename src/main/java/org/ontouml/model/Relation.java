@@ -15,4 +15,12 @@ import org.ontouml.model.stereotype.RelationStereotype;
 @Data
 @SuperBuilder
 @NoArgsConstructor
-public abstract class Relation extends Classifier<Relation, RelationStereotype> {}
+public abstract class Relation extends Classifier<Relation, RelationStereotype> {
+  public Relation(String id, MultilingualText name, RelationStereotype ontoumlStereotype) {
+    super(id, name, ontoumlStereotype);
+  }
+
+  public Relation(String id, MultilingualText name, String ontoumlStereotype) {
+    super(id, name, ontoumlStereotype);
+  }
+}

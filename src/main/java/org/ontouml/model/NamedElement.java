@@ -72,6 +72,9 @@ public abstract class NamedElement extends OntoumlElement {
   }
 
   public void addName(String value) {
+    if (name == null) {
+      this.name = new MultilingualText(value);
+    }
     this.name.putText(value);
   }
 

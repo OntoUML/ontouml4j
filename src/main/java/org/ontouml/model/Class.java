@@ -418,7 +418,8 @@ public class Class extends Classifier<Class, ClassStereotype> {
               project.getElementById(property.getId(), Property.class);
           propertyInProject.ifPresent(newProperties::add);
         });
-    this.properties = newProperties;
+    this.properties.clear();
+    this.properties.addAll(newProperties);
   }
 
   public Property createAttribute(String name, Classifier<?, ?> type) {

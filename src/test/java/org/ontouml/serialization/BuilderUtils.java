@@ -42,6 +42,7 @@ class BuilderUtils {
             .classes(createClasses())
             //        .properties(createProperties())
             //        .literals(createLiterals())
+            //            .relations(createRelations())
             .creators(List.of(creator))
             .packages(packages)
             .build();
@@ -132,6 +133,14 @@ class BuilderUtils {
             .build();
     properties.put("property1", property1);
     return properties;
+  }
+
+  static Map<String, Relation> createRelations() {
+    Map<String, Relation> relations = new HashMap<>();
+    Relation relation1 =
+        BinaryRelation.builder().properties(createProperties().values().stream().toList()).build();
+    relations.put("relation1", relation1);
+    return relations;
   }
 
   static Map<String, Literal> createLiterals() {
