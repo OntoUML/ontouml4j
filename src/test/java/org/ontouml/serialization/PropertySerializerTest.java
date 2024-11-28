@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Project;
 import org.ontouml.model.Property;
+import org.ontouml.utils.BuilderUtils;
 
 public class PropertySerializerTest {
 

@@ -183,4 +183,8 @@ public class Project extends NamedElement {
   public Optional<Relation> getRelationById(String id) {
     return Optional.ofNullable(this.relations.get(id));
   }
+
+  public Optional<Generalization> getGeneralizationById(String id) {
+    return Optional.ofNullable(this.generalizations.get(id));
+  }
 }

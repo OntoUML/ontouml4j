@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.ontouml.model.MultilingualText;
 import org.ontouml.model.Project;
 import org.ontouml.model.Resource;
+import org.ontouml.utils.BuilderUtils;
 
 public class ProjectSerializerTest {
   static Project project;

@@ -73,6 +73,7 @@ public class ProjectSerializer extends JsonSerializer<Project> {
         case Literal literal -> LiteralSerializer.serializeFields(literal, jsonGen);
         case BinaryRelation relation -> BinaryRelationSerializer.serializeFields(relation, jsonGen);
         case NaryRelation relation -> NaryRelationSerializer.serializeFields(relation, jsonGen);
+        case Generalization gen -> GeneralizationSerializer.serializeFields(gen, jsonGen);
         default ->
             throw new IllegalArgumentException("Unexpected element type: " + element.getClass());
       }

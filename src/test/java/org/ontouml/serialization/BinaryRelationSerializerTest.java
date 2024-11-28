@@ -13,6 +13,7 @@ import org.ontouml.model.BinaryRelation;
 import org.ontouml.model.Class;
 import org.ontouml.model.Project;
 import org.ontouml.model.stereotype.RelationStereotype;
+import org.ontouml.utils.BuilderUtils;
 
 public class BinaryRelationSerializerTest {
   ObjectMapper mapper;

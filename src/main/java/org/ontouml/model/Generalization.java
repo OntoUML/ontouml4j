@@ -1,6 +1,7 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.Optional;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.GeneralizationDeserializer;
 import org.ontouml.model.stereotype.Stereotype;
+import org.ontouml.serialization.GeneralizationSerializer;
 
 /**
  * A model element that represents the generalization of a specific classifier into a general
@@ -22,10 +24,11 @@ import org.ontouml.model.stereotype.Stereotype;
 @Data
 @SuperBuilder
 @JsonDeserialize(using = GeneralizationDeserializer.class)
+@JsonSerialize(using = GeneralizationSerializer.class)
 @NoArgsConstructor
 public class Generalization extends PackageableElement {
-  String generalId;
-  String specificId;
+  private String generalId;
+  private String specificId;
 
   /**
    * Identifies the general classifier in a generalization element. E.g., in the generalization of

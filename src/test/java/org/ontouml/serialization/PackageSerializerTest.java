@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Package;
 import org.ontouml.model.Project;
+import org.ontouml.utils.BuilderUtils;
 
 public class PackageSerializerTest {
   static Project project;
@@ -66,7 +67,7 @@ public class PackageSerializerTest {
   @Test
   void shouldSerializeEmptyDescriptionAsNull() throws JsonProcessingException {
     pkg.setDescription(null);
-    String json = mapper.writeValueAsString(pkg);
+    String json = pkg.serializeAsString();
     assertThat(json).contains("\"description\" : null");
   }
 

@@ -1,4 +1,4 @@
-package org.ontouml.serialization;
+package org.ontouml.utils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -11,10 +11,10 @@ import org.ontouml.model.Package;
 import org.ontouml.model.stereotype.ClassStereotype;
 import org.ontouml.model.utils.AggregationKind;
 
-class BuilderUtils {
+public class BuilderUtils {
   static DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
-  static Project createProject() throws URISyntaxException {
+  public static Project createProject() throws URISyntaxException {
     var projectName = new MultilingualText("My Project");
     projectName.putText("pt-br", "Meu Projeto");
     Date modifiedDate =
@@ -31,6 +31,18 @@ class BuilderUtils {
 
     Map<String, Package> packages = createPackages();
 
+    Map<String, Generalization> generalizations = createGeneralizations();
+
+    Map<String, Class> classes = createClasses();
+
+    generalizations.forEach(
+        (key, item) -> {
+          Class general = classes.get("class_1");
+          Class specific = classes.get("class_2");
+          item.setGeneral(general);
+          item.setSpecific(specific);
+        });
+
     Project project =
         Project.builder()
             .id("project_1")
@@ -39,8 +51,9 @@ class BuilderUtils {
             .modified(modifiedDate)
             .description(description)
             .alternativeNames(List.of(new MultilingualText("Project first alternative name")))
-            .classes(createClasses())
+            .classes(classes)
             .properties(createProperties())
+            .generalizations(generalizations)
             .literals(createLiterals())
             .relations(createRelations())
             .creators(List.of(creator))
@@ -53,7 +66,7 @@ class BuilderUtils {
     return project;
   }
 
-  static Map<String, Package> createPackages() throws URISyntaxException {
+  public static Map<String, Package> createPackages() throws URISyntaxException {
     Map<String, Package> packages = new HashMap<>();
 
     Date createdDate =
@@ -82,7 +95,7 @@ class BuilderUtils {
     return packages;
   }
 
-  static Map<String, Class> createClasses() throws URISyntaxException {
+  public static Map<String, Class> createClasses() throws URISyntaxException {
     Map<String, Class> classes = new HashMap<>();
 
     Class class1 =
@@ -120,7 +133,7 @@ class BuilderUtils {
     return classes;
   }
 
-  static Map<String, Property> createProperties() {
+  public static Map<String, Property> createProperties() {
     Map<String, Property> properties = new HashMap<>();
     Property property1 =
         Property.builder()
@@ -136,7 +149,7 @@ class BuilderUtils {
     return properties;
   }
 
-  static Map<String, Relation> createRelations() {
+  public static Map<String, Relation> createRelations() {
     Map<String, Relation> relations = new HashMap<>();
     Relation relation1 =
         BinaryRelation.builder()
@@ -147,18 +160,25 @@ class BuilderUtils {
     return relations;
   }
 
-  static Map<String, Literal> createLiterals() {
+  public static Map<String, Literal> createLiterals() {
     Map<String, Literal> literals = new HashMap<>();
     literals.put("literal1", new Literal("literal1"));
     return literals;
   }
 
-  static List<Resource> createCreators() throws URISyntaxException {
+  public static List<Resource> createCreators() throws URISyntaxException {
     return List.of(
         new Resource(new MultilingualText("Matheus Lenke"), new URI("https://lenke.software")));
   }
 
-  static List<MultilingualText> createEditorialNotes() throws URISyntaxException {
+  public static List<MultilingualText> createEditorialNotes() throws URISyntaxException {
     return List.of(new MultilingualText("Editorial Note 1"));
+  }
+
+  public static Map<String, Generalization> createGeneralizations() {
+    Map<String, Generalization> generalizations = new HashMap<>();
+    Generalization generalization1 = Generalization.builder().id("generalization_1").build();
+    generalizations.put("generalization_1", generalization1);
+    return generalizations;
   }
 }

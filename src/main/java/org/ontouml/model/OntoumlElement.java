@@ -1,5 +1,10 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.Date;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -52,4 +57,15 @@ public abstract class OntoumlElement {
   public OntoumlElement() {}
 
   public abstract String getType();
+
+  public String serializeAsString() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    return mapper.writeValueAsString(this);
+  }
+
+  public JsonNode serialize() throws JsonProcessingException {
+    ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    return mapper.convertValue(this, JsonNode.class);
+  }
 }
