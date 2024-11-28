@@ -56,6 +56,15 @@ public class Class extends Classifier<Class, ClassStereotype> {
     this.id = id;
     this.setName(new MultilingualText(name));
     this.setStereotype(classStereotype.getStereotypeName());
+    this.setOntoumlStereotype(classStereotype);
+  }
+
+  public Class(String id, String name, String customStereotype) {
+    super();
+    this.id = id;
+    this.setName(new MultilingualText(name));
+    this.setCustomStereotype(customStereotype);
+    this.setStereotype(customStereotype);
   }
 
   public static Class createKind(String id, String name) {

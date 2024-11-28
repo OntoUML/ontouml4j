@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.util.List;
 import org.ontouml.model.*;
+import org.ontouml.model.Class;
+import org.ontouml.model.Package;
 import org.ontouml.model.utils.ProjectMetaProperties;
 
 public class ProjectSerializer extends JsonSerializer<Project> {
@@ -35,13 +37,14 @@ public class ProjectSerializer extends JsonSerializer<Project> {
       return;
     }
     Serializer.writeNullableOjectField("publisher", metaProperties.getPublisher(), jsonGen);
-    Serializer.writeNullableArrayField(
+    Serializer.writeEmptyableArrayField(
         "designedForTasks", metaProperties.getDesignedForTasks(), jsonGen);
     Serializer.writeNullableOjectField("license", metaProperties.getLicense(), jsonGen);
-    Serializer.writeNullableArrayField("accessRights", metaProperties.getAccessRights(), jsonGen);
-    Serializer.writeNullableArrayField("themes", metaProperties.getThemes(), jsonGen);
-    Serializer.writeNullableArrayField("contexts", metaProperties.getContexts(), jsonGen);
-    Serializer.writeNullableArrayField("ontologyTypes", metaProperties.getOntologyTypes(), jsonGen);
+    Serializer.writeEmptyableArrayField("accessRights", metaProperties.getAccessRights(), jsonGen);
+    Serializer.writeEmptyableArrayField("themes", metaProperties.getThemes(), jsonGen);
+    Serializer.writeEmptyableArrayField("contexts", metaProperties.getContexts(), jsonGen);
+    Serializer.writeEmptyableArrayField(
+        "ontologyTypes", metaProperties.getOntologyTypes(), jsonGen);
     Serializer.writeNullableOjectField(
         "representationStyle", metaProperties.getRepresentationStyle(), jsonGen);
     Serializer.writeNullableStringField(
@@ -49,18 +52,28 @@ public class ProjectSerializer extends JsonSerializer<Project> {
         metaProperties.getNamespace() == null ? null : metaProperties.getNamespace().toString(),
         jsonGen);
 
-    Serializer.writeNullableArrayField("landingPages", metaProperties.getLandingPages(), jsonGen);
-    Serializer.writeNullableArrayField("sources", metaProperties.getSources(), jsonGen);
-    Serializer.writeNullableArrayField(
+    Serializer.writeEmptyableArrayField("landingPages", metaProperties.getLandingPages(), jsonGen);
+    Serializer.writeEmptyableArrayField("sources", metaProperties.getSources(), jsonGen);
+    Serializer.writeEmptyableArrayField(
         "bibliographicCitations", metaProperties.getBibliographicCitations(), jsonGen);
-    Serializer.writeNullableArrayField("acronyms", metaProperties.getAcronyms(), jsonGen);
-    Serializer.writeNullableArrayField("languages", metaProperties.getLanguages(), jsonGen);
-    Serializer.writeNullableArrayField("keywords", metaProperties.getKeywords(), jsonGen);
+    Serializer.writeEmptyableArrayField("acronyms", metaProperties.getAcronyms(), jsonGen);
+    Serializer.writeEmptyableArrayField("languages", metaProperties.getLanguages(), jsonGen);
+    Serializer.writeEmptyableArrayField("keywords", metaProperties.getKeywords(), jsonGen);
   }
 
   private static void serializeElements() throws IOException {
     List<ModelElement> elements = project.getElements();
     jsonGen.writeArrayFieldStart("elements");
+    for (ModelElement element : elements) {
+      jsonGen.writeStartObject();
+      switch (element) {
+        case Class clazz -> ClassSerializer.serializeFields(clazz, jsonGen);
+        case Package pkg -> PackageSerializer.serializeFields(pkg, jsonGen);
+        default ->
+            throw new IllegalArgumentException("Unexpected element type: " + element.getClass());
+      }
+      jsonGen.writeEndObject();
+    }
     jsonGen.writeEndArray();
   }
 

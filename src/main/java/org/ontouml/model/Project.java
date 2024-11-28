@@ -172,6 +172,10 @@ public class Project extends NamedElement {
     }
   }
 
+  public void addClass(Class clazz) {
+    this.classes.put(clazz.getId(), clazz);
+  }
+
   public Optional<Property> getPropertyById(String id) {
     return Optional.ofNullable(this.properties.get(id));
   }

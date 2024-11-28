@@ -9,8 +9,7 @@ import org.ontouml.model.PackageableElement;
 public class PackageableElementSerializer extends JsonSerializer<PackageableElement> {
   static void serializeFields(PackageableElement element, JsonGenerator jsonGen)
       throws IOException {
-    NamedElementSerializer.serializeFields(element, jsonGen);
-    OntoumlElementSerializer.serializeFields(element, jsonGen);
+    ModelElementSerializer.serializeFields(element, jsonGen);
   }
 
   @Override

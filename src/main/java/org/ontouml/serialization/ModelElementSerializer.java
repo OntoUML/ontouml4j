@@ -4,30 +4,36 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
+import java.util.Map;
 import org.ontouml.model.ModelElement;
 
 public class ModelElementSerializer extends JsonSerializer<ModelElement> {
+
+  public static void serializeFields(ModelElement element, JsonGenerator jsonGen)
+      throws IOException {
+    NamedElementSerializer.serializeFields(element, jsonGen);
+    Map<String, Object> customProperties = element.getCustomProperties();
+
+    if (customProperties == null) {
+      jsonGen.writeNullField("customProperties");
+      return;
+    }
+
+    customProperties.forEach(
+        (key, value) -> {
+          try {
+            jsonGen.writeObjectField(key, value);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+        });
+  }
 
   @Override
   public void serialize(ModelElement element, JsonGenerator jsonGen, SerializerProvider serializers)
       throws IOException {
     jsonGen.writeStartObject();
-    NamedElementSerializer.serializeFields(element, jsonGen);
-    OntoumlElementSerializer.serializeFields(element, jsonGen);
     serializeFields(element, jsonGen);
     jsonGen.writeEndObject();
-  }
-
-  public void serializeFields(ModelElement element, JsonGenerator jsonGen) {
-    element
-        .getCustomProperties()
-        .forEach(
-            (key, value) -> {
-              try {
-                jsonGen.writeObjectField(key, value);
-              } catch (IOException e) {
-                e.printStackTrace();
-              }
-            });
   }
 }
