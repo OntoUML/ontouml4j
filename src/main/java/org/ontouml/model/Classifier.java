@@ -28,7 +28,7 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
    * attributes when contained by classes, and relation ends when contained by relations. In the
    * case of relations, the properties array must be ordered.
    */
-  List<Property> properties = new ArrayList<>();
+  @Builder.Default List<Property> properties = new ArrayList<>();
 
   /**
    * Determines whether the classifier can have direct instances using a boolean. Abstract
@@ -44,6 +44,7 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
 
   public Classifier(String id, MultilingualText name, String stereotypeName) {
     super(id, name, stereotypeName);
+    properties = new ArrayList<>();
   }
 
   public void setProperties(Collection<String> properties) {

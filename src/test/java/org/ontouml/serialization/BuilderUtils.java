@@ -40,9 +40,9 @@ class BuilderUtils {
             .description(description)
             .alternativeNames(List.of(new MultilingualText("Project first alternative name")))
             .classes(createClasses())
-            //        .properties(createProperties())
-            //        .literals(createLiterals())
-            //            .relations(createRelations())
+            .properties(createProperties())
+            .literals(createLiterals())
+            .relations(createRelations())
             .creators(List.of(creator))
             .packages(packages)
             .build();
@@ -124,6 +124,7 @@ class BuilderUtils {
     Map<String, Property> properties = new HashMap<>();
     Property property1 =
         Property.builder()
+            .id("property_1")
             .name(new MultilingualText("My Property1"))
             .cardinality(new Cardinality("1", "*"))
             .isDerived(true)
@@ -138,7 +139,10 @@ class BuilderUtils {
   static Map<String, Relation> createRelations() {
     Map<String, Relation> relations = new HashMap<>();
     Relation relation1 =
-        BinaryRelation.builder().properties(createProperties().values().stream().toList()).build();
+        BinaryRelation.builder()
+            .id("relation_1")
+            .properties(createProperties().values().stream().toList())
+            .build();
     relations.put("relation1", relation1);
     return relations;
   }

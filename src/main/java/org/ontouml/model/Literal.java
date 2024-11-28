@@ -25,7 +25,7 @@ public class Literal extends ModelElement {
   }
 
   public Literal(String name) {
-    this(null, new MultilingualText(name));
+    this(name, new MultilingualText(name));
   }
 
   @Override

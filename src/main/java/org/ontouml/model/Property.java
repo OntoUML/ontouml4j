@@ -1,6 +1,7 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.PropertyDeserializer;
 import org.ontouml.model.stereotype.PropertyStereotype;
 import org.ontouml.model.utils.AggregationKind;
+import org.ontouml.serialization.PropertySerializer;
 
 /**
  * A decoratable element that represents an attribute of a class, or one end of a relation. Examples
@@ -18,7 +20,7 @@ import org.ontouml.model.utils.AggregationKind;
  * within each property. For example, the value assigned to a property in an instance must be itself
  * an instance of the classifier in property type.
  */
-// @JsonSerialize(using = PropertySerializer.class)
+@JsonSerialize(using = PropertySerializer.class)
 @JsonDeserialize(using = PropertyDeserializer.class)
 @EqualsAndHashCode(callSuper = true)
 @Data
