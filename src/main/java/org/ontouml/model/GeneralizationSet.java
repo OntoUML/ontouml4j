@@ -1,13 +1,16 @@
 package org.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.OntoumlUtils;
 import org.ontouml.deserialization.GeneralizationSetDeserializer;
+import org.ontouml.serialization.GeneralizationSetSerializer;
 
 /**
  * A model element that contains an annotation about the ontology or some of its elements. A note
@@ -19,6 +22,7 @@ import org.ontouml.deserialization.GeneralizationSetDeserializer;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = GeneralizationSetDeserializer.class)
+@JsonSerialize(using = GeneralizationSetSerializer.class)
 public class GeneralizationSet extends PackageableElement {
   /**
    * Determines whether the specific classifiers in the generalization set have disjoint extensions.
@@ -37,7 +41,7 @@ public class GeneralizationSet extends PackageableElement {
   private boolean isComplete;
 
   /** Identifies all generalizations that are involved by the generalization set. */
-  private Set<Generalization> generalizations = new HashSet<>();
+  @Builder.Default private Set<Generalization> generalizations = new HashSet<>();
 
   private List<String> generalizationIds = new ArrayList<>();
 

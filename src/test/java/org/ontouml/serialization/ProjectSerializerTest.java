@@ -3,6 +3,7 @@ package org.ontouml.serialization;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.net.URI;
@@ -40,10 +41,13 @@ public class ProjectSerializerTest {
 
   @Test
   void shouldSerializeName() throws JsonProcessingException {
-    String json = mapper.writeValueAsString(project);
-    assertThat(json).contains("\"name\" : {");
-    assertThat(json).contains("\"pt-br\" : \"Meu Projeto\"");
-    assertThat(json).contains("\"en\" : \"My Project\"");
+    JsonNode node = project.serialize();
+
+    String namePt = node.get("name").get("pt").asText();
+    String nameEn = node.get("name").get("en").asText();
+
+    assertThat(namePt).contains("Meu Projeto");
+    assertThat(nameEn).contains("My Project");
   }
 
   @Test

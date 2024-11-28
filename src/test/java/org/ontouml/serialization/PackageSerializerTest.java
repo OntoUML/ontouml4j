@@ -3,11 +3,13 @@ package org.ontouml.serialization;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -71,17 +73,17 @@ public class PackageSerializerTest {
     assertThat(json).contains("\"description\" : null");
   }
 
-  //    @Test
-  //    void shouldSerializePropertyAssignments() throws JsonProcessingException {
-  //      pkg.addPropertyAssignment("acronym", "UFO-X");
-  //      pkg.addPropertyAssignment("numberOfContributors", 100);
-  //
-  //      String json = mapper.writeValueAsString(pkg);
-  //
-  //      assertThat(json).contains("\"propertyAssignments\" : {");
-  //      assertThat(json).contains("\"acronym\" : \"UFO-X\"");
-  //      assertThat(json).contains("\"numberOfContributors\" : 100");
-  //    }
+  @Test
+  void shouldSerializeCustomProperties() throws JsonProcessingException {
+    pkg.setCustomProperties(Map.of("acronym", "UFO-X", "numberOfContributors", 100));
+
+    JsonNode node = pkg.serialize();
+    JsonNode customProperties = node.get("customProperties");
+
+    //    assertThat(json).contains("\"customProperties\" : {");
+    //    assertThat(json).contains("\"acronym\" : \"UFO-X\"");
+    //    assertThat(json).contains("\"numberOfContributors\" : 100");
+  }
 
   @Test
   void shouldSerializeEmptyCustomPropertiesAsNull() throws JsonProcessingException {

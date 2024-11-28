@@ -10,13 +10,13 @@ import org.ontouml.model.Class;
 import org.ontouml.model.Package;
 import org.ontouml.model.stereotype.ClassStereotype;
 import org.ontouml.model.utils.AggregationKind;
+import org.ontouml.model.utils.ProjectMetaProperties;
 
 public class BuilderUtils {
   static DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 
   public static Project createProject() throws URISyntaxException {
-    var projectName = new MultilingualText("My Project");
-    projectName.putText("pt-br", "Meu Projeto");
+    var projectName = new MultilingualText(Map.of("en", "My Project", "pt", "Meu Projeto"));
     Date modifiedDate =
         Date.from(ZonedDateTime.parse("2024-09-04T00:00:00Z", formatter).toInstant());
     Resource creator =
@@ -33,6 +33,8 @@ public class BuilderUtils {
 
     Map<String, Generalization> generalizations = createGeneralizations();
 
+    Map<String, GeneralizationSet> generalizationSets = createGeneralizationSets();
+
     Map<String, Class> classes = createClasses();
 
     generalizations.forEach(
@@ -41,6 +43,11 @@ public class BuilderUtils {
           Class specific = classes.get("class_2");
           item.setGeneral(general);
           item.setSpecific(specific);
+        });
+
+    generalizationSets.forEach(
+        (key, item) -> {
+          item.setGeneralizations(generalizations.values());
         });
 
     Project project =
@@ -54,6 +61,7 @@ public class BuilderUtils {
             .classes(classes)
             .properties(createProperties())
             .generalizations(generalizations)
+            .generalizationSets(generalizationSets)
             .literals(createLiterals())
             .relations(createRelations())
             .creators(List.of(creator))
@@ -64,6 +72,10 @@ public class BuilderUtils {
           item.setProjectContainer(project);
         });
     return project;
+  }
+
+  public static ProjectMetaProperties createProjectMetaProperties() {
+    return new ProjectMetaProperties();
   }
 
   public static Map<String, Package> createPackages() throws URISyntaxException {
@@ -178,7 +190,17 @@ public class BuilderUtils {
   public static Map<String, Generalization> createGeneralizations() {
     Map<String, Generalization> generalizations = new HashMap<>();
     Generalization generalization1 = Generalization.builder().id("generalization_1").build();
+    Generalization generalization2 = Generalization.builder().id("generalization_2").build();
     generalizations.put("generalization_1", generalization1);
+    generalizations.put("generalization_2", generalization2);
     return generalizations;
+  }
+
+  public static Map<String, GeneralizationSet> createGeneralizationSets() {
+    Map<String, GeneralizationSet> generalizationSets = new HashMap<>();
+    GeneralizationSet generalizationSet1 =
+        GeneralizationSet.builder().id("generalizationSet_1").build();
+    generalizationSets.put("generalizationSet_1", generalizationSet1);
+    return generalizationSets;
   }
 }

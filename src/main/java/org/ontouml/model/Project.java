@@ -187,4 +187,8 @@ public class Project extends NamedElement {
   public Optional<Generalization> getGeneralizationById(String id) {
     return Optional.ofNullable(this.generalizations.get(id));
   }
+
+  public Optional<GeneralizationSet> getGeneralizationSetById(String id) {
+    return Optional.ofNullable(this.generalizationSets.get(id));
+  }
 }

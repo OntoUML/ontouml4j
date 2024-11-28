@@ -19,6 +19,7 @@ public class ModelElementSerializer extends JsonSerializer<ModelElement> {
       return;
     }
 
+    jsonGen.writeObjectFieldStart("customProperties");
     customProperties.forEach(
         (key, value) -> {
           try {
@@ -27,6 +28,7 @@ public class ModelElementSerializer extends JsonSerializer<ModelElement> {
             e.printStackTrace();
           }
         });
+    jsonGen.writeEndObject();
   }
 
   @Override
