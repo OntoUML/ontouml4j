@@ -217,7 +217,11 @@ public class BuilderUtils {
 
   public static Map<String, Note> createNotes() {
     Map<String, Note> notes = new HashMap<>();
-    Note note1 = Note.builder().id("note_1").build();
+    Note note1 =
+        Note.builder()
+            .id("note_1")
+            .text(new MultilingualText(Map.of("en", "My Note Text", "pt", "Meu texto")))
+            .build();
     notes.put("note_1", note1);
     return notes;
   }
