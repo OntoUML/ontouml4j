@@ -23,12 +23,11 @@ class BinaryRelationDeserializerTest {
   static ObjectMapper mapper;
   static Project project;
   static BinaryRelation relation;
-  static ResourceGetter resourceGetter = new ResourceGetter();
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    File jsonFile = resourceGetter.getJsonFromDeserialization("relation.allfields.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("relation.allfields.ontouml.json");
 
     try {
       project = mapper.readValue(jsonFile, Project.class);

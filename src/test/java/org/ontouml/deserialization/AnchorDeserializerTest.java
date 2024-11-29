@@ -15,16 +15,14 @@ import org.ontouml.utils.ResourceGetter;
 
 public class AnchorDeserializerTest {
   static ObjectMapper mapper;
-  static ResourceGetter resourceGetter;
   static Anchor anchor;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    resourceGetter = new ResourceGetter();
 
-    File jsonFile = resourceGetter.getJsonFromDeserialization("anchor.allfields.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("anchor.allfields.ontouml.json");
     Project project = mapper.readValue(jsonFile, Project.class);
     Optional<Anchor> anchor1 = project.getElementById("anchor_1", Anchor.class);
     anchor1.ifPresent(aAnchor -> anchor = aAnchor);

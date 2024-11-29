@@ -15,16 +15,14 @@ import org.ontouml.utils.ResourceGetter;
 
 public class NoteDeserializerTest {
   static ObjectMapper mapper;
-  static ResourceGetter resourceGetter;
   static Note note;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    resourceGetter = new ResourceGetter();
 
-    File jsonFile = resourceGetter.getJsonFromDeserialization("note.allfields.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("note.allfields.ontouml.json");
     Project project = mapper.readValue(jsonFile, Project.class);
     Optional<Note> note1 = project.getElementById("note_1", Note.class);
     note1.ifPresent(aNote -> note = aNote);

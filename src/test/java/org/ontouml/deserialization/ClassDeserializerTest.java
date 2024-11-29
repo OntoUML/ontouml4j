@@ -19,16 +19,14 @@ import org.ontouml.utils.ResourceGetter;
 class ClassDeserializerTest {
 
   static ObjectMapper mapper;
-  static ResourceGetter resourceGetter;
   static Class clazz;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    resourceGetter = new ResourceGetter();
 
-    File jsonFile = resourceGetter.getJsonFromDeserialization("class.allfields.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("class.allfields.ontouml.json");
     Project project = mapper.readValue(jsonFile, Project.class);
     Optional<Class> class1 = project.getClassById("class1");
     class1.ifPresent(aClass -> clazz = aClass);

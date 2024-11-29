@@ -15,16 +15,14 @@ import org.ontouml.utils.ResourceGetter;
 
 class GeneralizationDeserializerTest {
 
-  static ResourceGetter resourceGetter;
   static ObjectMapper mapper;
   static Generalization gen;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    resourceGetter = new ResourceGetter();
     File jsonFile =
-        resourceGetter.getJsonFromDeserialization("generalization.allfields.ontouml.json");
+        ResourceGetter.getJsonFromDeserialization("generalization.allfields.ontouml.json");
 
     try {
       Project project = mapper.readValue(jsonFile, Project.class);

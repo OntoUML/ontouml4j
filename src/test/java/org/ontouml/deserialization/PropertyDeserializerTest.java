@@ -16,13 +16,12 @@ import org.ontouml.utils.ResourceGetter;
 class PropertyDeserializerTest {
 
   static ObjectMapper mapper;
-  static ResourceGetter resourceGetter = new ResourceGetter();
   static Property property;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    File jsonFile = resourceGetter.getJsonFromDeserialization("property.minimum.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("property.minimum.ontouml.json");
     try {
       property = mapper.readValue(jsonFile, Property.class);
     } catch (IOException e) {

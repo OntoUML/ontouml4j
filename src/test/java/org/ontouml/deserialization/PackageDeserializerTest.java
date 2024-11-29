@@ -18,14 +18,12 @@ import org.ontouml.utils.ResourceGetter;
 public class PackageDeserializerTest {
 
   static ObjectMapper mapper;
-  static ResourceGetter resourceGetter;
   static Package pkg;
 
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    resourceGetter = new ResourceGetter();
-    File jsonFile = resourceGetter.getJsonFromDeserialization("package.allfields.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("package.allfields.ontouml.json");
 
     try {
       Project project = mapper.readValue(jsonFile, Project.class);
