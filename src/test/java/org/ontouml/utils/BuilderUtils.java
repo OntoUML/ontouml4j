@@ -50,6 +50,15 @@ public class BuilderUtils {
           item.setGeneralizations(generalizations.values());
         });
 
+    var notes = createNotes();
+    var anchors = createAnchors();
+
+    anchors.forEach(
+        (key, item) -> {
+          item.setNote(notes.get("note_1"));
+          item.setElement(classes.get("class_1"));
+        });
+
     Project project =
         Project.builder()
             .id("project_1")
@@ -64,8 +73,10 @@ public class BuilderUtils {
             .generalizationSets(generalizationSets)
             .literals(createLiterals())
             .relations(createRelations())
-            .creators(List.of(creator))
             .packages(packages)
+            .notes(notes)
+            .anchors(anchors)
+            .creators(List.of(creator))
             .build();
     packages.forEach(
         (key, item) -> {
@@ -202,5 +213,19 @@ public class BuilderUtils {
         GeneralizationSet.builder().id("generalizationSet_1").build();
     generalizationSets.put("generalizationSet_1", generalizationSet1);
     return generalizationSets;
+  }
+
+  public static Map<String, Note> createNotes() {
+    Map<String, Note> notes = new HashMap<>();
+    Note note1 = Note.builder().id("note_1").build();
+    notes.put("note_1", note1);
+    return notes;
+  }
+
+  public static Map<String, Anchor> createAnchors() {
+    Map<String, Anchor> anchors = new HashMap<>();
+    Anchor anchor1 = Anchor.builder().id("anchor_1").build();
+    anchors.put(anchor1.getId(), anchor1);
+    return anchors;
   }
 }
