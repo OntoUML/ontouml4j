@@ -172,8 +172,56 @@ public class Project extends NamedElement {
     }
   }
 
+  public ModelElement addElement(ModelElement element) {
+    switch (element) {
+      case Class clazz -> this.addClass(clazz);
+      case Package pkg -> this.addPackage(pkg);
+      case Relation relation -> this.addRelation(relation);
+      case Property property -> this.addProperty(property);
+      case Literal literal -> this.addLiteral(literal);
+      case GeneralizationSet genset -> this.addGeneralizationSet(genset);
+      case Generalization gen -> this.addGeneralization(gen);
+      case Note note -> this.addNote(note);
+      case Anchor anchor -> this.addAnchor(anchor);
+      default -> throw new IllegalStateException("Unexpected value: " + element);
+    }
+    return element;
+  }
+
   public void addClass(Class clazz) {
     this.classes.put(clazz.getId(), clazz);
+  }
+
+  public void addPackage(Package pkg) {
+    this.packages.put(pkg.getId(), pkg);
+  }
+
+  public void addRelation(Relation relation) {
+    this.relations.put(relation.getId(), relation);
+  }
+
+  public void addLiteral(Literal literal) {
+    this.literals.put(literal.getId(), literal);
+  }
+
+  public void addProperty(Property property) {
+    this.properties.put(property.getId(), property);
+  }
+
+  public void addGeneralization(Generalization gen) {
+    this.generalizations.put(gen.getId(), gen);
+  }
+
+  public void addGeneralizationSet(GeneralizationSet genset) {
+    this.generalizationSets.put(genset.getId(), genset);
+  }
+
+  public void addNote(Note note) {
+    this.notes.put(note.getId(), note);
+  }
+
+  public void addAnchor(Anchor anchor) {
+    this.anchors.put(anchor.getId(), anchor);
   }
 
   public Optional<Property> getPropertyById(String id) {
@@ -190,5 +238,12 @@ public class Project extends NamedElement {
 
   public Optional<GeneralizationSet> getGeneralizationSetById(String id) {
     return Optional.ofNullable(this.generalizationSets.get(id));
+  }
+
+  public Package createPackage(String id, String name) {
+    Package pkg = Package.builder().id(id).name(new MultilingualText(name)).build();
+    pkg.setProjectContainer(this);
+    this.packages.put(id, pkg);
+    return pkg;
   }
 }

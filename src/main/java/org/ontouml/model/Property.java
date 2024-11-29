@@ -156,6 +156,8 @@ public final class Property extends Decoratable<PropertyStereotype> {
   }
 
   public void setCardinality(String cardinality) {
+    if (cardinality == null)
+      throw new NullPointerException("Cannot set null cardinality string on property!");
     this.cardinality.setValue(cardinality);
   }
 
@@ -242,5 +244,13 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public Optional<String> getCardinalityValue() {
     return cardinality.getValue();
+  }
+
+  public void addRedefinedProperty(Property prop) {
+    this.redefinedProperties.add(prop);
+  }
+
+  public void addSubsettedProperty(Property prop) {
+    this.subsettedProperties.add(prop);
   }
 }

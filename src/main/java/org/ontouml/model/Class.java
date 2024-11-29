@@ -368,11 +368,17 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public void setRestrictedTo(Optional<Nature> restrictedTo) {
+    if (this.restrictedTo == null) {
+      this.restrictedTo = new ArrayList<>();
+    }
     this.restrictedTo.clear();
     restrictedTo.ifPresent(this.restrictedTo::add);
   }
 
   public void setRestrictedTo(Nature restrictedTo) {
+    if (this.restrictedTo == null) {
+      this.restrictedTo = new ArrayList<>();
+    }
     this.restrictedTo.clear();
     this.restrictedTo.add(restrictedTo);
   }
@@ -389,6 +395,9 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public void setRestrictedToNatures(Collection<Nature> restrictedTo) {
+    if (this.restrictedTo == null) {
+      this.restrictedTo = new ArrayList<>();
+    }
     this.restrictedTo.clear();
     this.restrictedTo.addAll(restrictedTo);
   }

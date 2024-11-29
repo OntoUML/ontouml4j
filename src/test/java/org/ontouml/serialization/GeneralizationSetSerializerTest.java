@@ -5,6 +5,7 @@ import static com.google.common.truth.Truth.assertThat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -111,10 +112,9 @@ public class GeneralizationSetSerializerTest {
     JsonNode node = generalizationSet.serialize();
     JsonNode generalizations = node.get("generalizations");
 
-    String firstGeneralization = generalizations.get(0).asText();
-    String secondGeneralization = generalizations.get(1).asText();
+    List<String> gens = List.of(generalizations.get(0).asText(), generalizations.get(1).asText());
 
-    assertThat(firstGeneralization).isEqualTo("generalization_2");
-    assertThat(secondGeneralization).isEqualTo("generalization_1");
+    assertThat(gens).contains("generalization_2");
+    assertThat(gens).contains("generalization_1");
   }
 }

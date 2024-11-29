@@ -28,4 +28,8 @@ public abstract class ModelElement extends NamedElement {
   public ModelElement(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
     super(id, name, alternativeNames);
   }
+
+  public void addCustomProperty(String key, Object value) {
+    customProperties.put(key, value);
+  }
 }
