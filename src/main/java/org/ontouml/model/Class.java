@@ -51,9 +51,14 @@ public class Class extends Classifier<Class, ClassStereotype> {
    */
   String order;
 
+  private Project projectContainer;
+
   public Class(String id, String name, ClassStereotype classStereotype) {
     super();
     this.id = id;
+    this.literals = new ArrayList<>();
+    this.restrictedTo = new ArrayList<>();
+    this.customProperties = new HashMap<>();
     this.setName(new MultilingualText(name));
     this.setStereotype(classStereotype.getStereotypeName());
     this.setOntoumlStereotype(classStereotype);
@@ -62,6 +67,8 @@ public class Class extends Classifier<Class, ClassStereotype> {
   public Class(String id, String name, String customStereotype) {
     super();
     this.id = id;
+    this.literals = new ArrayList<>();
+    this.restrictedTo = new ArrayList<>();
     this.setName(new MultilingualText(name));
     this.setCustomStereotype(customStereotype);
     this.setStereotype(customStereotype);
@@ -439,6 +446,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
     Property attribute = new Property(id, name, type);
     attribute.setContainer(this);
     properties.add(attribute);
+    attribute.setProjectContainer(this.projectContainer);
 
     return attribute;
   }

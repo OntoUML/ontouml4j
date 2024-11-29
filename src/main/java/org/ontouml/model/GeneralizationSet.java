@@ -62,6 +62,7 @@ public class GeneralizationSet extends PackageableElement {
       Class categorizer,
       Collection<Generalization> generalizations) {
     super(id, name, new ArrayList<>());
+    this.generalizations = new HashSet<>(generalizations);
     OntoumlUtils.addIfNotNull(this.generalizations, generalizations);
     this.categorizer = categorizer;
   }

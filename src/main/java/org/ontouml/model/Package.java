@@ -26,9 +26,6 @@ import org.ontouml.serialization.PackageSerializer;
 @JsonSerialize(using = PackageSerializer.class)
 public class Package extends PackageableElement {
 
-  /** A reference to the Project that this package is contained */
-  Project projectContainer;
-
   /** Identifies the contents of a package element. */
   @Builder.Default List<PackageableElement> contents = new ArrayList<>();
 
@@ -77,6 +74,7 @@ public class Package extends PackageableElement {
     contents.add(aClass);
     contentIds.add(aClass.getId());
     projectContainer.addElement(aClass);
+    aClass.setProjectContainer(projectContainer);
     return aClass;
   }
 

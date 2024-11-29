@@ -75,7 +75,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>This regular expression is not enforced to accommodate theoretical ranges as expression,
    * such as, "a..b".
    */
-  @Builder.Default private Cardinality cardinality = new Cardinality();
+  @Builder.Default private Cardinality cardinality = new Cardinality("0", "*");
 
   /** Not used in JSON. Must be determined by ontouml4j library */
   private boolean isDerived;
@@ -100,6 +100,9 @@ public final class Property extends Decoratable<PropertyStereotype> {
       PropertyStereotype ontoumlStereotype,
       Classifier<?, ?> type) {
     super(id, name, ontoumlStereotype);
+    this.cardinality = new Cardinality("0", "*");
+    this.subsettedProperties = new ArrayList<>();
+    this.redefinedProperties = new ArrayList<>();
     setPropertyType(type);
   }
 

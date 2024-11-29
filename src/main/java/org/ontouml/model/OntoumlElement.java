@@ -38,6 +38,8 @@ public abstract class OntoumlElement {
   /** The container in which the element is located. */
   OntoumlElement container;
 
+  Project projectContainer;
+
   public OntoumlElement(String id) {
     this(id, null, null, null);
   }

@@ -58,11 +58,6 @@ public class SerializerTest {
     Generalization g1 = model.createGeneralization("g1", person, agent);
     Generalization g2 = model.createGeneralization("g2", organization, agent);
 
-    GeneralizationSet genSet = model.createGeneralizationSet(g1, g2);
-    genSet.setCategorizer(agentType);
-    genSet.setDisjoint(true);
-    genSet.setComplete(true);
-
     mapper.writeValue(new File("target/serializedModel.json"), project);
   }
 }

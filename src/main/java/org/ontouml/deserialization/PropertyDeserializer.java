@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
-
 import org.ontouml.model.Property;
 import org.ontouml.model.utils.AggregationKind;
 
@@ -31,7 +30,9 @@ public class PropertyDeserializer extends JsonDeserializer<Property> {
     property.setOrdered(isOrdered);
 
     String cardinality = DeserializerUtils.deserializeNullableStringField(root, "cardinality");
-    property.setCardinality(cardinality);
+    if (cardinality != null) {
+      property.setCardinality(cardinality);
+    }
 
     String propertyType = DeserializerUtils.deserializeNullableStringField(root, "propertyType");
     property.setPropertyTypeId(propertyType);

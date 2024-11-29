@@ -10,7 +10,6 @@ public class NamedElementSerializer extends JsonSerializer<NamedElement> {
 
   static void serializeFields(NamedElement element, JsonGenerator jsonGen) throws IOException {
     OntoumlElementSerializer.serializeFields(element, jsonGen);
-    jsonGen.writeStringField("id", element.getId());
     serializeName(element, jsonGen);
     serializeDescription(element, jsonGen);
     serializeAlternativeNames(element, jsonGen);
