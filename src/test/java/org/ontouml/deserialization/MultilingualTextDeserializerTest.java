@@ -3,7 +3,6 @@ package org.ontouml.deserialization;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.truth.Truth8;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.MultilingualText;
@@ -17,8 +16,8 @@ public class MultilingualTextDeserializerTest {
     MultilingualText element = mapper.readValue(json, MultilingualText.class);
 
     assertThat(element.getLanguages()).containsExactly("en", "pt");
-    Truth8.assertThat(element.getText("en")).hasValue("My Project");
-    Truth8.assertThat(element.getText("pt")).hasValue("Meu Projeto");
+    assertThat(element.getText("en")).hasValue("My Project");
+    assertThat(element.getText("pt")).hasValue("Meu Projeto");
   }
 
   @Test
@@ -29,7 +28,7 @@ public class MultilingualTextDeserializerTest {
     MultilingualText element = mapper.readValue(json, MultilingualText.class);
 
     assertThat(element.getLanguages()).containsExactly("en");
-    Truth8.assertThat(element.getText("en")).hasValue("My Project");
+    assertThat(element.getText("en")).hasValue("My Project");
   }
 
   @Test
@@ -40,6 +39,6 @@ public class MultilingualTextDeserializerTest {
     MultilingualText element = mapper.readValue(json, MultilingualText.class);
 
     assertThat(element.getLanguages()).isEmpty();
-    Truth8.assertThat(element.getText("en")).isEmpty();
+    assertThat(element.getText("en")).isEmpty();
   }
 }

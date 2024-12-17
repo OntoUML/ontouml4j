@@ -13,9 +13,14 @@ import java.util.HashMap;
 import java.util.List;
 import org.ontouml.model.*;
 import org.ontouml.model.Package;
+import org.ontouml.model.view.*;
+import org.ontouml.shape.Path;
+import org.ontouml.shape.Rectangle;
+import org.ontouml.shape.Shape;
+import org.ontouml.shape.Text;
 
 public class ProjectDeserializer extends JsonDeserializer<Project> {
-  HashMap<String, ModelElement> elements = new HashMap<>();
+  HashMap<String, OntoumlElement> elements = new HashMap<>();
   ObjectCodec codec;
   JsonNode root;
   JsonParser parser;
@@ -73,7 +78,7 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
 
     String type = elementNode.get("type").asText();
 
-    java.lang.Class<? extends ModelElement> referenceType;
+    java.lang.Class<? extends OntoumlElement> referenceType;
 
     switch (type) {
       case "Package":
@@ -106,12 +111,48 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
       case "Anchor":
         referenceType = Anchor.class;
         break;
+      case "ClassView":
+        referenceType = ClassView.class;
+        break;
+      case "GeneralizationView":
+        referenceType = GeneralizationView.class;
+        break;
+      case "GeneralizationSetView":
+        referenceType = GeneralizationSetView.class;
+        break;
+      case "PackageView":
+        referenceType = PackageView.class;
+        break;
+      case "BinaryRelationView":
+        referenceType = BinaryRelationView.class;
+        break;
+      case "NaryRelationView":
+        referenceType = NaryRelationView.class;
+        break;
+      case "NoteView":
+        referenceType = NoteView.class;
+        break;
+      case "Shape":
+        referenceType = Shape.class;
+        break;
+      case "Rectangle":
+        referenceType = Rectangle.class;
+        break;
+      case "Diamond":
+        referenceType = Diagram.class;
+        break;
+      case "Text":
+        referenceType = Text.class;
+        break;
+      case "Path":
+        referenceType = Path.class;
+        break;
       default:
         return;
     }
     JsonParser parser = elementNode.traverse(codec);
-    ModelElement content = parser.readValueAs(referenceType);
-    ModelElement previousValue = elements.put(content.getId(), content);
+    OntoumlElement content = parser.readValueAs(referenceType);
+    OntoumlElement previousValue = elements.put(content.getId(), content);
     if (previousValue != null) {
       throw new JsonParseException(parser, "Duplicated id identified: " + content.getId());
     }

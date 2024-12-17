@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.truth.Truth8;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +37,7 @@ class ClassDeserializerTest {
   //    Class clazz = mapper.readValue(jsonReference, Class.class);
   //
   //    Truth.assertThat(clazz.getId()).isEqualTo("c1");
-  //    Truth8.assertThat(clazz.getFirstName()).isEmpty();
+  //    assertThat(clazz.getFirstName()).isEmpty();
   //    assertThat(clazz.getStereotype()).isEmpty();
   //  }
 
@@ -113,7 +112,7 @@ class ClassDeserializerTest {
     assertThat(a1.isDerived()).isTrue();
     assertThat(a1.isOrdered()).isTrue();
     assertThat(a1.isReadOnly()).isTrue();
-    Truth8.assertThat(a1.getFirstName()).hasValue("name");
+    assertThat(a1.getFirstName()).hasValue("name");
     assertThat(a1.getCardinality().getValue()).hasValue("1..*");
     assertThat(a1.getPropertyType()).isPresent();
     assertThat(a1.getPropertyType().get().getId()).isEqualTo("class1");
@@ -125,7 +124,7 @@ class ClassDeserializerTest {
 
     Literal literal = clazz.getLiterals().getFirst();
     assertThat(literal.getId()).isEqualTo("l1");
-    Truth8.assertThat(literal.getFirstName()).hasValue("red");
+    assertThat(literal.getFirstName()).hasValue("red");
   }
 
   @Test

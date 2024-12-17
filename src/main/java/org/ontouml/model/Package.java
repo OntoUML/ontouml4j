@@ -48,8 +48,10 @@ public class Package extends PackageableElement {
   }
 
   public void buildAllReferences(Project project) {
+    Map<String, ModelElement> elements = project.getModelElementMap();
+
     for (String id : contentIds) {
-      Optional<ModelElement> element = project.getElementById(id);
+      Optional<ModelElement> element = Optional.ofNullable(elements.get(id));
       element.ifPresent(item -> this.contents.add((PackageableElement) item));
     }
   }

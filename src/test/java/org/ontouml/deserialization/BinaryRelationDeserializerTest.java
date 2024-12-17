@@ -4,7 +4,6 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
-import com.google.common.truth.Truth8;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -46,7 +45,7 @@ class BinaryRelationDeserializerTest {
 
     Truth.assertThat(relation.getId()).isEqualTo("r1");
     Optional<String> name = relation.getFirstName();
-    Truth8.assertThat(relation.getFirstName()).isEmpty();
+    assertThat(relation.getFirstName()).isEmpty();
     assertThat(relation.getStereotype()).isEmpty();
   }
 
@@ -57,14 +56,14 @@ class BinaryRelationDeserializerTest {
 
   @Test
   void shouldDeserializeName() {
-    Truth8.assertThat(relation.getNameIn("en")).hasValue("My BinaryRelation");
-    Truth8.assertThat(relation.getNameIn("pt")).hasValue("Minha Relação");
+    assertThat(relation.getNameIn("en")).hasValue("My BinaryRelation");
+    assertThat(relation.getNameIn("pt")).hasValue("Minha Relação");
   }
 
   @Test
   void shouldDeserializeDescription() {
-    Truth8.assertThat(relation.getDescriptionIn("en")).hasValue("My description.");
-    Truth8.assertThat(relation.getDescriptionIn("pt")).hasValue("Minha descrição.");
+    assertThat(relation.getDescriptionIn("en")).hasValue("My description.");
+    assertThat(relation.getDescriptionIn("pt")).hasValue("Minha descrição.");
   }
 
   @Test
@@ -88,14 +87,14 @@ class BinaryRelationDeserializerTest {
   void shouldDeserializeSourceEnd() {
     Property sourceEnd = relation.getSourceEnd();
     Truth.assertThat(sourceEnd.getId()).isEqualTo("end1");
-    Truth8.assertThat(sourceEnd.getFirstName()).hasValue("person");
+    assertThat(sourceEnd.getFirstName()).hasValue("person");
   }
 
   @Test
   void shouldDeserializeTargetEnd() {
     Property targetEnd = relation.getTargetEnd();
     Truth.assertThat(targetEnd.getId()).isEqualTo("end2");
-    Truth8.assertThat(targetEnd.getFirstName()).hasValue("car");
+    assertThat(targetEnd.getFirstName()).hasValue("car");
   }
 
   @Test

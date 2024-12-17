@@ -1,9 +1,14 @@
 package org.ontouml.model.view;
 
+import java.util.Optional;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.model.ModelElement;
 import org.ontouml.model.OntoumlElement;
+import org.ontouml.model.Project;
 
 /**
  * An OntoUML element that represents a single model element in a diagram.
@@ -21,8 +26,18 @@ import org.ontouml.model.OntoumlElement;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class View extends OntoumlElement {
 
   /** Identifies the model element that the view represents in the diagram. */
-  private String isViewOf;
+  private ModelElement isViewOf;
+
+  private String isViewOfId;
+
+  public void resolveAllReferences(Project project) {
+    Optional<ModelElement> element = project.getElementById(isViewOfId, ModelElement.class);
+
+    element.ifPresent(this::setIsViewOf);
+  }
 }

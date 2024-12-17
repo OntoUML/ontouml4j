@@ -11,7 +11,7 @@ import org.ontouml.model.view.View;
 /** This class is responsible for resolving the references inside elements after they are read. */
 public class ReferenceResolver {
   public static void resolveReferences(Project project) {
-    Map<String, ModelElement> elementMap = project.getElementMap();
+    Map<String, ModelElement> elementMap = project.getModelElementMap();
 
     for (Property property : project.getAllProperties()) {
       resolvePropertyType(elementMap, property);
@@ -25,22 +25,23 @@ public class ReferenceResolver {
     }
 
     for (GeneralizationSet gs : project.getAllGeneralizationSets()) {
+      System.out.println(gs);
       //          resolveCategorizer(elementMap, gs);
       //          resolveGeneralizations(elementMap, gs);
     }
 
-    //        for (Diagram diagram : project.getDiagrams()) {
-    //          resolveOwner(elementMap, diagram);
-    //        }
+    //            for (Diagram diagram : project.getDiagrams()) {
+    //              resolveOwner(elementMap, diagram);
+    //            }
     //
-    //        for (ElementView diagramElement : project.getAllDiagramElements()) {
-    //          resolveModelElement(elementMap, diagramElement);
-    //        }
+    //            for (ElementView diagramElement : project.getAllDiagramElements()) {
+    //              resolveModelElement(elementMap, diagramElement);
+    //            }
     //
-    //        for (ConnectorView connectorView : project.getAllConnectorViews()) {
-    //          resolveSource(elementMap, connectorView);
-    //          resolveTarget(elementMap, connectorView);
-    //        }
+    //            for (ConnectorView connectorView : project.getAllConnectorViews()) {
+    //              resolveSource(elementMap, connectorView);
+    //              resolveTarget(elementMap, connectorView);
+    //            }
 
     buildPropertyReferences(project);
     buildClassifierReferences(project);
@@ -48,6 +49,7 @@ public class ReferenceResolver {
     buildGeneralizationReferences(project);
     buildGeneralizationSetReferences(project);
     buildAnchorReferences(project);
+    buildViewsReferences(project);
   }
 
   //    private static void resolveOwner(Map<String, OntoumlElement> elementMap, Diagram diagram) {
@@ -228,5 +230,9 @@ public class ReferenceResolver {
    */
   private static void buildAnchorReferences(Project project) {
     project.getAnchors().values().forEach(anchor -> anchor.buildAllReferences(project));
+  }
+
+  private static void buildViewsReferences(Project project) {
+    project.getViews().values().forEach(view -> view.resolveAllReferences(project));
   }
 }

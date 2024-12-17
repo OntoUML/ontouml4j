@@ -1,5 +1,6 @@
 package org.ontouml.shape;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.SuperBuilder;
@@ -9,6 +10,7 @@ import org.ontouml.model.OntoumlElement;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@AllArgsConstructor
 public abstract class Shape extends OntoumlElement {
 
   public Shape(String id) {

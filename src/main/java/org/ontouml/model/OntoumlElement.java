@@ -16,6 +16,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Getter
 @Setter
+@AllArgsConstructor
 public abstract class OntoumlElement {
   /**
    * Determines the unique identifier for an OntoUML element in an ontology using a non-empty

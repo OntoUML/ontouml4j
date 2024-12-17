@@ -1,7 +1,9 @@
 package org.ontouml.model.view;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.shape.Path;
 
@@ -12,6 +14,8 @@ import org.ontouml.shape.Path;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@AllArgsConstructor
+@NoArgsConstructor
 public abstract class BinaryConnectorView extends View {
   /** Identifies the source view the binary connector view connects in the diagram. */
   private View sourceView;

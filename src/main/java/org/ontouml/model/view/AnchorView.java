@@ -2,12 +2,14 @@ package org.ontouml.model.view;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 /** A view element that represents the single occurrence of a anchor in a diagram. */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@NoArgsConstructor
 public class AnchorView extends BinaryConnectorView {
 
   @Override

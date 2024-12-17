@@ -43,7 +43,7 @@ public class GeneralizationSet extends PackageableElement {
   /** Identifies all generalizations that are involved by the generalization set. */
   @Builder.Default private Set<Generalization> generalizations = new HashSet<>();
 
-  private List<String> generalizationIds = new ArrayList<>();
+  @Builder.Default private List<String> generalizationIds = new ArrayList<>();
 
   /**
    * Identifies the high-order class that classifies (i.e., is instantiated by) every specific class
