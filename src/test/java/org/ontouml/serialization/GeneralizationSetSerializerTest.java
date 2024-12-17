@@ -4,33 +4,48 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeAll;
+import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Class;
+import org.ontouml.model.Generalization;
 import org.ontouml.model.GeneralizationSet;
-import org.ontouml.model.Project;
-import org.ontouml.utils.BuilderUtils;
+import org.ontouml.model.MultilingualText;
 
 public class GeneralizationSetSerializerTest {
 
-  static Project project;
   static GeneralizationSet generalizationSet;
 
-  @BeforeAll
-  static void beforeAll() throws URISyntaxException {
-    project = BuilderUtils.createProject();
-    Optional<GeneralizationSet> gen = project.getGeneralizationSetById("generalizationSet_1");
-    gen.ifPresent(value -> generalizationSet = value);
+  @BeforeEach
+  void beforeEach() {
+    Generalization generalization1 = Generalization.builder().id("generalization_1").build();
+    Class general = Class.builder().id("class_1").build();
+    Class specific = Class.builder().id("class_2").build();
+    generalization1.setGeneral(general);
+    generalization1.setSpecific(specific);
+
+    Generalization generalization2 = Generalization.builder().id("generalization_2").build();
+    Class general2 = Class.builder().id("class_3").build();
+    Class specific2 = Class.builder().id("class_4").build();
+    generalization1.setGeneral(general2);
+    generalization1.setSpecific(specific2);
+
+    generalizationSet =
+        GeneralizationSet.builder()
+            .generalizations(Set.of(generalization1, generalization2))
+            .id("genset_1")
+            .name(new MultilingualText("My Genset"))
+            .created(new Date())
+            .build();
   }
 
   @Test
   void shouldSerializeId() throws JsonProcessingException {
     JsonNode node = generalizationSet.serialize();
     String id = node.get("id").asText();
-    assertThat(id).isEqualTo("generalizationSet_1");
+    assertThat(id).isEqualTo("genset_1");
   }
 
   @Test

@@ -4,23 +4,21 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.net.URISyntaxException;
-import java.util.Optional;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.ontouml.model.Class;
 import org.ontouml.model.Generalization;
-import org.ontouml.model.Project;
-import org.ontouml.utils.BuilderUtils;
 
 public class GeneralizationSerializerTest {
-  static Project project;
-  static Generalization generalization;
+  Generalization generalization;
 
-  @BeforeAll
-  static void beforeAll() throws URISyntaxException {
-    project = BuilderUtils.createProject();
-    Optional<Generalization> gen = project.getGeneralizationById("generalization_1");
-    gen.ifPresent(value -> generalization = value);
+  @BeforeEach
+  void beforeEach() {
+    generalization = Generalization.builder().id("generalization_1").build();
+    Class general = Class.builder().id("class_1").build();
+    Class specific = Class.builder().id("class_2").build();
+    generalization.setGeneral(general);
+    generalization.setSpecific(specific);
   }
 
   @Test

@@ -31,8 +31,6 @@ public class ProjectSerializer extends JsonSerializer<Project> {
   }
 
   private static void serializeMetaProperties() throws IOException {
-    ProjectMetaProperties metaProperties = project.getMetaProperties();
-
     if (metaProperties == null) {
       return;
     }

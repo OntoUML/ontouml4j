@@ -4,11 +4,10 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.truth.Truth;
-import com.google.common.truth.Truth8;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.*;
 import org.ontouml.model.Class;
@@ -18,10 +17,10 @@ import org.ontouml.utils.ResourceGetter;
 public class PackageDeserializerTest {
 
   static ObjectMapper mapper;
-  static Package pkg;
+  Package pkg;
 
-  @BeforeAll
-  static void setUp() throws IOException {
+  @BeforeEach
+  void setUp() throws IOException {
     mapper = new ObjectMapper();
     File jsonFile = ResourceGetter.getJsonFromDeserialization("package.allfields.ontouml.json");
 
@@ -42,16 +41,16 @@ public class PackageDeserializerTest {
 
   @Test
   void shouldDeserializeName() {
-    Truth8.assertThat(pkg.getNameIn("en")).hasValue("My Package");
+    assertThat(pkg.getNameIn("en")).hasValue("My Package");
   }
 
   void shouldDeserializeAlternativeNames() {
-    Truth8.assertThat(pkg.getNameIn("en")).hasValue("My Package");
+    assertThat(pkg.getNameIn("en")).hasValue("My Package");
   }
 
   @Test
   void shouldDeserializeDescription() {
-    Truth8.assertThat(pkg.getDescriptionIn("en")).hasValue("My description.");
+    assertThat(pkg.getDescriptionIn("en")).hasValue("My description.");
   }
 
   @Test

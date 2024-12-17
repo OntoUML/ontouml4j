@@ -3,106 +3,120 @@ package org.ontouml.serialization;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Optional;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.BinaryRelation;
 import org.ontouml.model.Class;
-import org.ontouml.model.Project;
 import org.ontouml.model.stereotype.RelationStereotype;
-import org.ontouml.utils.BuilderUtils;
 
 public class BinaryRelationSerializerTest {
-  ObjectMapper mapper;
-  Project project;
-  Class clazz;
   BinaryRelation relation;
-  String json;
+  JsonNode node;
 
   @BeforeEach
   void setUp() throws JsonProcessingException, URISyntaxException {
-    project = BuilderUtils.createProject();
-    mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
-
-    Optional<Class> class1 = project.getElementById("class_1", Class.class);
-    class1.ifPresent(c -> clazz = c);
-    relation = new BinaryRelation("r1", "my relation", clazz, clazz);
-    json = mapper.writeValueAsString(relation);
+    Class clazz = Class.builder().id("class_1").build();
+    relation = new BinaryRelation("relation_1", "my relation", clazz, clazz);
+    node = relation.serialize();
   }
 
   @Test
   void shouldSerializeId() {
-    assertThat(json).contains("\"id\" : \"r1\"");
+    String id = node.get("id").asText();
+    assertThat(id).isEqualTo("relation_1");
   }
 
   @Test
   void shouldSerializeType() {
-    assertThat(json).contains("\"type\" : \"BinaryRelation\"");
+    String type = node.get("type").asText();
+    assertThat(type).isEqualTo("BinaryRelation");
   }
 
   @Test
   void shouldSerializeName() throws JsonProcessingException {
     relation.addName("pt", "Minha relação");
     relation.addName("en", "My relation");
-    json = mapper.writeValueAsString(relation);
+    node = relation.serialize();
 
-    assertThat(json).contains("\"name\" : {");
-    assertThat(json).contains("\"pt\" : \"Minha relação\"");
-    assertThat(json).contains("\"en\" : \"My relation\"");
+    String namePt = node.get("name").get("pt").asText();
+    String nameEn = node.get("name").get("en").asText();
+
+    assertThat(namePt).isEqualTo("Minha relação");
+    assertThat(nameEn).isEqualTo("My relation");
   }
 
   @Test
   void shouldSerializeDescription() throws JsonProcessingException {
     relation.addDescription("pt", "Minha descrição.");
     relation.addDescription("en", "My description.");
-    json = mapper.writeValueAsString(relation);
+    node = relation.serialize();
 
-    assertThat(json).contains("\"description\" : {");
-    assertThat(json).contains("\"pt\" : \"Minha descrição.\"");
-    assertThat(json).contains("\"en\" : \"My description.\"");
+    String descriptionPt = node.get("description").get("pt").asText();
+    String descriptionEn = node.get("description").get("en").asText();
+
+    assertThat(descriptionPt).isEqualTo("Minha descrição.");
+    assertThat(descriptionEn).isEqualTo("My description.");
   }
 
   @Test
   void shouldSerializeOntoumlStereotype() throws JsonProcessingException {
     relation.setOntoumlStereotype(RelationStereotype.MATERIAL);
-    json = mapper.writeValueAsString(relation);
-    assertThat(json).contains("\"stereotype\" : \"material\"");
+    node = relation.serialize();
+
+    String stereotype = node.get("stereotype").asText();
+
+    assertThat(stereotype).isEqualTo("material");
   }
 
   @Test
   void shouldSerializeCustomStereotype() throws JsonProcessingException {
     relation.setCustomStereotype("custom");
-    json = mapper.writeValueAsString(relation);
-    assertThat(json).contains("\"stereotype\" : \"custom\"");
+    node = relation.serialize();
+
+    String stereotype = node.get("stereotype").asText();
+
+    assertThat(stereotype).isEqualTo("custom");
   }
 
   @Test
   void shouldSerializeIsAbstract() throws JsonProcessingException {
     relation.setAbstract(true);
-    json = mapper.writeValueAsString(relation);
-    assertThat(json).contains("\"isAbstract\" : true");
+    node = relation.serialize();
+
+    Boolean isAbstract = node.get("isAbstract").booleanValue();
+
+    assertThat(isAbstract).isTrue();
   }
 
   @Test
   void shouldSerializeIsDerived() throws JsonProcessingException {
     relation.setDerived(true);
-    String json = mapper.writeValueAsString(relation);
-    assertThat(json).contains("\"isDerived\" : true");
+    node = relation.serialize();
+
+    Boolean isDerived = node.get("isDerived").booleanValue();
+
+    assertThat(isDerived).isTrue();
   }
 
   @Test
-  void shouldSerializeEnds() throws JsonProcessingException {
+  void shouldSerializeEnds() throws IOException {
     relation.getSourceEnd().setId("p0");
     relation.getSourceEnd().addName("source");
     relation.getTargetEnd().setId("p1");
     relation.getTargetEnd().addName("target");
 
-    mapper = new ObjectMapper();
-    json = mapper.writeValueAsString(relation);
+    node = relation.serialize();
+    String props = node.get("properties").toString();
+    List<String> properties =
+        new ObjectMapper().readValue(props, new TypeReference<List<String>>() {});
 
-    assertThat(json).contains("\"properties\":[\"p0\",\"p1\"]");
+    assertThat(properties.getFirst()).isEqualTo("p0");
+    assertThat(properties.get(1)).isEqualTo("p1");
   }
 }

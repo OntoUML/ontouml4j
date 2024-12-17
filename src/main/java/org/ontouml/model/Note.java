@@ -25,6 +25,20 @@ public class Note extends PackageableElement {
   /** Determines the contents of a note using a language string. */
   private MultilingualText text;
 
+  public void addText(String languageTag, String text) {
+    if (this.text == null) {
+      this.text = new MultilingualText();
+    }
+    this.text.putText(languageTag, text);
+  }
+
+  public void addText(String text) {
+    if (this.text == null) {
+      this.text = new MultilingualText();
+    }
+    this.text.putText("en", text);
+  }
+
   @Override
   public String getType() {
     return "Note";

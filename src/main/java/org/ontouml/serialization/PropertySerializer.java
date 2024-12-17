@@ -38,7 +38,8 @@ public class PropertySerializer extends JsonSerializer<Property> {
         "subsettedProperties", property.getSubsettedProperties(), jsonGen);
     Serializer.writeEmptyableArrayField(
         "redefinedProperties", property.getRedefinedProperties(), jsonGen);
-    Serializer.writeNullableOjectField("cardinality", property.getCardinality(), jsonGen);
+    Serializer.writeNullableStringField(
+        "cardinality", property.getCardinality().getCardinality(), jsonGen);
   }
 
   @Override

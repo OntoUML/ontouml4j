@@ -5,23 +5,26 @@ import static com.google.common.truth.Truth.assertThat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.net.URISyntaxException;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.*;
-import org.ontouml.utils.BuilderUtils;
+import org.ontouml.model.Class;
 
 public class AnchorSerializerTest {
 
-  Project project;
   Anchor anchor;
 
   @BeforeEach
   void setUp() throws JsonProcessingException, URISyntaxException {
-    project = BuilderUtils.createProject();
-
-    Optional<Anchor> anchor1 = project.getElementById("anchor_1", Anchor.class);
-    anchor1.ifPresent(a -> anchor = a);
+    Class clazz = Class.builder().id("class_1").build();
+    Note note = Note.builder().id("note_1").build();
+    anchor =
+        Anchor.builder()
+            .id("anchor_1")
+            .name(new MultilingualText("My Anchor"))
+            .element(clazz)
+            .note(note)
+            .build();
   }
 
   @Test

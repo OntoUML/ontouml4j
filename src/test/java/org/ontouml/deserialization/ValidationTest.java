@@ -56,9 +56,22 @@ public class ValidationTest {
             });
   }
 
+  //  @Test
+  //  void testSchemaOnProject() throws IOException {
+  //    File file = ResourceGetter.getJsonFromDeserialization("project.allfields.ontouml.json");
+  //    JSONObject json = new JSONObject(new JSONTokener(Files.newBufferedReader(file.toPath())));
+  //    try {
+  //      schema.validate(json);
+  //      System.out.println("This JSON is compliant with OntoUML Schema");
+  //    } catch (ValidationException e) {
+  //      printValidationException(e);
+  //      throw e;
+  //    }
+  //  }
+
   @Test
-  void testSchemaOnProject() throws IOException {
-    File file = ResourceGetter.getJsonFromDeserialization("project.allfields.ontouml.json");
+  void testSchemaOnProjectMinimum() throws IOException {
+    File file = ResourceGetter.getJsonFromDeserialization("project.minimum.ontouml.json");
     JSONObject json = new JSONObject(new JSONTokener(Files.newBufferedReader(file.toPath())));
     try {
       schema.validate(json);

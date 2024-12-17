@@ -4,25 +4,19 @@ import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import java.net.URISyntaxException;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Note;
-import org.ontouml.model.Project;
-import org.ontouml.utils.BuilderUtils;
 
 public class NoteSerializerTest {
 
-  Project project;
   Note note;
 
   @BeforeEach
-  void setUp() throws JsonProcessingException, URISyntaxException {
-    project = BuilderUtils.createProject();
-
-    Optional<Note> note1 = project.getElementById("note_1", Note.class);
-    note1.ifPresent(a -> note = a);
+  void setUp() {
+    note = Note.builder().id("note_1").build();
+    note.addText("en", "My Note Text");
+    note.addText("pt", "Meu texto");
   }
 
   @Test

@@ -12,6 +12,7 @@ import org.ontouml.model.stereotype.ClassStereotype;
 import org.ontouml.model.utils.AggregationKind;
 import org.ontouml.model.utils.ProjectMetaProperties;
 
+// TODO: Create small project for each test
 public class BuilderUtils {
   static DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
 

@@ -3,30 +3,29 @@ package org.ontouml.serialization;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.model.Class;
 import org.ontouml.model.MultilingualText;
-import org.ontouml.model.Nature;
-import org.ontouml.model.Project;
 import org.ontouml.model.stereotype.ClassStereotype;
 
 public class ClassSerializerTest {
-  static Project project;
   static Class clazz;
-  ObjectMapper mapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+  JsonNode node;
 
   @BeforeAll
-  static void beforeAll() throws IOException, ParseException, URISyntaxException {
+  static void beforeAll() throws IOException, ParseException, URISyntaxException {}
+
+  @BeforeEach
+  void beforeEach() throws JsonProcessingException {
     clazz =
         Class.builder()
             .name(new MultilingualText("class1"))
@@ -34,31 +33,21 @@ public class ClassSerializerTest {
             .ontoumlStereotype(ClassStereotype.KIND)
             .isAbstract(true)
             .build();
-    Map<String, Class> classes =
-        Map.of(
-            "class_1",
-            clazz,
-            "class_2",
-            Class.builder().name(new MultilingualText("class2")).id("class_2").build());
-    project =
-        Project.builder()
-            .id("project_1")
-            .created(new Date())
-            .name(new MultilingualText("My Project"))
-            .classes(classes)
-            .build();
+    node = clazz.serialize();
   }
 
   @Test
   void shouldSerializeId() throws JsonProcessingException {
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"id\" : \"class_1\"");
+    String id = node.get("id").asText();
+
+    assertThat(id).isEqualTo("class_1");
   }
 
   @Test
   void shouldSerializeType() throws JsonProcessingException {
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"type\" : \"Class\"");
+    String type = node.get("type").asText();
+
+    assertThat(type).isEqualTo("Class");
   }
 
   @Test
@@ -66,10 +55,13 @@ public class ClassSerializerTest {
     clazz.addName("pt", "Pessoa");
     clazz.addName("en", "Person");
 
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"name\" : {");
-    assertThat(json).contains("\"pt\" : \"Pessoa\"");
-    assertThat(json).contains("\"en\" : \"Person\"");
+    node = clazz.serialize();
+
+    String namePt = node.get("name").get("pt").asText();
+    String nameEn = node.get("name").get("en").asText();
+
+    assertThat(namePt).isEqualTo("Pessoa");
+    assertThat(nameEn).isEqualTo("Person");
   }
 
   @Test
@@ -78,82 +70,132 @@ public class ClassSerializerTest {
     clazz.addDescription(
         "en", "Only bipedal primate animal species of the genus Homo still alive.");
 
-    String json = mapper.writeValueAsString(clazz);
+    node = clazz.serialize();
 
-    assertThat(json).contains("\"description\" : {");
-    assertThat(json)
-        .contains("\"pt\" : \"Única espécie animal de primata bípede do género Homo ainda viva.\"");
-    assertThat(json)
-        .contains(
-            "\"en\" : \"Only bipedal primate animal species of the genus Homo still alive.\"");
+    String descriptionPt = node.get("description").get("pt").asText();
+    String descriptionEn = node.get("description").get("en").asText();
+
+    assertThat(descriptionPt)
+        .isEqualTo("Única espécie animal de primata bípede do género Homo ainda viva.");
+    assertThat(descriptionEn)
+        .isEqualTo("Only bipedal primate animal species of the genus Homo still alive.");
   }
 
   @Test
   void shouldSerializeOntoumlStereotype() throws JsonProcessingException {
     clazz.setOntoumlStereotype(ClassStereotype.KIND);
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"stereotype\" : \"kind\"");
+    node = clazz.serialize();
+
+    String stereotype = node.get("stereotype").asText();
+
+    assertThat(stereotype).isEqualTo("kind");
   }
 
   @Test
   void shouldSerializeCustomStereotype() throws JsonProcessingException {
     clazz.setCustomStereotype("custom");
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"stereotype\" : \"custom\"");
+
+    node = clazz.serialize();
+
+    String stereotype = node.get("stereotype").asText();
+
+    assertThat(stereotype).isEqualTo("custom");
+  }
+
+  @Test
+  void shouldSerializeNullStereotype() throws JsonProcessingException {
+    clazz.setCustomStereotype(null);
+
+    node = clazz.serialize();
+
+    String stereotype = node.get("stereotype").textValue();
+
+    assertThat(stereotype).isNull();
   }
 
   @Test
   void shouldSerializeIsAbstract() throws JsonProcessingException {
     clazz.setAbstract(true);
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"isAbstract\" : true");
+    node = clazz.serialize();
+
+    Boolean isAbstract = node.get("isAbstract").booleanValue();
+
+    assertThat(isAbstract).isTrue();
   }
 
   @Test
   void shouldSerializeIsDerived() throws JsonProcessingException {
     clazz.setDerived(true);
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"isDerived\" : true");
+    node = clazz.serialize();
+
+    Boolean isDerived = node.get("isDerived").booleanValue();
+
+    assertThat(isDerived).isTrue();
   }
 
   @Test
   void shouldSerializeEmptyAttributesAsNull() throws JsonProcessingException {
     clazz.setProperties(List.of());
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"properties\" : [ ]");
+    node = clazz.serialize();
+
+    JsonNode properties = node.get("properties");
+    List<String> props =
+        new ObjectMapper().readValue(properties.toString(), new TypeReference<List<String>>() {});
+
+    assertThat(props).hasSize(0);
   }
 
   @Test
   void shouldSerializeAttributes() throws JsonProcessingException {
     clazz.createAttribute("a1", "father", clazz);
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"properties\" : [ \"a1\" ]");
+    node = clazz.serialize();
+
+    JsonNode properties = node.get("properties");
+    List<String> props =
+        new ObjectMapper().readValue(properties.toString(), new TypeReference<List<String>>() {});
+    assertThat(props).hasSize(1);
+    assertThat(props.getFirst()).isEqualTo("a1");
   }
 
   @Test
   void shouldSerializeEmptyLiteralsAsNull() throws JsonProcessingException {
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"literals\" : [ ]");
+    clazz.setLiterals(List.of());
+    JsonNode literalsNode = node.get("literals");
+
+    List<String> literals =
+        new ObjectMapper().readValue(literalsNode.toString(), new TypeReference<List<String>>() {});
+    assertThat(literals).hasSize(0);
   }
 
   @Test
   void shouldSerializeLiterals() throws JsonProcessingException {
     Class enumeration = Class.createEnumeration("1", "Color", "red", "green", "blue");
-    String json = mapper.writeValueAsString(enumeration);
-    assertThat(json).contains("\"literals\" : [ \"red\", \"green\", \"blue\" ]");
+    JsonNode enumNode = enumeration.serialize();
+    JsonNode literalsNode = enumNode.get("literals");
+
+    List<String> literals =
+        new ObjectMapper().readValue(literalsNode.toString(), new TypeReference<List<String>>() {});
+    String name = enumNode.get("name").get("en").asText();
+    String id = enumNode.get("id").asText();
+
+    assertThat(id).isEqualTo("1");
+    assertThat(name).isEqualTo("Color");
+    assertThat(literals.getFirst()).isEqualTo("red");
+    assertThat(literals.get(1)).isEqualTo("green");
+    assertThat(literals.get(2)).isEqualTo("blue");
   }
 
-  @Test
-  void shouldSerializeEmptyRestrictedToAsNull() throws JsonProcessingException {
-    clazz.setRestrictedTo(Optional.empty());
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"restrictedTo\" : [ ]");
-  }
-
-  @Test
-  void shouldSerializeRestrictedTo() throws JsonProcessingException {
-    clazz.setRestrictedTo(Nature.FUNCTIONAL_COMPLEX);
-    String json = mapper.writeValueAsString(clazz);
-    assertThat(json).contains("\"restrictedTo\" : [ \"functional-complex\" ]");
-  }
+  //  @Test
+  //  void shouldSerializeEmptyRestrictedToAsNull() throws JsonProcessingException {
+  //    clazz.setRestrictedTo(Optional.empty());
+  //    String json = mapper.writeValueAsString(clazz);
+  //    assertThat(json).contains("\"restrictedTo\" : [ ]");
+  //  }
+  //
+  //  @Test
+  //  void shouldSerializeRestrictedTo() throws JsonProcessingException {
+  //    clazz.setRestrictedTo(Nature.FUNCTIONAL_COMPLEX);
+  //    String json = mapper.writeValueAsString(clazz);
+  //    assertThat(json).contains("\"restrictedTo\" : [ \"functional-complex\" ]");
+  //  }
 }

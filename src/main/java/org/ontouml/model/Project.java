@@ -44,7 +44,7 @@ public class Project extends NamedElement {
   @Builder.Default private Map<String, Anchor> anchors = new HashMap<>();
   @Builder.Default private List<View> diagrams = new ArrayList<>();
 
-  private Map<String, ModelElement> allElements;
+  @Builder.Default private Map<String, ModelElement> allElements = new HashMap<>();
 
   @Override
   public String getType() {
@@ -134,9 +134,7 @@ public class Project extends NamedElement {
    * @param id - The id of the element
    */
   public Optional<ModelElement> getElementById(String id) {
-    if (this.allElements == null) {
-      this.allElements = this.getElementMap();
-    }
+    this.allElements = this.getElementMap();
     return Optional.ofNullable(this.allElements.get(id));
   }
 
@@ -188,39 +186,62 @@ public class Project extends NamedElement {
     return element;
   }
 
+  /**
+   * Method that creates a new package and add it to the list of elements of the project
+   *
+   * @param id - Package id.
+   * @param name - Package Name.
+   * @return the created package.
+   */
+  public Package createPackage(String id, String name) {
+    Package pkg = Package.builder().id(id).name(new MultilingualText(name)).build();
+    pkg.setProjectContainer(this);
+    this.packages.put(id, pkg);
+    return pkg;
+  }
+
   public void addClass(Class clazz) {
+    clazz.setProjectContainer(this);
     this.classes.put(clazz.getId(), clazz);
   }
 
   public void addPackage(Package pkg) {
+    pkg.setProjectContainer(this);
     this.packages.put(pkg.getId(), pkg);
   }
 
   public void addRelation(Relation relation) {
+    relation.setProjectContainer(this);
     this.relations.put(relation.getId(), relation);
   }
 
   public void addLiteral(Literal literal) {
+    literal.setProjectContainer(this);
     this.literals.put(literal.getId(), literal);
   }
 
   public void addProperty(Property property) {
+    property.setProjectContainer(this);
     this.properties.put(property.getId(), property);
   }
 
   public void addGeneralization(Generalization gen) {
+    gen.setProjectContainer(this);
     this.generalizations.put(gen.getId(), gen);
   }
 
   public void addGeneralizationSet(GeneralizationSet genset) {
+    genset.setProjectContainer(this);
     this.generalizationSets.put(genset.getId(), genset);
   }
 
   public void addNote(Note note) {
+    note.setProjectContainer(this);
     this.notes.put(note.getId(), note);
   }
 
   public void addAnchor(Anchor anchor) {
+    anchor.setProjectContainer(this);
     this.anchors.put(anchor.getId(), anchor);
   }
 
@@ -238,12 +259,5 @@ public class Project extends NamedElement {
 
   public Optional<GeneralizationSet> getGeneralizationSetById(String id) {
     return Optional.ofNullable(this.generalizationSets.get(id));
-  }
-
-  public Package createPackage(String id, String name) {
-    Package pkg = Package.builder().id(id).name(new MultilingualText(name)).build();
-    pkg.setProjectContainer(this);
-    this.packages.put(id, pkg);
-    return pkg;
   }
 }

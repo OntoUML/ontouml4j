@@ -71,9 +71,12 @@ public class Package extends PackageableElement {
   }
 
   private <T extends PackageableElement> T addContent(T aClass) {
+    if (projectContainer == null) {
+      throw new NullPointerException(
+          "Cannot add content to package that does not belong to any project");
+    }
     contents.add(aClass);
     contentIds.add(aClass.getId());
-    projectContainer.addElement(aClass);
     aClass.setProjectContainer(projectContainer);
     return aClass;
   }
