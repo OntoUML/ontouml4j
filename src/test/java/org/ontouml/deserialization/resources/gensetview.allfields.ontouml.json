@@ -35,14 +35,30 @@
   ],
   "elements": [
     {
+      "id": "gensetview_1",
+      "type": "GeneralizationSetView",
+      "isViewOf": "genset_1",
+      "generalizations": [
+        "genview_1",
+        "genview_2"
+      ],
+      "text": "disjoint"
+    },
+    {
       "id": "genview_1",
       "type": "GeneralizationView",
       "isViewOf": "generalization_1",
       "sourceView": "classview_1",
       "targetView": "classview_2",
-      "path": "path_1",
-      "created": "2024-09-04T00:00:00Z",
-      "modified": "2024-09-04T00:00:00Z"
+      "path": "path_1"
+    },
+    {
+      "id": "genview_2",
+      "type": "GeneralizationView",
+      "isViewOf": "generalization_2",
+      "sourceView": "classview_2",
+      "targetView": "classview_1",
+      "path": "path_2"
     },
     {
       "id": "path_1",
@@ -53,6 +69,22 @@
         {
           "x": 0,
           "y": 0
+        },
+        {
+          "x": 10,
+          "y": 20
+        }
+      ]
+    },
+    {
+      "id": "path_2",
+      "created": "2024-09-04T00:00:00Z",
+      "modified": "2024-09-04T00:00:00Z",
+      "type": "Path",
+      "points": [
+        {
+          "x": 100,
+          "y": 100
         },
         {
           "x": 10,
@@ -146,6 +178,29 @@
       "specific": "class_2",
       "created": "2024-09-04T00:00:00Z",
       "modified": "2024-09-04T00:00:00Z"
+    },
+    {
+      "id": "generalization_2",
+      "type": "Generalization",
+      "customProperties": null,
+      "general": "class_2",
+      "specific": "class_1",
+      "created": "2024-09-04T00:00:00Z",
+      "modified": "2024-09-04T00:00:00Z"
+    },
+    {
+      "id": "genset_1",
+      "type": "GeneralizationSet",
+      "created": "2024-09-04T00:00:00Z",
+      "modified": "2024-09-04T00:00:00Z",
+      "customProperties": null,
+      "isDisjoint": false,
+      "isComplete": false,
+      "generalizations": [
+        "generalization_1",
+        "generalization_2"
+      ],
+      "categorizer": null
     }
   ]
 }

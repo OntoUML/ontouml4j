@@ -34,8 +34,13 @@ public abstract class BinaryConnectorView extends View {
 
   private String pathId;
 
+  public BinaryConnectorView(String id) {
+    super(id);
+  }
+
   @Override
   public void resolveAllReferences(Project project) {
+    super.resolveAllReferences(project);
     Optional<View> sourceView = project.getElementById(this.sourceViewId, View.class);
     sourceView.ifPresent(this::setSourceView);
 

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.ontouml.model.ModelElement;
 import org.ontouml.model.Project;
 import org.ontouml.model.view.GeneralizationView;
 import org.ontouml.utils.ResourceGetter;
@@ -59,5 +60,11 @@ public class GeneralizationViewDeserializerTest {
   void shouldDeserializePath() {
     assertThat(genView.getPath().getId()).isEqualTo("path_1");
     assertThat(genView.getPath().getPoints().size()).isEqualTo(2);
+  }
+
+  @Test
+  void shouldDeserializeIsViewOf() {
+    ModelElement element = genView.getIsViewOf();
+    assertThat(element.getId()).isEqualTo("generalization_1");
   }
 }

@@ -35,6 +35,10 @@ public abstract class View extends OntoumlElement {
 
   private String isViewOfId;
 
+  public View(String id) {
+    super(id);
+  }
+
   public void resolveAllReferences(Project project) {
     Optional<ModelElement> element = project.getElementById(isViewOfId, ModelElement.class);
 
