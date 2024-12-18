@@ -1,16 +1,21 @@
 package org.ontouml.shape;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.shape.PathDeserializer;
 
 /** A shape defined by a list of points connecting two other shapes. */
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@NoArgsConstructor
+@JsonDeserialize(using = PathDeserializer.class)
 public class Path extends Shape {
 
   /**
@@ -18,8 +23,7 @@ public class Path extends Shape {
    * has a minimum of two points which must be ordered from the edge of the source shape to the edge
    * of the target shape.
    */
-  @Builder.Default
-  private List<Point> points = new ArrayList<>();
+  @Builder.Default private List<Point> points = new ArrayList<>();
 
   public void addPoints(List<Point> points) {
     if (points != null) points.forEach(this::addPoint);

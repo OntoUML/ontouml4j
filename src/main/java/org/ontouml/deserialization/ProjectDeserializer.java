@@ -14,10 +14,7 @@ import java.util.List;
 import org.ontouml.model.*;
 import org.ontouml.model.Package;
 import org.ontouml.model.view.*;
-import org.ontouml.shape.Path;
-import org.ontouml.shape.Rectangle;
-import org.ontouml.shape.Shape;
-import org.ontouml.shape.Text;
+import org.ontouml.shape.*;
 
 public class ProjectDeserializer extends JsonDeserializer<Project> {
   HashMap<String, OntoumlElement> elements = new HashMap<>();
@@ -139,7 +136,7 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
         referenceType = Rectangle.class;
         break;
       case "Diamond":
-        referenceType = Diagram.class;
+        referenceType = Diamond.class;
         break;
       case "Text":
         referenceType = Text.class;

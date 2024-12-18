@@ -11,6 +11,9 @@ public class RectangularShapeDeserializer {
   public static void deserialize(RectangularShape shape, JsonNode root, ObjectCodec codec)
       throws IOException, JacksonException {
 
+    String id = root.get("id").textValue();
+    shape.setId(id);
+
     JsonNode topLeftNode = root.get("topLeft");
     if (topLeftNode != null) {
       Point point = topLeftNode.traverse(codec).readValueAs(Point.class);

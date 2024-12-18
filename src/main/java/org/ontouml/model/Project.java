@@ -183,6 +183,8 @@ public class Project extends NamedElement implements ElementContainer {
       return Optional.ofNullable(type.cast(notes.get(id)));
     } else if (type == Anchor.class) {
       return Optional.ofNullable(type.cast(anchors.get(id)));
+    } else if (type == View.class) {
+      return Optional.ofNullable(type.cast(views.get(id)));
     } else if (type == ClassView.class) {
       return Optional.ofNullable(type.cast(views.get(id)));
     } else if (type == AnchorView.class) {
@@ -205,6 +207,7 @@ public class Project extends NamedElement implements ElementContainer {
         || type == RectangularShape.class
         || type == Rectangle.class
         || type == Diamond.class
+        || type == Path.class
         || type == Text.class) {
       return Optional.ofNullable(type.cast(shapes.get(id)));
     } else if (type == Diagram.class) {

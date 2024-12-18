@@ -1,10 +1,13 @@
 package org.ontouml.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.deserialization.NaryRelationDeserializer;
 import org.ontouml.model.stereotype.RelationStereotype;
 import org.ontouml.serialization.NaryRelationSerializer;
 
@@ -16,7 +19,9 @@ import org.ontouml.serialization.NaryRelationSerializer;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
+@NoArgsConstructor
 @JsonSerialize(using = NaryRelationSerializer.class)
+@JsonDeserialize(using = NaryRelationDeserializer.class)
 public class NaryRelation extends Relation {
   @Override
   public String getType() {

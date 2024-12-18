@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
-import org.ontouml.deserialization.view.PointDeserializer;
+import org.ontouml.deserialization.shape.PointDeserializer;
 
 /**
  * A object that represents a point in a diagram through (x,y) coordinates (horizontal and
