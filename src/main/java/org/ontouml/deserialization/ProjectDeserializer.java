@@ -129,6 +129,9 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
       case "NoteView":
         referenceType = NoteView.class;
         break;
+      case "AnchorView":
+        referenceType = AnchorView.class;
+        break;
       case "Shape":
         referenceType = Shape.class;
         break;

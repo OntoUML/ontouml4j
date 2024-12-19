@@ -1,21 +1,23 @@
 package org.ontouml.deserialization.view;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import java.io.IOException;
 import org.ontouml.deserialization.*;
+import org.ontouml.model.view.AnchorView;
 
-// public class AnchorViewDeserializer extends JsonDeserializer<AnchorView> {
-//
-//  @Override
-//  public AnchorView deserialize(JsonParser parser, DeserializationContext ctxt)
-//      throws IOException, JacksonException {
-//    ObjectCodec codec = parser.getCodec();
-//    JsonNode root = parser.readValueAsTree();
-//
-//    AnchorView view = new AnchorView();
-//    ViewDeserializer.deserialize(view, root, codec);
-//
-//    String isViewOf = DeserializerUtils.deserializeNullableStringField(root, "isViewOf");
-//    anchor.setNoteId(noteId);
-//
-//    return relation;
-//  }
-// }
+public class AnchorViewDeserializer extends JsonDeserializer<AnchorView> {
+
+  @Override
+  public AnchorView deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
+    ObjectCodec codec = parser.getCodec();
+    JsonNode root = parser.readValueAsTree();
+
+    AnchorView anchorView = new AnchorView();
+    BinaryConnectorViewDeserializer.deserialize(anchorView, root, codec);
+    return anchorView;
+  }
+}
