@@ -17,6 +17,10 @@ public abstract class RectangularShape extends Shape {
 
   @Builder.Default int height = 10;
 
+  public RectangularShape(String id) {
+    super(id);
+  }
+
   public RectangularShape(String id, int width, int height) {
     super(id);
     this.width = width;

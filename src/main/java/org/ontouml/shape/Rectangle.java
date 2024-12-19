@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.ontouml.deserialization.view.RectangleDeserializer;
+import org.ontouml.deserialization.shape.RectangleDeserializer;
 
 @EqualsAndHashCode(callSuper = true)
 @Data

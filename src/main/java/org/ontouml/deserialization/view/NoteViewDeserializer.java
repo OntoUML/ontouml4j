@@ -7,21 +7,20 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
-import org.ontouml.model.view.PackageView;
-import org.ontouml.shape.Rectangle;
+import org.ontouml.model.view.NoteView;
+import org.ontouml.shape.Text;
 
-public class PackageViewDeserializer extends JsonDeserializer<PackageView> {
+public class NoteViewDeserializer extends JsonDeserializer<NoteView> {
   @Override
-  public PackageView deserialize(JsonParser parser, DeserializationContext ctxt)
+  public NoteView deserialize(JsonParser parser, DeserializationContext ctxt)
       throws IOException, JacksonException {
     ObjectCodec codec = parser.getCodec();
     JsonNode root = parser.readValueAsTree();
 
-    PackageView view = new PackageView();
+    NoteView view = new NoteView();
 
-    String rectangle = root.get("rectangle").asText();
-    view.setRectangle(new Rectangle(rectangle));
-    System.out.println("Deserialized retangle id:" + rectangle);
+    String textId = root.get("text").asText();
+    view.setText(new Text(textId));
 
     ViewDeserializer.deserialize(view, root, codec);
 

@@ -1,4 +1,4 @@
-package org.ontouml.deserialization.view;
+package org.ontouml.deserialization.shape;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.ObjectCodec;

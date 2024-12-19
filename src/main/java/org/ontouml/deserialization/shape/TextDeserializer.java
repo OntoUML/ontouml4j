@@ -7,18 +7,17 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
-import org.ontouml.shape.Diamond;
+import org.ontouml.shape.Text;
 
-public class DiamondDeserializer extends JsonDeserializer<Diamond> {
+public class TextDeserializer extends JsonDeserializer<Text> {
   @Override
-  public Diamond deserialize(JsonParser parser, DeserializationContext ctxt)
-      throws IOException, JacksonException {
+  public Text deserialize(JsonParser parser, DeserializationContext ctxt) throws IOException {
     ObjectCodec codec = parser.getCodec();
     JsonNode root = parser.readValueAsTree();
 
-    Diamond diamond = new Diamond();
-    RectangularShapeDeserializer.deserialize(diamond, root, codec);
+    Text text = new Text();
+    RectangularShapeDeserializer.deserialize(text, root, codec);
 
-    return diamond;
+    return text;
   }
 }
