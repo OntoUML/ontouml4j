@@ -1,12 +1,14 @@
 package org.ontouml.model.view;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.view.PackageViewDeserializer;
 import org.ontouml.model.Project;
+import org.ontouml.serialization.view.PackageViewSerializer;
 import org.ontouml.shape.Rectangle;
 
 /** A view element that represents the single occurrence of a package in a diagram. */
@@ -15,6 +17,7 @@ import org.ontouml.shape.Rectangle;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = PackageViewDeserializer.class)
+@JsonSerialize(using = PackageViewSerializer.class)
 public class PackageView extends View {
 
   /** Identifies the rectangle shape that renders the package view in the diagram. */

@@ -12,7 +12,6 @@ public class ViewDeserializer {
       throws IOException, JacksonException {
     String id = root.get("isViewOf").asText();
     view.setIsViewOfId(id);
-    System.out.println("Deserialized isViewOf:" + id);
 
     OntoumlElementDeserializer.deserialize(view, root, codec);
   }

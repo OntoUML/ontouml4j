@@ -9,7 +9,8 @@ import org.ontouml.model.OntoumlElement;
 
 public class OntoumlElementSerializer extends JsonSerializer<OntoumlElement> {
 
-  static void serializeFields(OntoumlElement element, JsonGenerator jsonGen) throws IOException {
+  public static void serializeFields(OntoumlElement element, JsonGenerator jsonGen)
+      throws IOException {
     jsonGen.writeStringField("id", element.getId());
     serializeCreated(element, jsonGen);
     serializeModified(element, jsonGen);

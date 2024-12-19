@@ -1,6 +1,7 @@
 package org.ontouml.model.view;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.view.GeneralizationSetViewDeserializer;
 import org.ontouml.model.Project;
+import org.ontouml.serialization.view.GeneralizationSetViewSerializer;
 import org.ontouml.shape.Text;
 
 /** A view element that represents the single occurrence of a generalization set in a diagram. */
@@ -19,6 +21,7 @@ import org.ontouml.shape.Text;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = GeneralizationSetViewDeserializer.class)
+@JsonSerialize(using = GeneralizationSetViewSerializer.class)
 public class GeneralizationSetView extends View {
   /**
    * Identifies the generalization views that are grouped by the generalization set view in the

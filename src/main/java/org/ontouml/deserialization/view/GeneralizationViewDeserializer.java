@@ -18,7 +18,6 @@ public class GeneralizationViewDeserializer extends JsonDeserializer<Generalizat
 
     GeneralizationView generalizationView = new GeneralizationView();
     BinaryConnectorViewDeserializer.deserialize(generalizationView, root, codec);
-    ViewDeserializer.deserialize(generalizationView, root, codec);
     return generalizationView;
   }
 }

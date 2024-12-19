@@ -1,12 +1,14 @@
 package org.ontouml.model.view;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.view.NaryRelationViewDeserializer;
 import org.ontouml.model.Project;
+import org.ontouml.serialization.view.NaryRelationViewSerializer;
 import org.ontouml.shape.Diamond;
 import org.ontouml.shape.Path;
 
@@ -17,6 +19,7 @@ import org.ontouml.shape.Path;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonDeserialize(using = NaryRelationViewDeserializer.class)
+@JsonSerialize(using = NaryRelationViewSerializer.class)
 public class NaryRelationView extends View {
 
   List<String> memberIds = new ArrayList<>();

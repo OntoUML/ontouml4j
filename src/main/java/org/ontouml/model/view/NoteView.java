@@ -1,12 +1,14 @@
 package org.ontouml.model.view;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.view.NoteViewDeserializer;
 import org.ontouml.model.Project;
+import org.ontouml.serialization.view.NoteViewSerializer;
 import org.ontouml.shape.Text;
 
 /** A view element that represents the single occurrence of a note in a diagram. */
@@ -15,6 +17,7 @@ import org.ontouml.shape.Text;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = NoteViewDeserializer.class)
+@JsonSerialize(using = NoteViewSerializer.class)
 public class NoteView extends View {
 
   /** Identifies the text shape that renders the note view in the diagram. */
