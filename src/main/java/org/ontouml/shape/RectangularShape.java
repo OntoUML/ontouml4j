@@ -1,7 +1,9 @@
 package org.ontouml.shape;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.ontouml.serialization.shape.RectangularShapeSerializer;
 
 /** A shape defined by a top left position, a height, a width. */
 @EqualsAndHashCode(callSuper = true)
@@ -9,6 +11,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonSerialize(using = RectangularShapeSerializer.class)
 public abstract class RectangularShape extends Shape {
 
   @Builder.Default Point topLeft = new Point(0, 0);

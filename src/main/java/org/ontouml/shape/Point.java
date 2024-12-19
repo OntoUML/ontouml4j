@@ -1,10 +1,12 @@
 package org.ontouml.shape;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.shape.PointDeserializer;
+import org.ontouml.serialization.shape.PointSerializer;
 
 /**
  * A object that represents a point in a diagram through (x,y) coordinates (horizontal and
@@ -15,6 +17,7 @@ import org.ontouml.deserialization.shape.PointDeserializer;
 @Data
 @SuperBuilder
 @JsonDeserialize(using = PointDeserializer.class)
+@JsonSerialize(using = PointSerializer.class)
 public class Point {
   /** Determines the horizontal coordinate of a point using a positive integer. */
   private int x;

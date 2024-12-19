@@ -1,6 +1,7 @@
 package org.ontouml.shape;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
@@ -9,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.deserialization.shape.PathDeserializer;
+import org.ontouml.serialization.shape.PathSerializer;
 
 /** A shape defined by a list of points connecting two other shapes. */
 @EqualsAndHashCode(callSuper = true)
@@ -16,6 +18,7 @@ import org.ontouml.deserialization.shape.PathDeserializer;
 @SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = PathDeserializer.class)
+@JsonSerialize(using = PathSerializer.class)
 public class Path extends Shape {
 
   /**
