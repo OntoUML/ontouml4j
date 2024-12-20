@@ -3,10 +3,9 @@ package org.ontouml.deserialization;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.ModelElement;
-
 import java.io.IOException;
 import java.util.Map;
+import org.ontouml.model.ModelElement;
 
 public class ModelElementDeserializer {
   public static void deserialize(ModelElement element, JsonNode root, ObjectCodec codec)

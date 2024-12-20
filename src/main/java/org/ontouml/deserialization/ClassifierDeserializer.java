@@ -5,10 +5,9 @@ import static org.ontouml.deserialization.DeserializerUtils.deserializeBooleanFi
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.Classifier;
-
 import java.io.IOException;
 import java.util.List;
+import org.ontouml.model.Classifier;
 
 public class ClassifierDeserializer {
   public static void deserialize(Classifier<?, ?> classifier, JsonNode root, ObjectCodec codec)

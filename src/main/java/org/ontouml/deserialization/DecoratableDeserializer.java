@@ -5,9 +5,8 @@ import static org.ontouml.deserialization.DeserializerUtils.deserializeNullableS
 
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.Decoratable;
-
 import java.io.IOException;
+import org.ontouml.model.Decoratable;
 
 public class DecoratableDeserializer {
   public static void deserialize(Decoratable<?> decoratable, JsonNode root, ObjectCodec codec)

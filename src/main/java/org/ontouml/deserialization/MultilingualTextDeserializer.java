@@ -7,10 +7,9 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.ontouml.model.MultilingualText;
-
 import java.io.IOException;
 import java.util.Map;
+import org.ontouml.model.MultilingualText;
 
 public class MultilingualTextDeserializer extends JsonDeserializer<MultilingualText> {
 
