@@ -18,11 +18,7 @@ public class NaryRelationDeserializer extends JsonDeserializer<NaryRelation> {
     JsonNode root = parser.readValueAsTree();
 
     NaryRelation relation = new NaryRelation();
-    OntoumlElementDeserializer.deserialize(relation, root, codec);
-    NamedElementDeserializer.deserialize(relation, root, codec);
-    ModelElementDeserializer.deserialize(relation, root, codec);
-    DecoratableDeserializer.deserialize(relation, root, codec);
-    ClassifierDeserializer.deserialize(relation, root, codec);
+    RelationDeserializer.deserialize(relation, root, codec);
 
     return relation;
   }

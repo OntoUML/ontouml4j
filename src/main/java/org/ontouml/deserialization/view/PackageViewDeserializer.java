@@ -21,7 +21,6 @@ public class PackageViewDeserializer extends JsonDeserializer<PackageView> {
 
     String rectangle = root.get("rectangle").asText();
     view.setRectangle(new Rectangle(rectangle));
-    System.out.println("Deserialized retangle id:" + rectangle);
 
     ViewDeserializer.deserialize(view, root, codec);
 

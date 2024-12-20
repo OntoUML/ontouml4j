@@ -1,4 +1,4 @@
-package org.ontouml.deserialization;
+package org.ontouml.deserialization.view;
 
 import static com.google.common.truth.Truth.assertThat;
 

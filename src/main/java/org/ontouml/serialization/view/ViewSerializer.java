@@ -11,7 +11,7 @@ public class ViewSerializer extends JsonSerializer<View> {
 
   static void serializeFields(View view, JsonGenerator jsonGen) throws IOException {
     OntoumlElementSerializer.serializeFields(view, jsonGen);
-    jsonGen.writeStringField("isViewOf", view.getIsViewOfId());
+    jsonGen.writeStringField("isViewOf", view.getIsViewOf().getId());
   }
 
   @Override

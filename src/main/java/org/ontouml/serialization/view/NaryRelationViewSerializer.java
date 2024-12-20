@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
+import java.util.List;
+import org.ontouml.model.OntoumlElement;
 import org.ontouml.model.view.NaryRelationView;
 import org.ontouml.serialization.Serializer;
 
@@ -11,9 +13,11 @@ public class NaryRelationViewSerializer extends JsonSerializer<NaryRelationView>
   public static void serializeFields(NaryRelationView view, JsonGenerator jsonGen)
       throws IOException {
     ViewSerializer.serializeFields(view, jsonGen);
+    List<String> memberIds = view.getMembers().stream().map(OntoumlElement::getId).toList();
+    Serializer.writeNullableArrayField("members", memberIds, jsonGen);
 
-    Serializer.writeNullableArrayField("members", view.getMembers(), jsonGen);
-    Serializer.writeNullableArrayField("paths", view.getPaths(), jsonGen);
+    List<String> pathIds = view.getPaths().stream().map(OntoumlElement::getId).toList();
+    Serializer.writeNullableArrayField("paths", pathIds, jsonGen);
     Serializer.writeNullableStringField("diamond", view.getDiamond().getId(), jsonGen);
   }
 
