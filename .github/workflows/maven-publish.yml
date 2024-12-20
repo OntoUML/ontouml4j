@@ -20,8 +20,11 @@ jobs:
 
       - name: Import GPG Key
         run: |
-          echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --import
+          export GPG_TTY=$(tty)
+          echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --batch --pinentry-mode loopback --import
           gpg --list-secret-keys --keyid-format LONG
+        env:
+          GPG_TTY: $(tty)
 
       - name: Publish package
         run: |
