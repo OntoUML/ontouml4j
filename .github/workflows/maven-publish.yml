@@ -2,7 +2,7 @@ name: Publish OntoUML4j to the Maven Central Repository
 
 on:
   release:
-    types: [created]
+    types: [ created ]
 
 jobs:
   publish:
@@ -28,7 +28,7 @@ jobs:
 
       - name: Publish package
         run: |
-          mvn clean deploy -P release -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }} -Dgpg.keyname=KEY_ID_FROM_LIST_COMMAND
+          mvn clean deploy -P release -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }} -Dgpg.keyname=CA5FD024D9116DD0 -Dgpg.homedir=/home/runner/.gnupg
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
