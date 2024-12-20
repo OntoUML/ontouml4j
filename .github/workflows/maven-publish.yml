@@ -18,13 +18,13 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Import GPG Key and Cache Passphrase
+      - name: Import GPG Key and Set Passphrase for Agent
         run: |
           export GPG_TTY=$(tty)
           echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
-          echo "${{ secrets.GPG_PASSWORD }}" | gpg-connect-agent --batch "PRECACHE ${{ secrets.GPG_KEY_ID }}" "S CACHE_INCAPS" /bye
-          gpg-connect-agent updatestartuptty /bye
+          echo RELOADAGENT | gpg-connect-agent
+          echo "${{ secrets.GPG_PASSWORD }}" | gpg-connect-agent "SETKEY ${{ secrets.GPG_KEY_ID }}" /bye
         env:
           GPG_TTY: $(tty)
 
