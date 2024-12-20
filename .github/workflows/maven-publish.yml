@@ -28,9 +28,15 @@ jobs:
         env:
           GPG_TTY: $(tty)
 
+      - name: Verify Secret Key Import
+        run: gpg --list-secret-keys --keyid-format LONG
+
+      - name: Check GPG Version
+        run: gpg --version
+
       - name: Publish package
         run: |
-          mvn clean deploy -P release -Dgpg.keyname=${{ secrets.GPG_KEY_ID }}
+          mvn clean deploy -P release -Dgpg.keyname=${{ secrets.GPG_KEY_ID }} -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
