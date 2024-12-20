@@ -20,10 +20,8 @@ jobs:
 
       - name: Import GPG Key
         run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode > ~/.gnupg/private-key.asc
-          gpg --batch --import ~/.gnupg/private-key.asc
-        env:
-          GPG_TTY: $(tty)
+          echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --batch --passphrase "${{ secrets.GPG_PASSWORD }}" --import
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Verify Secret Key Import
         run: gpg --list-secret-keys --keyid-format LONG
