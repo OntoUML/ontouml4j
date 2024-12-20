@@ -18,17 +18,20 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Import GPG Key
+      - name: Import GPG Key and Cache Passphrase
         run: |
           export GPG_TTY=$(tty)
-          echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --batch --pinentry-mode loopback --import
+          echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
+          echo "${{ secrets.GPG_PASSWORD }}" | gpg-connect-agent --batch "PRECACHE ${{ secrets.GPG_KEY_ID }}" "S CACHE_INCAPS" /bye
+          gpg-connect-agent updatestartuptty /bye
         env:
           GPG_TTY: $(tty)
 
       - name: Publish package
         run: |
-          mvn clean deploy -P release -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }} -Dgpg.keyname=CA5FD024D9116DD0 -Dgpg.homedir=/home/runner/.gnupg
+          mvn clean deploy -P release -Dgpg.keyname=${{ secrets.GPG_KEY_ID }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+
