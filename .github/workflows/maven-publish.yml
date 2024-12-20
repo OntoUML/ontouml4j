@@ -20,8 +20,10 @@ jobs:
 
       - name: Import GPG Key
         run: |
-          echo "${{ secrets.GPG_SIGNING_KEY }}" | base64 --decode | gpg --batch --passphrase "${{ secrets.GPG_PASSWORD }}" --import
-          gpg --list-secret-keys --keyid-format LONG
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode > ~/.gnupg/private-key.asc
+          gpg --batch --import ~/.gnupg/private-key.asc
+        env:
+          GPG_TTY: $(tty)
 
       - name: Verify Secret Key Import
         run: gpg --list-secret-keys --keyid-format LONG
@@ -29,10 +31,22 @@ jobs:
       - name: Check GPG Version
         run: gpg --version
 
-      - name: Publish package
+      - name: Configure Maven settings.xml
         run: |
-          mvn clean deploy -P release -Dgpg.keyname=${{ secrets.GPG_KEY_ID }} -Dgpg.passphrase=${{ secrets.GPG_PASSWORD }}
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+          cat << EOF > ~/.m2/settings.xml
+          <settings>
+            <servers>
+              <server>
+                <id>ossrh</id>
+                <username>${{ secrets.MAVEN_USERNAME }}</username>
+                <password>${{ secrets.MAVEN_PASSWORD }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
 
+      - name: Publish to Maven Central
+        run: |
+          mvn -B -DskipTests -Dgpg.passphrase="${{ secrets.GPG_PASS }}" release:clean release:prepare release:perform -Possrh
+        env:
+          GPG_TTY: $(tty)
