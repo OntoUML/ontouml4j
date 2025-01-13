@@ -103,17 +103,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>${plugin.publishing.version}</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>central</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <waitUntil>published</waitUntil>
-                </configuration>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
                 <version>${plugin.source.version}</version>
@@ -150,7 +139,7 @@
                     <publishingServerId>central</publishingServerId>
                     <!-- visit https://central.sonatype.com/publishing/deployments to publish manually -->
                     <!-- also visit that site to debug validation issues -->
-                    <autoPublish>false</autoPublish>
+                    <autoPublish>true</autoPublish>
                 </configuration>
             </plugin>
             <!-- https://central.sonatype.org/publish/publish-maven/#gpg-signed-components -->
