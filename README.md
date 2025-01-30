@@ -18,7 +18,7 @@ To include OntoUML4J in your project, add the following dependency to your `pom.
 
 ```xml
 <dependency>
-    <groupId>io.github.matheuslenke</groupId>
+    <groupId>org.ontouml</groupId>
     <artifactId>ontouml4j</artifactId>
     <version>0.1.0</version>
 </dependency>
@@ -28,10 +28,9 @@ To include OntoUML4J in your project, add the following dependency to your `pom.
 
 This package is designed to support manipulating OntoUML models and their serialization into [ontouml-schema](https://github.com/OntoUML/ontouml-schema) compliant JSON files.
 
-
 ```java
-import org.ontouml.model.MultilingualText;
-import org.ontouml.model.Project;
+import org.ontouml.ontouml4j.model.MultilingualText;
+import org.ontouml.ontouml4j.model.Project;
 
 public class Main {
   public static void main(String[] args) {

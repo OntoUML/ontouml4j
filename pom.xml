@@ -90,8 +90,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>some directory</source>
-                                ...
+                                <source>${project.basedir}/src/main/java/org/ontouml/ontouml4j</source>
                             </sources>
                         </configuration>
                     </execution>
