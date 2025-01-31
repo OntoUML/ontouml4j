@@ -1,6 +1,5 @@
 package org.ontouml.ontouml4j.deserialization;
 
-import static com.google.common.truth.Truth.assertThat;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
 import org.ontouml.ontouml4j.model.Anchor;
 import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.utils.ResourceGetter;
