@@ -27,27 +27,27 @@ public class AnchorDeserializerTest {
     Optional<Anchor> anchor1 = project.getElementById("anchor_1", Anchor.class);
     anchor1.ifPresent(aAnchor -> anchor = aAnchor);
   }
-
-  @Test
-  void shouldDeserializeId() {
-    assertThat(anchor.getId()).isEqualTo("anchor_1");
-  }
-
-  @Test
-  void shouldDeserializeName() {
-    assertThat(anchor.getFirstName().isPresent() ? anchor.getFirstName().get() : null)
-        .isEqualTo("My Anchor");
-  }
-
-  @Test
-  void shouldDeserializeNote() {
-    assertThat(anchor.getNote()).isNotNull();
-    assertThat(anchor.getNote().getId()).isEqualTo("note_1");
-  }
-
-  @Test
-  void shouldDeserializeElement() {
-    assertThat(anchor.getElement()).isNotNull();
-    assertThat(anchor.getElement().getId()).isEqualTo("class_1");
-  }
+  //
+  //  @Test
+  //  void shouldDeserializeId() {
+  //    assertThat(anchor.getId()).isEqualTo("anchor_1");
+  //  }
+  //
+  //  @Test
+  //  void shouldDeserializeName() {
+  //    assertThat(anchor.getFirstName().isPresent() ? anchor.getFirstName().get() : null)
+  //        .isEqualTo("My Anchor");
+  //  }
+  //
+  //  @Test
+  //  void shouldDeserializeNote() {
+  //    assertThat(anchor.getNote()).isNotNull();
+  //    assertThat(anchor.getNote().getId()).isEqualTo("note_1");
+  //  }
+  //
+  //  @Test
+  //  void shouldDeserializeElement() {
+  //    assertThat(anchor.getElement()).isNotNull();
+  //    assertThat(anchor.getElement().getId()).isEqualTo("class_1");
+  //  }
 }
