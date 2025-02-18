@@ -242,6 +242,12 @@ public class Class extends Classifier<Class, ClassStereotype> {
     return Stream.of(names).map(this::createLiteral).toList();
   }
 
+  /**
+   * This method creates a Literal and add it to the current project
+   *
+   * @param name - Name of the literal
+   * @return the created literal
+   */
   public Literal createLiteral(String name) {
     if (literals == null) literals = new ArrayList<>();
 
@@ -250,9 +256,18 @@ public class Class extends Classifier<Class, ClassStereotype> {
     return literal;
   }
 
+  /**
+   * This method gets a created literal, and add it to this class
+   *
+   * @param literal
+   */
   public void addLiteral(Literal literal) {
     if (literals == null) literals = new ArrayList<>();
 
+    if (this.projectContainer != null) {
+      literal.setProjectContainer(projectContainer);
+      this.projectContainer.addLiteral(literal);
+    }
     literal.setContainer(this);
     literals.add(literal);
   }
@@ -475,6 +490,8 @@ public class Class extends Classifier<Class, ClassStereotype> {
     properties.add(attribute);
     attribute.setProjectContainer(this.projectContainer);
 
+    this.projectContainer.addElement(attribute);
+
     return attribute;
   }
 
@@ -493,6 +510,8 @@ public class Class extends Classifier<Class, ClassStereotype> {
 
   public void addAttribute(Property attribute) {
     if (attribute == null) return;
+
+    projectContainer.addElement(attribute);
 
     attribute.setContainer(this);
     properties.add(attribute);

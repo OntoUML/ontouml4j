@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @SuperBuilder
-@NoArgsConstructor
 @AllArgsConstructor
 public abstract class ModelElement extends NamedElement {
   /**
@@ -27,6 +26,10 @@ public abstract class ModelElement extends NamedElement {
 
   public ModelElement(String id, MultilingualText name, List<MultilingualText> alternativeNames) {
     super(id, name, alternativeNames);
+  }
+
+  public ModelElement() {
+    super();
   }
 
   public void addCustomProperty(String key, Object value) {

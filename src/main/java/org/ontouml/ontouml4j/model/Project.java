@@ -28,8 +28,7 @@ import org.ontouml.ontouml4j.shape.*;
 public class Project extends NamedElement implements ElementContainer {
 
   /** Contains the OntoUML elements that are part of the project. */
-  @Builder.Default
-  ProjectMetaProperties metaProperties = new ProjectMetaProperties();
+  @Builder.Default ProjectMetaProperties metaProperties = new ProjectMetaProperties();
 
   /** Properties related to diagrams, views, and shapes that are part of the project. */
   @Builder.Default Map<String, Diagram> diagrams = new HashMap<>();
@@ -74,7 +73,7 @@ public class Project extends NamedElement implements ElementContainer {
     return elements;
   }
 
-  public void setElements(List<OntoumlElement> elements) {
+  public <T extends OntoumlElement> void setElements(List<T> elements) {
     elements.forEach(
         element -> {
           if (element instanceof Class) {
@@ -247,6 +246,7 @@ public class Project extends NamedElement implements ElementContainer {
       case Anchor anchor -> this.addAnchor(anchor);
       default -> throw new IllegalStateException("Unexpected value: " + element);
     }
+    element.setProjectContainer(this);
     return element;
   }
 
@@ -323,5 +323,44 @@ public class Project extends NamedElement implements ElementContainer {
 
   public Optional<GeneralizationSet> getGeneralizationSetById(String id) {
     return Optional.ofNullable(this.generalizationSets.get(id));
+  }
+
+  @Override
+  public String toString() {
+    return "Project{"
+        + "type='"
+        + getType()
+        + '\''
+        + ", metaProperties="
+        + metaProperties.toString()
+        + ", diagrams="
+        + diagrams.keySet()
+        + // Including keys to summarize data
+        ", views="
+        + views.keySet()
+        + ", shapes="
+        + shapes.keySet()
+        + ", root="
+        + (root != null ? root.getName() : "null")
+        + // Assuming root has getName method
+        ", classes="
+        + classes.keySet()
+        + ", packages="
+        + packages.keySet()
+        + ", relations="
+        + relations.keySet()
+        + ", properties="
+        + properties.keySet()
+        + ", literals="
+        + literals.keySet()
+        + ", generalizationSets="
+        + generalizationSets.keySet()
+        + ", generalizations="
+        + generalizations.keySet()
+        + ", notes="
+        + notes.keySet()
+        + ", anchors="
+        + anchors.keySet()
+        + '}';
   }
 }

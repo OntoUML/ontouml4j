@@ -15,7 +15,6 @@ import org.ontouml.ontouml4j.serialization.NamedElementSerializer;
 @Data
 @SuperBuilder
 @AllArgsConstructor
-@NoArgsConstructor
 @JsonSerialize(using = NamedElementSerializer.class)
 public abstract class NamedElement extends OntoumlElement {
 
@@ -56,6 +55,10 @@ public abstract class NamedElement extends OntoumlElement {
     this.alternativeNames = alternativeNames;
   }
 
+  public NamedElement() {
+    super();
+  }
+
   public Optional<String> getNameIn(String language) {
     return name.getText(language);
   }
@@ -68,6 +71,9 @@ public abstract class NamedElement extends OntoumlElement {
   }
 
   public void addName(String languageTag, String value) {
+    if (value == null) {
+      return;
+    }
     if (this.name == null) {
       this.name = new MultilingualText(languageTag, value);
       return;
@@ -76,7 +82,10 @@ public abstract class NamedElement extends OntoumlElement {
   }
 
   public void addName(String value) {
-    if (name == null) {
+    if (value == null) {
+      return;
+    }
+    if (this.name == null) {
       this.name = new MultilingualText(value);
     }
     this.name.putText(value);

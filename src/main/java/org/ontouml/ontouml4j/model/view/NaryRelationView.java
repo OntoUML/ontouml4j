@@ -22,7 +22,7 @@ import org.ontouml.ontouml4j.shape.Path;
 @JsonSerialize(using = NaryRelationViewSerializer.class)
 public class NaryRelationView extends View {
 
-  List<String> memberIds = new ArrayList<>();
+  @Builder.Default List<String> memberIds = new ArrayList<>();
 
   /**
    * Identifies the class views (i.e., the members) that are connected by the n-ary relation view in
@@ -46,9 +46,9 @@ public class NaryRelationView extends View {
    * This array of paths must be ordered according to the properties of the relation the view
    * represents.
    */
-  private List<Path> paths = new ArrayList<>();
+  @Builder.Default private List<Path> paths = new ArrayList<>();
 
-  private List<String> pathIds = new ArrayList<>();
+  @Builder.Default private List<String> pathIds = new ArrayList<>();
 
   @Override
   public String getType() {

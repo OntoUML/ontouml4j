@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.GeneralizationDeserializer;
 import org.ontouml.ontouml4j.model.stereotype.Stereotype;
@@ -25,7 +24,6 @@ import org.ontouml.ontouml4j.serialization.GeneralizationSerializer;
 @SuperBuilder
 @JsonDeserialize(using = GeneralizationDeserializer.class)
 @JsonSerialize(using = GeneralizationSerializer.class)
-@NoArgsConstructor
 public class Generalization extends PackageableElement {
   private String generalId;
   private String specificId;
@@ -62,6 +60,10 @@ public class Generalization extends PackageableElement {
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
       Classifier<T, S> specific, Classifier<T, S> general) {
     this(null, (MultilingualText) null, specific, general);
+  }
+
+  public Generalization() {
+    super();
   }
 
   public Optional<Classifier<?, ?>> getGeneral() {

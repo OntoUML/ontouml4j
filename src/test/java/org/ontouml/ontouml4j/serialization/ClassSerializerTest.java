@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.ontouml4j.model.Class;
 import org.ontouml.ontouml4j.model.MultilingualText;
+import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.model.stereotype.ClassStereotype;
 
 public class ClassSerializerTest {
@@ -26,6 +27,7 @@ public class ClassSerializerTest {
 
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
+    Project project = new Project();
     clazz =
         Class.builder()
             .name(new MultilingualText("class1"))
@@ -33,6 +35,7 @@ public class ClassSerializerTest {
             .ontoumlStereotype(ClassStereotype.KIND)
             .isAbstract(true)
             .build();
+    project.addClass(clazz);
     node = clazz.serialize();
   }
 

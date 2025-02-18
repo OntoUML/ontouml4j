@@ -31,4 +31,54 @@ public class ProjectMetaProperties {
   List<String> acronyms;
   List<String> languages;
   List<MultilingualText> keywords;
+
+  @Override
+  public String toString() {
+    return "ProjectMetaProperties{"
+        + "publisher="
+        + publisher
+        + ", "
+        + "designedForTasks="
+        + designedForTasks
+        + ", "
+        + "license="
+        + license
+        + ", "
+        + "accessRights="
+        + accessRights
+        + ", "
+        + "themes="
+        + themes
+        + ", "
+        + "contexts="
+        + contexts
+        + ", "
+        + "ontologyTypes="
+        + ontologyTypes
+        + ", "
+        + "representationStyle="
+        + representationStyle
+        + ", "
+        + "namespace="
+        + namespace
+        + ", "
+        + "landingPages="
+        + landingPages
+        + ", "
+        + "sources="
+        + sources
+        + ", "
+        + "bibliographicCitations="
+        + bibliographicCitations
+        + ", "
+        + "acronyms="
+        + acronyms
+        + ", "
+        + "languages="
+        + languages
+        + ", "
+        + "keywords="
+        + keywords
+        + '}';
+  }
 }
