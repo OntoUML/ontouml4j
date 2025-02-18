@@ -9,7 +9,9 @@ import org.ontouml.ontouml4j.model.Generalization;
 public class GeneralizationSerializer extends JsonSerializer<Generalization> {
   static void serializeFields(Generalization value, JsonGenerator jsonGen) throws IOException {
     jsonGen.writeStringField("type", "Generalization");
+
     PackageableElementSerializer.serializeFields(value, jsonGen);
+
     if (value.getGeneral().isEmpty()) {
       jsonGen.writeNullField("general");
     } else {

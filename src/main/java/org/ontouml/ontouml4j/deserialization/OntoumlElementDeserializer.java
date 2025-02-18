@@ -15,14 +15,14 @@ public class OntoumlElementDeserializer {
     System.out.println("Deserialized id:" + id);
 
     JsonNode createdNode = root.get("created");
-    if (createdNode != null) {
+    if (createdNode != null && !createdNode.isNull()) {
       Date created = createdNode.traverse(codec).readValueAs(Date.class);
       element.setCreated(created);
       System.out.println("Deserialized created:" + created.toString());
     }
 
     JsonNode modifiedNode = root.get("modified");
-    if (modifiedNode != null) {
+    if (modifiedNode != null && !modifiedNode.isNull()) {
       Date modified = modifiedNode.traverse(codec).readValueAs(Date.class);
       element.setModified(modified);
       System.out.println("Deserialized modified:" + modified.toString());

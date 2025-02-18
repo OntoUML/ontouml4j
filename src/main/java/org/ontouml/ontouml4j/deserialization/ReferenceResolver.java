@@ -26,8 +26,8 @@ public class ReferenceResolver {
 
     for (GeneralizationSet gs : project.getAllGeneralizationSets()) {
       System.out.println(gs);
-      //          resolveCategorizer(elementMap, gs);
-      //          resolveGeneralizations(elementMap, gs);
+      resolveCategorizer(elementMap, gs);
+      resolveGeneralizations(elementMap, gs);
     }
 
     //            for (Diagram diagram : project.getDiagrams()) {
