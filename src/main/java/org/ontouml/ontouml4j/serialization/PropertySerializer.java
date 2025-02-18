@@ -14,7 +14,7 @@ public class PropertySerializer extends JsonSerializer<Property> {
   public static void serializeFields(Property property, JsonGenerator jsonGen) throws IOException {
     jsonGen.writeStringField("type", "Property");
     DecoratableSerializer.serializeFields(property, jsonGen);
-    jsonGen.writeBooleanField("isDerived", property.isDerived());
+
     jsonGen.writeBooleanField("isOrdered", property.isOrdered());
     jsonGen.writeBooleanField("isReadOnly", property.isReadOnly());
 
