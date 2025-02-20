@@ -40,4 +40,11 @@ public class ClassView extends View {
         project.getElementById(getRectangle().getId(), Rectangle.class).orElse(null);
     this.setRectangle(rectangle);
   }
+
+  @Override
+  public void setProjectContainer(Project projectContainer) {
+    super.setProjectContainer(projectContainer);
+    this.rectangle.setProjectContainer(projectContainer);
+    projectContainer.addElement(this.rectangle);
+  }
 }

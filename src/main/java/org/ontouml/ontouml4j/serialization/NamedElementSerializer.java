@@ -8,7 +8,8 @@ import org.ontouml.ontouml4j.model.NamedElement;
 
 public class NamedElementSerializer extends JsonSerializer<NamedElement> {
 
-  static void serializeFields(NamedElement element, JsonGenerator jsonGen) throws IOException {
+  public static void serializeFields(NamedElement element, JsonGenerator jsonGen)
+      throws IOException {
     OntoumlElementSerializer.serializeFields(element, jsonGen);
     serializeName(element, jsonGen);
     serializeDescription(element, jsonGen);

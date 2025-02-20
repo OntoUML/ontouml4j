@@ -23,7 +23,7 @@ public class NamedElementDeserializer {
     }
 
     JsonNode alternativeNamesNode = root.get("alternativeNames");
-    if (alternativeNamesNode != null) {
+    if (alternativeNamesNode != null && !alternativeNamesNode.isNull()) {
       List<MultilingualText> alternativeNames =
           alternativeNamesNode
               .traverse(codec)

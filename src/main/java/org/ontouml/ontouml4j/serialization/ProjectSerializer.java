@@ -9,6 +9,10 @@ import org.ontouml.ontouml4j.model.*;
 import org.ontouml.ontouml4j.model.Class;
 import org.ontouml.ontouml4j.model.Package;
 import org.ontouml.ontouml4j.model.utils.ProjectMetaProperties;
+import org.ontouml.ontouml4j.model.view.*;
+import org.ontouml.ontouml4j.serialization.shape.*;
+import org.ontouml.ontouml4j.serialization.view.*;
+import org.ontouml.ontouml4j.shape.*;
 
 public class ProjectSerializer extends JsonSerializer<Project> {
 
@@ -60,9 +64,9 @@ public class ProjectSerializer extends JsonSerializer<Project> {
   }
 
   private static void serializeElements() throws IOException {
-    List<ModelElement> elements = project.getElements();
+    List<OntoumlElement> elements = project.getElements();
     jsonGen.writeArrayFieldStart("elements");
-    for (ModelElement element : elements) {
+    for (OntoumlElement element : elements) {
       jsonGen.writeStartObject();
       switch (element) {
         case Class clazz -> ClassSerializer.serializeFields(clazz, jsonGen);
@@ -75,6 +79,24 @@ public class ProjectSerializer extends JsonSerializer<Project> {
         case GeneralizationSet gen -> GeneralizationSetSerializer.serializeFields(gen, jsonGen);
         case Anchor anchor -> AnchorSerializer.serializeFields(anchor, jsonGen);
         case Note note -> NoteSerializer.serializeFields(note, jsonGen);
+        case Diagram diagram -> DiagramSerializer.serializeFields(diagram, jsonGen);
+        case AnchorView view -> AnchorViewSerializer.serializeFields(view, jsonGen);
+        case BinaryRelationView view -> BinaryRelationViewSerializer.serializeFields(view, jsonGen);
+        case ClassView view -> ClassViewSerializer.serializeFields(view, jsonGen);
+        case GeneralizationView view -> GeneralizationViewSerializer.serializeFields(view, jsonGen);
+        case GeneralizationSetView view ->
+            GeneralizationSetViewSerializer.serializeFields(view, jsonGen);
+        case NaryRelationView view -> NaryRelationViewSerializer.serializeFields(view, jsonGen);
+        case NoteView view -> NoteViewSerializer.serializeFields(view, jsonGen);
+        case PackageView view -> PackageViewSerializer.serializeFields(view, jsonGen);
+        case BinaryConnectorView view ->
+            BinaryConnectorViewSerializer.serializeFields(view, jsonGen);
+        case Rectangle rectangle -> RectangleSerializer.serializeFields(rectangle, jsonGen);
+        case Diamond diamond -> DiamondSerializer.serializeFields(diamond, jsonGen);
+        case Path path -> PathSerializer.serializeFields(path, jsonGen);
+        case Text text -> TextSerializer.serializeFields(text, jsonGen);
+        case RectangularShape rectangle ->
+            RectangularShapeSerializer.serializeFields(rectangle, jsonGen);
         default ->
             throw new IllegalArgumentException("Unexpected element type: " + element.getClass());
       }

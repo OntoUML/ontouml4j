@@ -39,10 +39,6 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
 
     this.deserializeContents(project, root);
 
-    //    List<Diagram> diagrams =
-    //        DeserializerUtils.deserializeArrayField(root, "diagrams", Diagram.class, codec);
-    //    project.setDiagrams(diagrams);
-
     try {
       ReferenceResolver.resolveReferences(project);
     } catch (Exception e) {
@@ -108,6 +104,9 @@ public class ProjectDeserializer extends JsonDeserializer<Project> {
         break;
       case "Anchor":
         referenceType = Anchor.class;
+        break;
+      case "Diagram":
+        referenceType = Diagram.class;
         break;
       case "ClassView":
         referenceType = ClassView.class;

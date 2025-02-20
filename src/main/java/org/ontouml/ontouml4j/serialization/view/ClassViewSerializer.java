@@ -11,7 +11,7 @@ public class ClassViewSerializer extends JsonSerializer<ClassView> {
   public static void serializeFields(ClassView view, JsonGenerator jsonGen) throws IOException {
     ViewSerializer.serializeFields(view, jsonGen);
 
-    Serializer.writeNullableOjectField("rectangle", view.getRectangle(), jsonGen);
+    Serializer.writeNullableStringField("rectangle", view.getRectangle().getId(), jsonGen);
   }
 
   @Override

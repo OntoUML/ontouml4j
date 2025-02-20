@@ -52,13 +52,29 @@ public class Project extends NamedElement implements ElementContainer {
   @Builder.Default private Map<String, Note> notes = new HashMap<>();
   @Builder.Default private Map<String, Anchor> anchors = new HashMap<>();
 
+  public Project(String id, String name) {
+    super(id, new MultilingualText(name));
+    this.classes = new HashMap<>();
+    this.packages = new HashMap<>();
+    this.relations = new HashMap<>();
+    this.properties = new HashMap<>();
+    this.literals = new HashMap<>();
+    this.generalizationSets = new HashMap<>();
+    this.generalizations = new HashMap<>();
+    this.notes = new HashMap<>();
+    this.anchors = new HashMap<>();
+    this.diagrams = new HashMap<>();
+    this.views = new HashMap<>();
+    this.shapes = new HashMap<>();
+  }
+
   @Override
   public String getType() {
     return "Project";
   }
 
-  public List<ModelElement> getElements() {
-    List<ModelElement> elements = new ArrayList<>();
+  public List<OntoumlElement> getElements() {
+    List<OntoumlElement> elements = new ArrayList<>();
 
     elements.addAll(classes.values().stream().toList());
     elements.addAll(packages.values().stream().toList());
@@ -69,6 +85,9 @@ public class Project extends NamedElement implements ElementContainer {
     elements.addAll(generalizations.values().stream().toList());
     elements.addAll(notes.values().stream().toList());
     elements.addAll(anchors.values().stream().toList());
+    elements.addAll(diagrams.values().stream().toList());
+    elements.addAll(views.values().stream().toList());
+    elements.addAll(shapes.values().stream().toList());
 
     return elements;
   }
@@ -250,6 +269,25 @@ public class Project extends NamedElement implements ElementContainer {
     return element;
   }
 
+  public OntoumlElement addElement(OntoumlElement element) {
+    switch (element) {
+      case Diagram diagram -> this.diagrams.put(element.getId(), diagram);
+      case View view -> this.views.put(element.getId(), view);
+      case Package pkg -> this.addPackage(pkg);
+      case Relation relation -> this.addRelation(relation);
+      case Property property -> this.addProperty(property);
+      case Literal literal -> this.addLiteral(literal);
+      case GeneralizationSet genset -> this.addGeneralizationSet(genset);
+      case Generalization gen -> this.addGeneralization(gen);
+      case Note note -> this.addNote(note);
+      case Anchor anchor -> this.addAnchor(anchor);
+      case Shape shape -> this.shapes.put(element.getId(), shape);
+      default -> throw new IllegalStateException("Unexpected value: " + element);
+    }
+    element.setProjectContainer(this);
+    return element;
+  }
+
   /**
    * Method that creates a new package and add it to the list of elements of the project
    *
@@ -309,6 +347,46 @@ public class Project extends NamedElement implements ElementContainer {
     this.anchors.put(anchor.getId(), anchor);
   }
 
+  public void addDiagram(Diagram diagram) {
+    diagram.setProjectContainer(this);
+    this.diagrams.put(diagram.getId(), diagram);
+  }
+
+  private void addView(View view) {
+    view.setProjectContainer(this);
+    this.views.put(view.getId(), view);
+  }
+
+  public void addShape(Shape shape) {
+    shape.setProjectContainer(this);
+    this.shapes.put(shape.getId(), shape);
+  }
+
+  public void addDiamond(Diamond diamond) {
+    diamond.setProjectContainer(this);
+    this.shapes.put(diamond.getId(), diamond);
+  }
+
+  public void addPath(Path path) {
+    path.setProjectContainer(this);
+    this.shapes.put(path.getId(), path);
+  }
+
+  public void addRectangle(Rectangle rectangle) {
+    rectangle.setProjectContainer(this);
+    this.shapes.put(rectangle.getId(), rectangle);
+  }
+
+  public void addRectangularShape(RectangularShape rectangle) {
+    rectangle.setProjectContainer(this);
+    this.shapes.put(rectangle.getId(), rectangle);
+  }
+
+  public void addText(Text text) {
+    text.setProjectContainer(this);
+    this.shapes.put(text.getId(), text);
+  }
+
   public Optional<Property> getPropertyById(String id) {
     return Optional.ofNullable(this.properties.get(id));
   }
@@ -327,40 +405,41 @@ public class Project extends NamedElement implements ElementContainer {
 
   @Override
   public String toString() {
-    return "Project{"
-        + "type='"
-        + getType()
-        + '\''
-        + ", metaProperties="
-        + metaProperties.toString()
-        + ", diagrams="
-        + diagrams.keySet()
-        + // Including keys to summarize data
-        ", views="
-        + views.keySet()
-        + ", shapes="
-        + shapes.keySet()
-        + ", root="
-        + (root != null ? root.getName() : "null")
-        + // Assuming root has getName method
-        ", classes="
-        + classes.keySet()
-        + ", packages="
-        + packages.keySet()
-        + ", relations="
-        + relations.keySet()
-        + ", properties="
-        + properties.keySet()
-        + ", literals="
-        + literals.keySet()
-        + ", generalizationSets="
-        + generalizationSets.keySet()
-        + ", generalizations="
-        + generalizations.keySet()
-        + ", notes="
-        + notes.keySet()
-        + ", anchors="
-        + anchors.keySet()
-        + '}';
+    return "Project";
+    //    return "Project{"
+    //        + "type='"
+    //        + getType()
+    //        + '\''
+    //        + ", metaProperties="
+    //        + metaProperties.toString()
+    //        + ", diagrams="
+    //        + diagrams.keySet()
+    //        + // Including keys to summarize data
+    //        ", views="
+    //        + views.keySet()
+    //        + ", shapes="
+    //        + shapes.keySet()
+    //        + ", root="
+    //        + (root != null ? root.getName() : "null")
+    //        + // Assuming root has getName method
+    //        ", classes="
+    //        + classes.keySet()
+    //        + ", packages="
+    //        + packages.keySet()
+    //        + ", relations="
+    //        + relations.keySet()
+    //        + ", properties="
+    //        + properties.keySet()
+    //        + ", literals="
+    //        + literals.keySet()
+    //        + ", generalizationSets="
+    //        + generalizationSets.keySet()
+    //        + ", generalizations="
+    //        + generalizations.keySet()
+    //        + ", notes="
+    //        + notes.keySet()
+    //        + ", anchors="
+    //        + anchors.keySet()
+    //        + '}';
   }
 }

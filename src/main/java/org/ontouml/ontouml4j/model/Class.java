@@ -516,4 +516,11 @@ public class Class extends Classifier<Class, ClassStereotype> {
     attribute.setContainer(this);
     properties.add(attribute);
   }
+
+  @Override
+  public void setProjectContainer(Project projectContainer) {
+    super.setProjectContainer(projectContainer);
+    this.properties.forEach(element -> element.setProjectContainer(projectContainer));
+    this.literals.forEach(element -> element.setProjectContainer(projectContainer));
+  }
 }
