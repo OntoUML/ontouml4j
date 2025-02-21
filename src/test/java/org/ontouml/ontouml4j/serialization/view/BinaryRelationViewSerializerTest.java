@@ -8,9 +8,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.ontouml4j.model.BinaryRelation;
 import org.ontouml.ontouml4j.model.Class;
+import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.model.view.BinaryRelationView;
 import org.ontouml.ontouml4j.model.view.ClassView;
 import org.ontouml.ontouml4j.shape.Path;
+import org.ontouml.ontouml4j.shape.Rectangle;
 
 public class BinaryRelationViewSerializerTest {
   BinaryRelationView binaryRelationView;
@@ -18,13 +20,27 @@ public class BinaryRelationViewSerializerTest {
 
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
+    Project project = Project.builder().build();
+
     Class clazz1 = Class.builder().id("class_1").build();
     Class clazz2 = Class.builder().id("class_2").build();
 
-    ClassView classView1 = ClassView.builder().id("classview_1").isViewOf(clazz1).build();
-    ClassView classView2 = ClassView.builder().id("classview_2").isViewOf(clazz2).build();
+    project.addClass(clazz1);
+    project.addClass(clazz2);
+
+    Rectangle rectangle = project.addRectangle(new Rectangle("rectangle_1", 20, 20));
+
+    ClassView classView1 =
+        ClassView.builder().id("classview_1").rectangle(rectangle).isViewOf(clazz1).build();
+    ClassView classView2 =
+        ClassView.builder().id("classview_2").rectangle(rectangle).isViewOf(clazz2).build();
+
+    project.addElement(classView1);
+    project.addElement(classView2);
 
     BinaryRelation binaryRelation = BinaryRelation.builder().id("binaryrelation_1").build();
+
+    project.addElement(binaryRelation);
 
     Path path = Path.builder().id("path_1").build();
 
@@ -37,6 +53,7 @@ public class BinaryRelationViewSerializerTest {
             .isViewOf(binaryRelation)
             .build();
 
+    project.addElement(binaryRelationView);
     node = binaryRelationView.serialize();
   }
 

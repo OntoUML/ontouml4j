@@ -302,79 +302,94 @@ public class Project extends NamedElement implements ElementContainer {
     return pkg;
   }
 
-  public void addClass(Class clazz) {
+  public Class addClass(Class clazz) {
     clazz.setProjectContainer(this);
     this.classes.put(clazz.getId(), clazz);
+    return clazz;
   }
 
-  public void addPackage(Package pkg) {
+  public Package addPackage(Package pkg) {
     pkg.setProjectContainer(this);
     this.packages.put(pkg.getId(), pkg);
+    return pkg;
   }
 
-  public void addRelation(Relation relation) {
+  public Relation addRelation(Relation relation) {
     relation.setProjectContainer(this);
     this.relations.put(relation.getId(), relation);
+    return relation;
   }
 
-  public void addLiteral(Literal literal) {
+  public Literal addLiteral(Literal literal) {
     literal.setProjectContainer(this);
     this.literals.put(literal.getId(), literal);
+    return literal;
   }
 
-  public void addProperty(Property property) {
+  public Property addProperty(Property property) {
     property.setProjectContainer(this);
     this.properties.put(property.getId(), property);
+    return property;
   }
 
-  public void addGeneralization(Generalization gen) {
+  public Generalization addGeneralization(Generalization gen) {
     gen.setProjectContainer(this);
     this.generalizations.put(gen.getId(), gen);
+    return gen;
   }
 
-  public void addGeneralizationSet(GeneralizationSet genset) {
+  public GeneralizationSet addGeneralizationSet(GeneralizationSet genset) {
     genset.setProjectContainer(this);
     this.generalizationSets.put(genset.getId(), genset);
+    return genset;
   }
 
-  public void addNote(Note note) {
+  public Note addNote(Note note) {
     note.setProjectContainer(this);
     this.notes.put(note.getId(), note);
+    return note;
   }
 
-  public void addAnchor(Anchor anchor) {
+  public Anchor addAnchor(Anchor anchor) {
     anchor.setProjectContainer(this);
     this.anchors.put(anchor.getId(), anchor);
+    return anchor;
   }
 
-  public void addDiagram(Diagram diagram) {
+  public Diagram addDiagram(Diagram diagram) {
     diagram.setProjectContainer(this);
     this.diagrams.put(diagram.getId(), diagram);
+    return diagram;
   }
 
-  private void addView(View view) {
+  private View addView(View view) {
     view.setProjectContainer(this);
     this.views.put(view.getId(), view);
+    return view;
   }
 
-  public void addShape(Shape shape) {
+  public Shape addShape(Shape shape) {
     shape.setProjectContainer(this);
     this.shapes.put(shape.getId(), shape);
+    return shape;
   }
 
-  public void addDiamond(Diamond diamond) {
+  public Diamond addDiamond(Diamond diamond) {
     diamond.setProjectContainer(this);
     this.shapes.put(diamond.getId(), diamond);
+    return diamond;
   }
 
-  public void addPath(Path path) {
+  public Path addPath(Path path) {
     path.setProjectContainer(this);
     this.shapes.put(path.getId(), path);
+    return path;
   }
 
-  public void addRectangle(Rectangle rectangle) {
+  public Rectangle addRectangle(Rectangle rectangle) {
     rectangle.setProjectContainer(this);
     this.shapes.put(rectangle.getId(), rectangle);
+    return rectangle;
   }
 
   public void addRectangularShape(RectangularShape rectangle) {

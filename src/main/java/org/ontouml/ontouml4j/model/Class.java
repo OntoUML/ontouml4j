@@ -490,7 +490,9 @@ public class Class extends Classifier<Class, ClassStereotype> {
     properties.add(attribute);
     attribute.setProjectContainer(this.projectContainer);
 
-    this.projectContainer.addElement(attribute);
+    if (this.projectContainer != null) {
+      this.projectContainer.addElement(attribute);
+    }
 
     return attribute;
   }

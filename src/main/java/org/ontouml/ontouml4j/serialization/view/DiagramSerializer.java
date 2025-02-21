@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import java.util.List;
+import org.ontouml.ontouml4j.model.ModelElement;
 import org.ontouml.ontouml4j.model.OntoumlElement;
 import org.ontouml.ontouml4j.model.view.Diagram;
 import org.ontouml.ontouml4j.serialization.NamedElementSerializer;
@@ -15,8 +16,16 @@ public class DiagramSerializer extends JsonSerializer<Diagram> {
   public static void serializeFields(Diagram diagram, JsonGenerator jsonGen) throws IOException {
     NamedElementSerializer.serializeFields(diagram, jsonGen);
 
-    List<String> viewsIds = diagram.getViews().stream().map(OntoumlElement::getId).toList();
+    Serializer.writeNullableStringField("type", "Diagram", jsonGen);
 
+    List<String> viewsIds = diagram.getViews().stream().map(OntoumlElement::getId).toList();
+    ModelElement owner = diagram.getOwner();
+    if (owner != null) {
+      Serializer.writeNullableStringField("owner", owner.getId(), jsonGen);
+
+    } else {
+      Serializer.writeNullableStringField("owner", null, jsonGen);
+    }
     Serializer.writeEmptyableArrayField("views", viewsIds, jsonGen);
   }
 

@@ -9,7 +9,7 @@ import org.ontouml.ontouml4j.model.view.GeneralizationView;
 public class GeneralizationViewSerializer extends JsonSerializer<GeneralizationView> {
   public static void serializeFields(GeneralizationView view, JsonGenerator jsonGen)
       throws IOException {
-    BinaryConnectorViewSerializer.serialize(view, jsonGen);
+    BinaryConnectorViewSerializer.serializeFields(view, jsonGen);
   }
 
   @Override

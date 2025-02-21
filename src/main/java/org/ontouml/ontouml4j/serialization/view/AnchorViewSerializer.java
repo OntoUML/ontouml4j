@@ -8,7 +8,7 @@ import org.ontouml.ontouml4j.model.view.AnchorView;
 
 public class AnchorViewSerializer extends JsonSerializer<AnchorView> {
   public static void serializeFields(AnchorView view, JsonGenerator jsonGen) throws IOException {
-    BinaryConnectorViewSerializer.serialize(view, jsonGen);
+    BinaryConnectorViewSerializer.serializeFields(view, jsonGen);
   }
 
   @Override

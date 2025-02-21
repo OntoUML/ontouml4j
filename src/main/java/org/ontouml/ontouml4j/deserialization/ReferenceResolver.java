@@ -50,6 +50,7 @@ public class ReferenceResolver {
     buildGeneralizationSetReferences(project);
     buildAnchorReferences(project);
     buildViewsReferences(project);
+    buildDiagramReferences(project);
   }
 
   //    private static void resolveOwner(Map<String, OntoumlElement> elementMap, Diagram diagram) {
@@ -234,5 +235,9 @@ public class ReferenceResolver {
 
   private static void buildViewsReferences(Project project) {
     project.getViews().values().forEach(view -> view.resolveAllReferences(project));
+  }
+
+  private static void buildDiagramReferences(Project project) {
+    project.getDiagrams().values().forEach(diagram -> diagram.resolveAllReferences(project));
   }
 }

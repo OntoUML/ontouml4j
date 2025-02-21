@@ -34,7 +34,44 @@ public class DiagramSerializerTest {
   }
 
   @Test
-  void shouldSerializeDiagram() throws IOException, URISyntaxException {}
+  void shouldSerializeId() throws IOException, URISyntaxException {
+    String id = node.get("id").asText();
+    assertThat(id).isEqualTo("diagram_1");
+  }
+
+  @Test
+  void shouldSerializeType() throws IOException, URISyntaxException {
+    String type = node.get("type").asText();
+    assertThat(type).isEqualTo("Diagram");
+  }
+
+  @Test
+  void shouldSerializeName() throws IOException, URISyntaxException {
+    diagram.addName("pt", "Meu Diagrama");
+    diagram.addName("en", "My Diagram");
+
+    node = diagram.serialize();
+
+    String namePt = node.get("name").get("pt").asText();
+    String nameEn = node.get("name").get("en").asText();
+
+    assertThat(namePt).isEqualTo("Meu Diagrama");
+    assertThat(nameEn).isEqualTo("My Diagram");
+  }
+
+  @Test
+  void shouldSerializeDescription() throws IOException, URISyntaxException {
+    diagram.addDescription("pt", "Descrição do diagrama");
+    diagram.addDescription("en", "Diagram description");
+
+    node = diagram.serialize();
+
+    String descriptionPt = node.get("description").get("pt").asText();
+    String descriptionEn = node.get("description").get("en").asText();
+
+    assertThat(descriptionPt).isEqualTo("Descrição do diagrama");
+    assertThat(descriptionEn).isEqualTo("Diagram description");
+  }
 
   @Test
   void shouldSerializeOwner() throws IOException, URISyntaxException {
@@ -43,6 +80,9 @@ public class DiagramSerializerTest {
     diagram.setOwner(pkg);
 
     node = diagram.serialize();
+
+    String ownerId = node.get("owner").asText();
+    assertThat(ownerId).isEqualTo("package_1");
   }
 
   @Test

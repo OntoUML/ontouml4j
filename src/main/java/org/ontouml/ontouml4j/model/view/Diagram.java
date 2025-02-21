@@ -2,10 +2,7 @@ package org.ontouml.ontouml4j.model.view;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.view.DiagramDeserializer;
@@ -60,5 +57,14 @@ public class Diagram extends NamedElement {
     super.setProjectContainer(projectContainer);
     this.views.forEach(view -> view.setProjectContainer(projectContainer));
     this.views.forEach(projectContainer::addElement);
+  }
+
+  public void resolveAllReferences(Project project) {
+    List<View> newViews = new ArrayList<>();
+    for (View view : views) {
+      Optional<View> element = project.getElementById(view.getId(), View.class);
+      element.ifPresent(newViews::add);
+    }
+    views = newViews;
   }
 }

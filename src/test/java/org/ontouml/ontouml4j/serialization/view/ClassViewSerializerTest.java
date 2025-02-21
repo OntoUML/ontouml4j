@@ -51,13 +51,8 @@ public class ClassViewSerializerTest {
 
   @Test
   void shouldSerializeRectangle() throws JsonProcessingException {
-    JsonNode rectangle = node.get("rectangle");
-    String id = rectangle.get("id").asText();
-    int width = rectangle.get("width").asInt();
-    int height = rectangle.get("height").asInt();
+    String rectangle = node.get("rectangle").textValue();
 
-    assertThat(id).isEqualTo("rectangle_1");
-    assertThat(width).isEqualTo(10);
-    assertThat(height).isEqualTo(20);
+    assertThat(rectangle).isEqualTo("rectangle_1");
   }
 }

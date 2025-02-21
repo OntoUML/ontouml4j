@@ -9,8 +9,7 @@ import org.ontouml.ontouml4j.model.view.BinaryRelationView;
 public class BinaryRelationViewSerializer extends JsonSerializer<BinaryRelationView> {
   public static void serializeFields(BinaryRelationView view, JsonGenerator jsonGen)
       throws IOException {
-    ViewSerializer.serializeFields(view, jsonGen);
-    BinaryConnectorViewSerializer.serialize(view, jsonGen);
+    BinaryConnectorViewSerializer.serializeFields(view, jsonGen);
   }
 
   @Override
