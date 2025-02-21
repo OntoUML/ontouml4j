@@ -9,6 +9,7 @@ import org.ontouml.ontouml4j.serialization.Serializer;
 
 public class NoteViewSerializer extends JsonSerializer<NoteView> {
   public static void serializeFields(NoteView view, JsonGenerator jsonGen) throws IOException {
+    Serializer.writeNullableStringField("type", "NoteView", jsonGen);
     ViewSerializer.serializeFields(view, jsonGen);
     Serializer.writeNullableStringField("text", view.getText().getId(), jsonGen);
   }

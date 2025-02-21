@@ -4,11 +4,13 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
+import org.ontouml.ontouml4j.serialization.Serializer;
 import org.ontouml.ontouml4j.shape.Text;
 
 public class TextSerializer extends JsonSerializer<Text> {
 
   public static void serializeFields(Text text, JsonGenerator jsonGen) throws IOException {
+    Serializer.writeNullableStringField("type", "Text", jsonGen);
     RectangularShapeSerializer.serializeFields(text, jsonGen);
   }
 

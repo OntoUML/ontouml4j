@@ -34,7 +34,8 @@ public class DiagramDeserializerTest {
   void shouldDeserializeViews() {
     assertThat(diagram.getViews()).hasSize(2);
 
-    assertThat(diagram.getViews().get(0).getId()).isEqualTo("classview_1");
-    assertThat(diagram.getViews().get(0).getIsViewOf().getId()).isEqualTo("class_1");
+    assertThat(diagram.getViews().stream().toList().getFirst().getId()).isEqualTo("classview_1");
+    assertThat(diagram.getViews().stream().toList().getFirst().getIsViewOf().getId())
+        .isEqualTo("class_1");
   }
 }

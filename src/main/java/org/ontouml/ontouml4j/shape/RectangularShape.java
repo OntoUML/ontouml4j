@@ -22,16 +22,21 @@ public abstract class RectangularShape extends Shape {
 
   public RectangularShape(String id) {
     super(id);
+    this.topLeft = new Point(0, 0);
+    this.width = 0;
+    this.height = 0;
   }
 
   public RectangularShape(String id, int width, int height) {
     super(id);
+    this.topLeft = new Point(0, 0);
     this.width = width;
     this.height = height;
   }
 
   public RectangularShape(int width, int height) {
     this((String) null, width, height);
+    this.topLeft = new Point(0, 0);
     this.width = width;
     this.height = height;
   }

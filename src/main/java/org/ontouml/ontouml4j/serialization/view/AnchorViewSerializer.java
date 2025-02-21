@@ -5,9 +5,11 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 import org.ontouml.ontouml4j.model.view.AnchorView;
+import org.ontouml.ontouml4j.serialization.Serializer;
 
 public class AnchorViewSerializer extends JsonSerializer<AnchorView> {
   public static void serializeFields(AnchorView view, JsonGenerator jsonGen) throws IOException {
+    Serializer.writeNullableStringField("type", "AnchorView", jsonGen);
     BinaryConnectorViewSerializer.serializeFields(view, jsonGen);
   }
 

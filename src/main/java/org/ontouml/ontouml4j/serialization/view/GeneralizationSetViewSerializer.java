@@ -12,6 +12,7 @@ import org.ontouml.ontouml4j.serialization.Serializer;
 public class GeneralizationSetViewSerializer extends JsonSerializer<GeneralizationSetView> {
   public static void serializeFields(GeneralizationSetView view, JsonGenerator jsonGen)
       throws IOException {
+    Serializer.writeNullableStringField("type", "GeneralizationSetView", jsonGen);
     List<String> generalizationIds =
         view.getGeneralizations().stream().map(OntoumlElement::getId).toList();
     Serializer.writeEmptyableArrayField("generalizations", generalizationIds, jsonGen);

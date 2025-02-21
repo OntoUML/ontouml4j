@@ -28,7 +28,7 @@ public class Diagram extends NamedElement {
   private ModelElement owner;
 
   /** Identifies the views contained in the diagram. */
-  @Builder.Default private List<View> views = new ArrayList<>();
+  @Builder.Default private Set<View> views = new HashSet<>();
 
   @Override
   public String getType() {
@@ -60,7 +60,7 @@ public class Diagram extends NamedElement {
   }
 
   public void resolveAllReferences(Project project) {
-    List<View> newViews = new ArrayList<>();
+    Set<View> newViews = new HashSet<>();
     for (View view : views) {
       Optional<View> element = project.getElementById(view.getId(), View.class);
       element.ifPresent(newViews::add);

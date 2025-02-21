@@ -14,15 +14,13 @@ import org.ontouml.ontouml4j.serialization.Serializer;
 public class DiagramSerializer extends JsonSerializer<Diagram> {
 
   public static void serializeFields(Diagram diagram, JsonGenerator jsonGen) throws IOException {
-    NamedElementSerializer.serializeFields(diagram, jsonGen);
-
     Serializer.writeNullableStringField("type", "Diagram", jsonGen);
+    NamedElementSerializer.serializeFields(diagram, jsonGen);
 
     List<String> viewsIds = diagram.getViews().stream().map(OntoumlElement::getId).toList();
     ModelElement owner = diagram.getOwner();
     if (owner != null) {
       Serializer.writeNullableStringField("owner", owner.getId(), jsonGen);
-
     } else {
       Serializer.writeNullableStringField("owner", null, jsonGen);
     }

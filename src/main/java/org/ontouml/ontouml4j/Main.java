@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.ontouml.ontouml4j.model.Class;
 import org.ontouml.ontouml4j.model.MultilingualText;
+import org.ontouml.ontouml4j.model.Package;
 import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.model.Resource;
 import org.ontouml.ontouml4j.model.utils.ProjectMetaProperties;
@@ -14,6 +15,11 @@ public class Main {
   public static void main(String[] args) throws URISyntaxException {
     Project myProject = createProject();
 
+    Package myPackage = myProject.createPackage("package_1", "My Package name");
+
+    Class myClass = myPackage.createClass("class_1", "My Class", "kind");
+
+    System.out.println(myClass.getStereotype());
     System.out.println(myProject.getName());
     System.out.println(myProject);
 
@@ -21,31 +27,23 @@ public class Main {
   }
 
   private static Project createProject() throws URISyntaxException {
-    try {
-      ProjectMetaProperties metaProperties =
-          ProjectMetaProperties.builder()
-              .publisher(
-                  Resource.builder()
-                      .uri(new URI("https://org.ontouml"))
-                      .name(new MultilingualText("OntoUML Foundation"))
-                      .build())
-              .build();
+    ProjectMetaProperties metaProperties =
+        ProjectMetaProperties.builder()
+            .publisher(
+                Resource.builder()
+                    .uri(new URI("https://org.ontouml"))
+                    .name(new MultilingualText("OntoUML Foundation"))
+                    .build())
+            .build();
 
-      List<Class> classes = createClasses();
-
-      return Project.builder()
-          .id("project_1")
-          .name(new MultilingualText("My Project"))
-          .description(new MultilingualText("Project Description."))
-          .created(new Date())
-          .alternativeNames(List.of(new MultilingualText("A second name for my Project")))
-          .metaProperties(metaProperties)
-          .build();
-
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-    return null;
+    return Project.builder()
+        .id("project_1")
+        .name(new MultilingualText("My Project"))
+        .description(new MultilingualText("Project Description."))
+        .created(new Date())
+        .alternativeNames(List.of(new MultilingualText("A second name for my Project")))
+        .metaProperties(metaProperties)
+        .build();
   }
 
   private static List<Class> createClasses() {

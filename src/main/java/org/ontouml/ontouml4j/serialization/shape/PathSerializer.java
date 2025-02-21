@@ -11,6 +11,7 @@ import org.ontouml.ontouml4j.shape.Path;
 public class PathSerializer extends JsonSerializer<Path> {
 
   public static void serializeFields(Path path, JsonGenerator jsonGen) throws IOException {
+    Serializer.writeNullableStringField("type", "Path", jsonGen);
     OntoumlElementSerializer.serializeFields(path, jsonGen);
     Serializer.writeEmptyableArrayField("points", path.getPoints(), jsonGen);
   }

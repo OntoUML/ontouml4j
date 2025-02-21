@@ -253,6 +253,9 @@ public class Project extends NamedElement implements ElementContainer {
   }
 
   public ModelElement addElement(ModelElement element) {
+    if (element.getId() == null) {
+      throw new RuntimeException("Element id cannot be null");
+    }
     switch (element) {
       case Class clazz -> this.addClass(clazz);
       case Package pkg -> this.addPackage(pkg);
@@ -270,6 +273,9 @@ public class Project extends NamedElement implements ElementContainer {
   }
 
   public OntoumlElement addElement(OntoumlElement element) {
+    if (element.getId() == null) {
+      throw new RuntimeException("Element id cannot be null");
+    }
     switch (element) {
       case Diagram diagram -> this.diagrams.put(element.getId(), diagram);
       case View view -> this.views.put(element.getId(), view);

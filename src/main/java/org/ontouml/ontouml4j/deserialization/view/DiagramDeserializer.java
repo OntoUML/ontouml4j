@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.ontouml.ontouml4j.deserialization.NamedElementDeserializer;
 import org.ontouml.ontouml4j.deserialization.OntoumlElementDeserializer;
@@ -40,10 +41,10 @@ public class DiagramDeserializer extends JsonDeserializer<Diagram> {
       try {
         List<String> contentIds =
             contentsNode.traverse(codec).readValueAs(new TypeReference<List<String>>() {});
-        List<View> views =
+        Set<View> views =
             contentIds.stream()
                 .map(item -> ClassView.builder().id(item).build())
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
         diagram.setViews(views);
       } catch (IOException e) {
         e.printStackTrace();

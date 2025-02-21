@@ -9,6 +9,7 @@ import org.ontouml.ontouml4j.serialization.Serializer;
 
 public class PackageViewSerializer extends JsonSerializer<PackageView> {
   public static void serializeFields(PackageView view, JsonGenerator jsonGen) throws IOException {
+    Serializer.writeNullableStringField("type", "PackageView", jsonGen);
     ViewSerializer.serializeFields(view, jsonGen);
     Serializer.writeNullableOjectField("rectangle", view.getRectangle(), jsonGen);
   }

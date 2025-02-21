@@ -12,6 +12,7 @@ import org.ontouml.ontouml4j.serialization.Serializer;
 public class NaryRelationViewSerializer extends JsonSerializer<NaryRelationView> {
   public static void serializeFields(NaryRelationView view, JsonGenerator jsonGen)
       throws IOException {
+    Serializer.writeNullableStringField("type", "NaryRelationView", jsonGen);
     ViewSerializer.serializeFields(view, jsonGen);
     List<String> memberIds = view.getMembers().stream().map(OntoumlElement::getId).toList();
     Serializer.writeNullableArrayField("members", memberIds, jsonGen);

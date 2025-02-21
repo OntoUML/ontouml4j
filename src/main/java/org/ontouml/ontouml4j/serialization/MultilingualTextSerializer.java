@@ -17,6 +17,10 @@ public class MultilingualTextSerializer extends JsonSerializer<MultilingualText>
         .forEach(
             (key, value) -> {
               try {
+                if (key == null || value == null) {
+                  return;
+                }
+                System.out.println("Key: " + key + "; value:" + value);
                 jsonGen.writeObjectField(key, value);
               } catch (IOException e) {
                 e.printStackTrace();
