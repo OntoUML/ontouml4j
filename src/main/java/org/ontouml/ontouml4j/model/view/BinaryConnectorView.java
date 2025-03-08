@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import org.ontouml.ontouml4j.model.ModelElement;
 import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.shape.Path;
 
@@ -15,24 +15,26 @@ import org.ontouml.ontouml4j.shape.Path;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class BinaryConnectorView extends View {
   /** Identifies the source view the binary connector view connects in the diagram. */
   private View sourceView;
 
-  private String sourceViewId;
-
   /** Identifies the target view the binary connector view connects in the diagram. */
   private View targetView;
-
-  private String targetViewId;
 
   /** Identifies the path shape that renders the binary connector in the diagram. */
   private Path path;
 
-  private String pathId;
+  public BinaryConnectorView(
+      String id, View sourceView, View targetView, Path path, ModelElement isViewOf) {
+    super(id);
+    this.sourceView = sourceView;
+    this.targetView = targetView;
+    this.setIsViewOf(isViewOf);
+    this.path = path;
+  }
 
   public BinaryConnectorView(String id) {
     super(id);
@@ -41,13 +43,13 @@ public abstract class BinaryConnectorView extends View {
   @Override
   public void resolveAllReferences(Project project) {
     super.resolveAllReferences(project);
-    Optional<View> sourceView = project.getElementById(this.sourceViewId, View.class);
+    Optional<View> sourceView = project.getElementById(this.sourceView.getId(), View.class);
     sourceView.ifPresent(this::setSourceView);
 
-    Optional<View> targetView = project.getElementById(this.targetViewId, View.class);
+    Optional<View> targetView = project.getElementById(this.targetView.getId(), View.class);
     targetView.ifPresent(this::setTargetView);
 
-    Optional<Path> path = project.getElementById(this.pathId, Path.class);
+    Optional<Path> path = project.getElementById(this.path.getId(), Path.class);
     path.ifPresent(this::setPath);
   }
 }

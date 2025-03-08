@@ -65,7 +65,7 @@ class PropertyDeserializerTest {
 
   @Test
   void shouldDeserializePropertyTypeId() {
-    Truth.assertThat(property.getPropertyTypeId()).isEqualTo("class2");
+    Truth.assertThat(property.getPropertyType().get().getId()).isEqualTo("class2");
   }
 
   @Test

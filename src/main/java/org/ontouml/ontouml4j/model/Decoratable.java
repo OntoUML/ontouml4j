@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.model.stereotype.Stereotype;
 import org.ontouml.ontouml4j.serialization.DecoratableSerializer;
 
@@ -18,7 +17,6 @@ import org.ontouml.ontouml4j.serialization.DecoratableSerializer;
  * instances.
  */
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,6 +35,10 @@ public abstract class Decoratable<S extends Stereotype> extends PackageableEleme
    * between two physical objects which is derived from their "Weight" quality.
    */
   private boolean isDerived;
+
+  public Decoratable(String id) {
+    super(id);
+  }
 
   public Decoratable(String id, MultilingualText name, S ontoumlStereotype) {
     super(id, name, new ArrayList<>());

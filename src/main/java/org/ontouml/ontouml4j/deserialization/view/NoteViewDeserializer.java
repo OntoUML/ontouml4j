@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import org.ontouml.ontouml4j.model.placeholders.UnresolvedText;
 import org.ontouml.ontouml4j.model.view.NoteView;
-import org.ontouml.ontouml4j.shape.Text;
 
 public class NoteViewDeserializer extends JsonDeserializer<NoteView> {
   @Override
@@ -20,7 +20,7 @@ public class NoteViewDeserializer extends JsonDeserializer<NoteView> {
     NoteView view = new NoteView();
 
     String textId = root.get("text").asText();
-    view.setText(new Text(textId));
+    view.setText(new UnresolvedText(textId));
 
     ViewDeserializer.deserialize(view, root, codec);
 

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.PropertyDeserializer;
 import org.ontouml.ontouml4j.model.stereotype.PropertyStereotype;
 import org.ontouml.ontouml4j.model.utils.AggregationKind;
@@ -23,8 +22,6 @@ import org.ontouml.ontouml4j.serialization.PropertySerializer;
 @JsonSerialize(using = PropertySerializer.class)
 @JsonDeserialize(using = PropertyDeserializer.class)
 @EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public final class Property extends Decoratable<PropertyStereotype> {
@@ -39,7 +36,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * connected to the same classifiers or classifiers that are in the same generalization chain.
    * Subsetting can also be represented through a generalization between relations.
    */
-  @Builder.Default private List<Property> subsettedProperties = new ArrayList<>();
+  private List<Property> subsettedProperties = new ArrayList<>();
 
   /**
    * Identifies the properties (relation ends) that provide redefinition constraints to the
@@ -50,7 +47,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>Redefinition can only occur on the relation ends when both sides of the involved relations
    * are connected to the same classifiers or classifiers that are in the same generalization chain.
    */
-  @Builder.Default private List<Property> redefinedProperties = new ArrayList<>();
+  private List<Property> redefinedProperties = new ArrayList<>();
 
   /**
    * Determines whether the property (a relation end) is a whole in a parthood (mereological)
@@ -60,7 +57,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * can be shared), and "none" for non-parthood relations. The "null" is also interpreted as
    * "none."
    */
-  private AggregationKind aggregationKind;
+  private AggregationKind aggregationKind = AggregationKind.NONE;
 
   /**
    * Determines the cardinality of a property using a string. Examples include "Person" with
@@ -75,7 +72,7 @@ public final class Property extends Decoratable<PropertyStereotype> {
    * <p>This regular expression is not enforced to accommodate theoretical ranges as expression,
    * such as, "a..b".
    */
-  @Builder.Default private Cardinality cardinality = new Cardinality("0", "*");
+  private Cardinality cardinality = new Cardinality("0", "*");
 
   /** Not used in JSON. Must be determined by ontouml4j library */
   private boolean isDerived;
@@ -92,7 +89,18 @@ public final class Property extends Decoratable<PropertyStereotype> {
   /** Identifies the classifier instantiated by the values assigned to the property. */
   private Classifier<?, ?> propertyType;
 
-  private String propertyTypeId;
+  public Property(
+      String id,
+      MultilingualText name,
+      PropertyStereotype ontoumlStereotype,
+      Cardinality cardinality,
+      Classifier<?, ?> type) {
+    super(id, name, ontoumlStereotype);
+    this.cardinality = cardinality;
+    this.subsettedProperties = new ArrayList<>();
+    this.redefinedProperties = new ArrayList<>();
+    setPropertyType(type);
+  }
 
   public Property(
       String id,
@@ -151,21 +159,12 @@ public final class Property extends Decoratable<PropertyStereotype> {
         s -> setOntoumlStereotype(stereotype.get()), () -> setCustomStereotype(stereotypeName));
   }
 
-  public void setCardinality(Cardinality cardinality) {
-    if (cardinality == null)
-      throw new NullPointerException("Cannot set null cardinality object on property!");
-
-    this.cardinality = cardinality;
-  }
-
-  public void setCardinality(String cardinality) {
-    if (cardinality == null)
-      throw new NullPointerException("Cannot set null cardinality string on property!");
-    this.cardinality.setValue(cardinality);
-  }
-
   public Optional<Classifier<?, ?>> getPropertyType() {
     return Optional.ofNullable(propertyType);
+  }
+
+  public void setPropertyType(Classifier<?, ?> propertyType) {
+    this.propertyType = propertyType;
   }
 
   public boolean isPropertyTypeClass() {
@@ -222,8 +221,12 @@ public final class Property extends Decoratable<PropertyStereotype> {
     return Optional.ofNullable(aggregationKind);
   }
 
+  public void setAggregationKind(AggregationKind aggregationKind) {
+    this.aggregationKind = aggregationKind;
+  }
+
   public void buildAllReferences(Project project) {
-    Optional<Classifier> type = project.getElementById(this.propertyTypeId, Classifier.class);
+    Optional<Classifier> type = project.getElementById(this.propertyType.getId(), Classifier.class);
     type.ifPresent(this::setPropertyType);
   }
 
@@ -271,5 +274,48 @@ public final class Property extends Decoratable<PropertyStereotype> {
 
   public void setRedefinedProperties(List<Property> redefinedProperties) {
     this.redefinedProperties = redefinedProperties;
+  }
+
+  public boolean isReadOnly() {
+    return isReadOnly;
+  }
+
+  public void setReadOnly(boolean readOnly) {
+    isReadOnly = readOnly;
+  }
+
+  public boolean isOrdered() {
+    return isOrdered;
+  }
+
+  public void setOrdered(boolean ordered) {
+    isOrdered = ordered;
+  }
+
+  @Override
+  public boolean isDerived() {
+    return isDerived;
+  }
+
+  @Override
+  public void setDerived(boolean derived) {
+    isDerived = derived;
+  }
+
+  public Cardinality getCardinality() {
+    return cardinality;
+  }
+
+  public void setCardinality(Cardinality cardinality) {
+    if (cardinality == null)
+      throw new NullPointerException("Cannot set null cardinality object on property!");
+
+    this.cardinality = cardinality;
+  }
+
+  public void setCardinality(String cardinality) {
+    if (cardinality == null)
+      throw new NullPointerException("Cannot set null cardinality string on property!");
+    this.cardinality.setValue(cardinality);
   }
 }

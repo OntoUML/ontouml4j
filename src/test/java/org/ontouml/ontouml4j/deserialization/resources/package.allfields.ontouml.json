@@ -101,7 +101,7 @@
       "isOrdered": true,
       "cardinality": "1..*",
       "customProperties": null,
-      "propertyType": "ref1",
+      "propertyType": "class1",
       "created": "2024-09-04T00:00:00Z",
       "modified": "2024-09-04T00:00:00Z",
       "subsettedProperties": [],
@@ -120,7 +120,7 @@
       "isOrdered": false,
       "cardinality": "1",
       "customProperties": null,
-      "propertyType": "ref2",
+      "propertyType": "class1",
       "subsettedProperties": [],
       "redefinedProperties": [],
       "aggregationKind": null

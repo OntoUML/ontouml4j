@@ -21,13 +21,11 @@ class GeneralizationDeserializerTest {
   @BeforeAll
   static void setUp() throws IOException {
     mapper = new ObjectMapper();
-    File jsonFile =
-        ResourceGetter.getJsonFromDeserialization("generalization.allfields.ontouml.json");
+    File jsonFile = ResourceGetter.getJsonFromDeserialization("generalization.allfields.ontouml.json");
 
     try {
       Project project = mapper.readValue(jsonFile, Project.class);
-      Optional<Generalization> myGeneralization =
-          project.getElementById("generalization_1", Generalization.class);
+      Optional<Generalization> myGeneralization = project.getElementById("generalization_1", Generalization.class);
       myGeneralization.ifPresent(myGen -> gen = myGen);
 
     } catch (IOException e) {

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.view.NoteViewDeserializer;
+import org.ontouml.ontouml4j.model.ModelElement;
 import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.serialization.view.NoteViewSerializer;
 import org.ontouml.ontouml4j.shape.Text;
@@ -14,7 +14,6 @@ import org.ontouml.ontouml4j.shape.Text;
 /** A view element that represents the single occurrence of a note in a diagram. */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = NoteViewDeserializer.class)
 @JsonSerialize(using = NoteViewSerializer.class)
@@ -22,6 +21,15 @@ public class NoteView extends View {
 
   /** Identifies the text shape that renders the note view in the diagram. */
   private Text text;
+
+  public NoteView(String id, ModelElement isViewOf, Text text) {
+    super(id, isViewOf);
+    this.text = text;
+  }
+
+  public NoteView(String id, ModelElement isViewOf) {
+    super(id, isViewOf);
+  }
 
   @Override
   public String getType() {

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.List;
 import java.util.Optional;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.serialization.NamedElementSerializer;
 
 /**
@@ -13,7 +12,6 @@ import org.ontouml.ontouml4j.serialization.NamedElementSerializer;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @JsonSerialize(using = NamedElementSerializer.class)
 public abstract class NamedElement extends OntoumlElement {
@@ -43,6 +41,10 @@ public abstract class NamedElement extends OntoumlElement {
    * descriptions.
    */
   private List<MultilingualText> editorialNotes;
+
+  public NamedElement(String id) {
+    super(id);
+  }
 
   public NamedElement(String id, MultilingualText name) {
     super(id);

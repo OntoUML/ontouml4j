@@ -23,29 +23,23 @@ public class PackageSerializerTest {
 
   @BeforeEach
   void beforeEach() throws URISyntaxException {
-    project = Project.builder().id("Project_1").build();
-    Date createdDate =
-        Date.from(ZonedDateTime.parse("2024-09-03T00:00:00Z", formatter).toInstant());
-    Date modifiedDate =
-        Date.from(ZonedDateTime.parse("2024-09-04T00:00:00Z", formatter).toInstant());
+    project = new Project("Project_1", "My Project");
+    Date createdDate = Date.from(ZonedDateTime.parse("2024-09-03T00:00:00Z", formatter).toInstant());
+    Date modifiedDate = Date.from(ZonedDateTime.parse("2024-09-04T00:00:00Z", formatter).toInstant());
 
     List<PackageableElement> contents = new ArrayList<>();
     List<MultilingualText> editorialNotes = List.of(new MultilingualText("Editorial Note 1"));
-    List<Resource> creators =
-        List.of(
-            new Resource(new MultilingualText("Matheus Lenke"), new URI("https://lenke.software")));
-    pkg =
-        Package.builder()
-            .id("package_1")
-            .name(new MultilingualText("My Package"))
-            .description(new MultilingualText("My Project description."))
-            .created(createdDate)
-            .modified(modifiedDate)
-            .customProperties(Map.of("myProperty", "My Value"))
-            .contents(contents)
-            .creators(creators)
-            .editorialNotes(editorialNotes)
-            .build();
+    List<Resource> creators = List.of(
+        new Resource(new MultilingualText("Matheus Lenke"), new URI("https://lenke.software")));
+    pkg = new Package("package_1", "My Package");
+    pkg.setDescription(new MultilingualText("My Project description."));
+    pkg.setCreated(createdDate);
+    pkg.setModified(modifiedDate);
+    pkg.setCustomProperties(Map.of("myProperty", "My Value"));
+    pkg.setCreators(creators);
+    pkg.setEditorialNotes(editorialNotes);
+
+    contents.forEach(item -> pkg.addContent(item));
     project.addPackage(pkg);
   }
 
@@ -134,21 +128,21 @@ public class PackageSerializerTest {
 
     JsonNode node = pkg.serialize();
 
-    List<String> contents =
-        new ObjectMapper()
-            .readValue(node.get("contents").toString(), new TypeReference<List<String>>() {});
+    List<String> contents = new ObjectMapper()
+        .readValue(node.get("contents").toString(), new TypeReference<List<String>>() {
+        });
     assertThat(contents).hasSize(1);
     assertThat(contents.getFirst()).isEqualTo("c1");
   }
 
   @Test
   void shouldSerializeEmptyContentsAsNull() throws JsonProcessingException {
-    pkg.setContents();
+    pkg.resetContents();
 
     JsonNode node = pkg.serialize();
-    List<String> contents =
-        new ObjectMapper()
-            .readValue(node.get("contents").toString(), new TypeReference<List<String>>() {});
+    List<String> contents = new ObjectMapper()
+        .readValue(node.get("contents").toString(), new TypeReference<List<String>>() {
+        });
 
     assertThat(contents).isEmpty();
   }

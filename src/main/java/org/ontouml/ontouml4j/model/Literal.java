@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.LiteralDeserializer;
 
 /**
@@ -16,7 +15,6 @@ import org.ontouml.ontouml4j.deserialization.LiteralDeserializer;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-@SuperBuilder
 @JsonDeserialize(using = LiteralDeserializer.class)
 public class Literal extends ModelElement {
 

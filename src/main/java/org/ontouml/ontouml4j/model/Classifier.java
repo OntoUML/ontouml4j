@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.model.stereotype.Stereotype;
 import org.ontouml.ontouml4j.serialization.ClassifierSerializer;
 
@@ -15,8 +14,6 @@ import org.ontouml.ontouml4j.serialization.ClassifierSerializer;
  * instances.
  */
 @EqualsAndHashCode(callSuper = true)
-@SuperBuilder
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(using = ClassifierSerializer.class)
@@ -28,7 +25,7 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
    * attributes when contained by classes, and relation ends when contained by relations. In the
    * case of relations, the properties array must be ordered.
    */
-  @Builder.Default List<Property> properties = new ArrayList<>();
+  List<Property> properties = new ArrayList<>();
 
   /**
    * Determines whether the classifier can have direct instances using a boolean. Abstract
@@ -37,21 +34,22 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
    */
   private boolean isAbstract;
 
-  public Classifier(String id, MultilingualText name, S ontoumlStereotype) {
+  protected Classifier(String id) {
+    super(id);
+    properties = new ArrayList<>();
+  }
+
+  protected Classifier(String id, MultilingualText name, S ontoumlStereotype) {
     super(id, name, ontoumlStereotype);
     properties = new ArrayList<>();
   }
 
-  public Classifier(String id, MultilingualText name, String stereotypeName) {
+  protected Classifier(String id, MultilingualText name, String stereotypeName) {
     super(id, name, stereotypeName);
     properties = new ArrayList<>();
   }
 
-  public void setProperties(Collection<String> properties) {
-    this.properties.clear();
-
-    if (properties != null) properties.forEach(this::addProperty);
-  }
+  public void createProperty() {}
 
   public void addProperty(String propertyId) {
     if (propertyId != null) {
@@ -75,5 +73,27 @@ public abstract class Classifier<T extends Classifier<T, S>, S extends Stereotyp
         });
     this.properties.clear();
     this.properties.addAll(newProperties);
+  }
+
+  public boolean isAbstract() {
+    return isAbstract;
+  }
+
+  public void setAbstract(boolean anAbstract) {
+    isAbstract = anAbstract;
+  }
+
+  public List<Property> getProperties() {
+    return properties;
+  }
+
+  public void setProperties(Collection<String> properties) {
+    this.properties.clear();
+
+    if (properties != null) properties.forEach(this::addProperty);
+  }
+
+  public void setProperties(List<Property> properties) {
+    this.properties = properties;
   }
 }

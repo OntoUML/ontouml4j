@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
 import java.util.stream.Stream;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.ClassDeserializer;
 import org.ontouml.ontouml4j.model.stereotype.ClassStereotype;
 import org.ontouml.ontouml4j.serialization.ClassSerializer;
@@ -18,8 +17,6 @@ import org.ontouml.ontouml4j.serialization.ClassSerializer;
  * values (e.g., a number or a literal).
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonDeserialize(using = ClassDeserializer.class)
@@ -30,7 +27,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   public static String ORDERLESS_STRING = "*";
 
   /** Identifies the literals of an enumeration class. */
-  @Builder.Default List<Literal> literals = new ArrayList<>();
+  List<Literal> literals = new ArrayList<>();
 
   /**
    * Determines the possible ontological natures of the instances of a class using an array of
@@ -38,43 +35,53 @@ public class Class extends Classifier<Class, ClassStereotype> {
    * "functional-complex" instances and the class "Insured Item" restricted to "functional-complex"
    * and "relator" (e.g., employment insurance).
    */
-  @Builder.Default List<Nature> restrictedTo = new ArrayList<>();
+  List<Nature> restrictedTo = new ArrayList<>();
 
   /**
    * Determines whether the high-order class is a "Cardelli powertype" using a boolean. In other
    * words, determines whether the high-order class is defined as the one whose instances are its
    * base type plus all possible specializations of it.
    */
-  boolean isPowertype;
+  boolean isPowertype = false;
 
   /**
    * Determines the instantiation order of a class using a string. Examples include ordered classes
    * such as first-order classes (order "1"), second-order classes (order "2"), and third-order
    * classes (order "3"), as well as orderless classes (order "*").
    */
-  Integer order;
+  Integer order = ORDERLESS;
 
   private Project projectContainer;
 
   public Class(String id, String name, ClassStereotype classStereotype) {
-    super();
-    this.id = id;
-    this.literals = new ArrayList<>();
-    this.restrictedTo = new ArrayList<>();
-    this.customProperties = new HashMap<>();
+    super(id);
     this.setName(new MultilingualText(name));
     this.setStereotype(classStereotype.getStereotypeName());
     this.setOntoumlStereotype(classStereotype);
   }
 
   public Class(String id, String name, String customStereotype) {
-    super();
-    this.id = id;
-    this.literals = new ArrayList<>();
-    this.restrictedTo = new ArrayList<>();
+    super(id);
     this.setName(new MultilingualText(name));
     this.setCustomStereotype(customStereotype);
     this.setStereotype(customStereotype);
+  }
+
+  public Class(String id, String name) {
+    super(id);
+    this.setName(new MultilingualText(name));
+    this.setOntoumlStereotype(ClassStereotype.ABSTRACT);
+  }
+
+  public Class(String id, MultilingualText name) {
+    super(id);
+    this.setName(name);
+    this.setOntoumlStereotype(ClassStereotype.ABSTRACT);
+  }
+
+  public Class(String id) {
+    super(id);
+    this.setOntoumlStereotype(ClassStereotype.ABSTRACT);
   }
 
   public static Class createKind(String id, String name) {
@@ -203,12 +210,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public static Class createEnumeration(String id, String name, String... literals) {
-    Class enumeration =
-        Class.builder()
-            .id(id)
-            .name(new MultilingualText(name))
-            .ontoumlStereotype(ClassStereotype.ENUMERATION)
-            .build();
+    Class enumeration = new Class(id, name, ClassStereotype.ENUMERATION);
     enumeration.setRestrictedTo(Nature.ABSTRACT);
     enumeration.createLiterals(literals);
     return enumeration;
@@ -228,6 +230,10 @@ public class Class extends Classifier<Class, ClassStereotype> {
     } else {
       order = ORDERLESS;
     }
+  }
+
+  public void setOrder(Integer order) {
+    this.order = order;
   }
 
   public Optional<String> getOrderAsString() {
@@ -406,43 +412,6 @@ public class Class extends Classifier<Class, ClassStereotype> {
     return !properties.isEmpty();
   }
 
-  public void setLiterals(Collection<String> literals) {
-    this.literals.clear();
-    literals.forEach(
-        literalId -> {
-          Literal newLiteral = new Literal(literalId, new MultilingualText());
-          newLiteral.setContainer(this);
-          this.literals.add(newLiteral);
-        });
-  }
-
-  public void setRestrictedTo(Optional<Nature> restrictedTo) {
-    if (this.restrictedTo == null) {
-      this.restrictedTo = new ArrayList<>();
-    }
-    this.restrictedTo.clear();
-    restrictedTo.ifPresent(this.restrictedTo::add);
-  }
-
-  public void setRestrictedTo(Nature restrictedTo) {
-    if (this.restrictedTo == null) {
-      this.restrictedTo = new ArrayList<>();
-    }
-    this.restrictedTo.clear();
-    this.restrictedTo.add(restrictedTo);
-  }
-
-  public void setRestrictedTo(Collection<String> restrictedTo) {
-    this.restrictedTo.clear();
-    restrictedTo.forEach(
-        item -> {
-          Nature nature = Nature.forValue(item);
-          if (nature != null) {
-            this.restrictedTo.add(nature);
-          }
-        });
-  }
-
   public void setRestrictedToNatures(Collection<Nature> restrictedTo) {
     if (this.restrictedTo == null) {
       this.restrictedTo = new ArrayList<>();
@@ -498,7 +467,7 @@ public class Class extends Classifier<Class, ClassStereotype> {
   }
 
   public List<Property> getAttributes() {
-    return getProperties();
+    return this.getProperties();
   }
 
   public void setAttributes(Collection<Property> attributes) {
@@ -519,10 +488,64 @@ public class Class extends Classifier<Class, ClassStereotype> {
     properties.add(attribute);
   }
 
-  @Override
-  public void setProjectContainer(Project projectContainer) {
-    super.setProjectContainer(projectContainer);
-    this.properties.forEach(element -> element.setProjectContainer(projectContainer));
-    this.literals.forEach(element -> element.setProjectContainer(projectContainer));
+  public boolean isPowertype() {
+    return isPowertype;
+  }
+
+  public void setPowertype(boolean powertype) {
+    isPowertype = powertype;
+  }
+
+  public List<Literal> getLiterals() {
+    return literals;
+  }
+
+  public void setLiterals(Collection<String> literals) {
+    this.literals.clear();
+    literals.forEach(
+        literalId -> {
+          Literal newLiteral = new Literal(literalId, new MultilingualText());
+          newLiteral.setContainer(this);
+          this.literals.add(newLiteral);
+        });
+  }
+
+  public void setLiterals(List<Literal> literals) {
+    this.literals = literals;
+  }
+
+  public List<Nature> getRestrictedTo() {
+    return restrictedTo;
+  }
+
+  public void setRestrictedTo(Optional<Nature> restrictedTo) {
+    if (this.restrictedTo == null) {
+      this.restrictedTo = new ArrayList<>();
+    }
+    this.restrictedTo.clear();
+    restrictedTo.ifPresent(this.restrictedTo::add);
+  }
+
+  public void setRestrictedTo(Nature restrictedTo) {
+    if (this.restrictedTo == null) {
+      this.restrictedTo = new ArrayList<>();
+    }
+    this.restrictedTo.clear();
+    this.restrictedTo.add(restrictedTo);
+  }
+
+  public void setRestrictedTo(Collection<String> restrictedTo) {
+    this.restrictedTo.clear();
+    restrictedTo.forEach(
+        item -> {
+          Nature nature = Nature.forValue(item);
+          if (nature != null) {
+            this.restrictedTo.add(nature);
+          }
+        });
+  }
+
+  public void setRestrictedTo(List<Nature> restrictedTo) {
+    this.restrictedTo = restrictedTo;
   }
 }

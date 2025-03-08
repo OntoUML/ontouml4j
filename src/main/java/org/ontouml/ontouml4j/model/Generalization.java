@@ -6,22 +6,28 @@ import java.util.ArrayList;
 import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.SuperBuilder;
+import lombok.NoArgsConstructor;
+
 import org.ontouml.ontouml4j.deserialization.GeneralizationDeserializer;
 import org.ontouml.ontouml4j.model.stereotype.Stereotype;
 import org.ontouml.ontouml4j.serialization.GeneralizationSerializer;
 
 /**
- * A model element that represents the generalization of a specific classifier into a general
- * classifier. When read in the inverse direction, a generalization is referred to as a
- * specialization. Examples include the generalization of a specific class "Student" into a general
- * class "Person," and the generalization of a specific relation "close friends with" into a general
- * relation "friends with". A generalization can only connect two classifiers of the same type,
+ * A model element that represents the generalization of a specific classifier
+ * into a general
+ * classifier. When read in the inverse direction, a generalization is referred
+ * to as a
+ * specialization. Examples include the generalization of a specific class
+ * "Student" into a general
+ * class "Person," and the generalization of a specific relation "close friends
+ * with" into a general
+ * relation "friends with". A generalization can only connect two classifiers of
+ * the same type,
  * i.e., it can either connect two class elements or two relation elements.
  */
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @Data
-@SuperBuilder
 @JsonDeserialize(using = GeneralizationDeserializer.class)
 @JsonSerialize(using = GeneralizationSerializer.class)
 public class Generalization extends PackageableElement {
@@ -29,13 +35,15 @@ public class Generalization extends PackageableElement {
   private String specificId;
 
   /**
-   * Identifies the general classifier in a generalization element. E.g., in the generalization of
+   * Identifies the general classifier in a generalization element. E.g., in the
+   * generalization of
    * "Student" into "Person", "Person" is the general classifier.
    */
   private Classifier<?, ?> general;
 
   /**
-   * Identifies the general classifier in a generalization element. E.g., in the generalization of
+   * Identifies the general classifier in a generalization element. E.g., in the
+   * generalization of
    * "Student" into "Person", "Student" is the specific classifier.
    */
   private Classifier<?, ?> specific;
@@ -60,10 +68,6 @@ public class Generalization extends PackageableElement {
   public <T extends Classifier<T, S>, S extends Stereotype> Generalization(
       Classifier<T, S> specific, Classifier<T, S> general) {
     this(null, (MultilingualText) null, specific, general);
-  }
-
-  public Generalization() {
-    super();
   }
 
   public Optional<Classifier<?, ?>> getGeneral() {
@@ -97,5 +101,29 @@ public class Generalization extends PackageableElement {
             setSpecific((Classifier<?, ?>) spec);
           }
         });
+  }
+
+  public String getGeneralId() {
+    return generalId;
+  }
+
+  public void setGeneralId(String generalId) {
+    this.generalId = generalId;
+  }
+
+  public String getSpecificId() {
+    return specificId;
+  }
+
+  public void setSpecificId(String specificId) {
+    this.specificId = specificId;
+  }
+
+  public void setGeneral(Classifier<?, ?> general) {
+    this.general = general;
+  }
+
+  public void setSpecific(Classifier<?, ?> specific) {
+    this.specific = specific;
   }
 }

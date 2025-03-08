@@ -6,12 +6,14 @@ import java.util.Optional;
 import java.util.Set;
 import org.ontouml.ontouml4j.model.*;
 import org.ontouml.ontouml4j.model.Class;
+import org.ontouml.ontouml4j.model.view.BinaryConnectorView;
+import org.ontouml.ontouml4j.model.view.Diagram;
 import org.ontouml.ontouml4j.model.view.View;
 
 /** This class is responsible for resolving the references inside elements after they are read. */
 public class ReferenceResolver {
   public static void resolveReferences(Project project) {
-    Map<String, ModelElement> elementMap = project.getModelElementMap();
+    Map<String, OntoumlElement> elementMap = project.getElementMap();
 
     for (Property property : project.getAllProperties()) {
       resolvePropertyType(elementMap, property);
@@ -30,18 +32,19 @@ public class ReferenceResolver {
       resolveGeneralizations(elementMap, gs);
     }
 
-    //            for (Diagram diagram : project.getDiagrams()) {
-    //              resolveOwner(elementMap, diagram);
-    //            }
-    //
-    //            for (ElementView diagramElement : project.getAllDiagramElements()) {
-    //              resolveModelElement(elementMap, diagramElement);
-    //            }
-    //
-    //            for (ConnectorView connectorView : project.getAllConnectorViews()) {
-    //              resolveSource(elementMap, connectorView);
-    //              resolveTarget(elementMap, connectorView);
-    //            }
+    for (Diagram diagram : project.getAllDiagrams()) {
+      resolveOwner(elementMap, diagram);
+    }
+
+    for (View diagramElement : project.getAllDiagramElements()) {
+      resolveModelElement(elementMap, diagramElement);
+    }
+
+    for (BinaryConnectorView connectorView :
+        project.getAllContentsByType(BinaryConnectorView.class)) {
+      resolveSource(elementMap, connectorView);
+      resolveTarget(elementMap, connectorView);
+    }
 
     buildPropertyReferences(project);
     buildClassifierReferences(project);
@@ -53,34 +56,34 @@ public class ReferenceResolver {
     buildDiagramReferences(project);
   }
 
-  //    private static void resolveOwner(Map<String, OntoumlElement> elementMap, Diagram diagram) {
-  //      ModelElement reference = diagram.getOwner();
-  //
-  //      if (reference == null) return;
-  //
-  //      ModelElement source = resolve(elementMap, reference, ModelElement.class);
-  //      diagram.setOwner(source);
-  //    }
+  private static void resolveOwner(Map<String, OntoumlElement> elementMap, Diagram diagram) {
+    ModelElement reference = diagram.getOwner();
 
-  //  private static void resolveSource(Map<String, OntoumlElement> elementMap, ConnectorView
-  // element) {
-  //    ElementView reference = element.getSource();
-  //
-  //    if (reference == null) return;
-  //
-  //    ElementView source = resolve(elementMap, reference, ElementView.class);
-  //    element.setSource(source);
-  //  }
+    if (reference == null) return;
 
-  //    private static void resolveTarget(Map<String, OntoumlElement> elementMap, ConnectorView
-  //   element) {
-  //      ElementView reference = element.getTarget();
-  //
-  //      if (reference == null) return;
-  //
-  //      ElementView source = resolve(elementMap, reference, ElementView.class);
-  //      element.setTarget(source);
-  //    }
+    ModelElement source = resolve(elementMap, reference, ModelElement.class);
+    diagram.setOwner(source);
+  }
+
+  private static void resolveSource(
+      Map<String, OntoumlElement> elementMap, BinaryConnectorView element) {
+    View reference = element.getSourceView();
+
+    if (reference == null) return;
+
+    View source = resolve(elementMap, reference, View.class);
+    element.setSourceView(source);
+  }
+
+  private static void resolveTarget(
+      Map<String, OntoumlElement> elementMap, BinaryConnectorView element) {
+    View reference = element.getTargetView();
+
+    if (reference == null) return;
+
+    View source = resolve(elementMap, reference, View.class);
+    element.setTargetView(source);
+  }
 
   private static void resolveModelElement(Map<String, OntoumlElement> elementMap, View element) {
     //    ModelElement reference = element.getModelElement();
@@ -92,7 +95,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveGeneralizations(
-      Map<String, ModelElement> elementMap, GeneralizationSet gs) {
+      Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
 
     Set<Generalization> sources = new HashSet<>();
 
@@ -103,7 +106,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveCategorizer(
-      Map<String, ModelElement> elementMap, GeneralizationSet gs) {
+      Map<String, OntoumlElement> elementMap, GeneralizationSet gs) {
     Optional<Class> reference = gs.getCategorizer();
 
     if (reference.isEmpty()) return;
@@ -113,7 +116,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveGeneral(
-      Map<String, ModelElement> elementMap, Generalization generalization) {
+      Map<String, OntoumlElement> elementMap, Generalization generalization) {
     Optional<Classifier<?, ?>> reference = generalization.getGeneral();
 
     if (reference.isEmpty()) return;
@@ -123,7 +126,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveSpecific(
-      Map<String, ModelElement> elementMap, Generalization generalization) {
+      Map<String, OntoumlElement> elementMap, Generalization generalization) {
     Optional<Classifier<?, ?>> reference = generalization.getSpecific();
 
     if (reference.isEmpty()) return;
@@ -132,7 +135,8 @@ public class ReferenceResolver {
     generalization.setSpecific(source);
   }
 
-  private static void resolvePropertyType(Map<String, ModelElement> elementMap, Property property) {
+  private static void resolvePropertyType(
+      Map<String, OntoumlElement> elementMap, Property property) {
     Optional<Classifier<?, ?>> reference = property.getPropertyType();
 
     if (reference.isEmpty()) return;
@@ -142,7 +146,7 @@ public class ReferenceResolver {
   }
 
   private static void resolveSubsettedProperties(
-      Map<String, ModelElement> elementMap, Property property) {
+      Map<String, OntoumlElement> elementMap, Property property) {
     for (Property reference : property.getSubsettedProperties()) {
       Property source = resolve(elementMap, reference, Property.class);
       property.replaceSubsettedProperty(reference, source);
@@ -150,17 +154,17 @@ public class ReferenceResolver {
   }
 
   private static void resolveRedefinedProperties(
-      Map<String, ModelElement> elementMap, Property property) {
+      Map<String, OntoumlElement> elementMap, Property property) {
     for (Property reference : property.getRedefinedProperties()) {
       Property source = resolve(elementMap, reference, Property.class);
       property.replaceRedefinedProperty(reference, source);
     }
   }
 
-  private static <T extends ModelElement> T resolve(
-      Map<String, ModelElement> elementMap, T reference, java.lang.Class<T> referenceType) {
+  private static <T extends OntoumlElement> T resolve(
+      Map<String, OntoumlElement> elementMap, T reference, java.lang.Class<T> referenceType) {
 
-    ModelElement source = elementMap.get(reference.getId());
+    OntoumlElement source = elementMap.get(reference.getId());
 
     if (source == null)
       throw new NullPointerException("Referenced element in property type does not exist!");
@@ -179,11 +183,8 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildClassifierReferences(Project project) {
-    project.getClasses().values().forEach(clazz -> clazz.buildAllReferences(project));
-    project
-        .getRelations()
-        .values()
-        .forEach(relation -> relation.resolvePropertyReferences(project));
+    project.getAllClasses().forEach(clazz -> clazz.buildAllReferences(project));
+    project.getAllRelations().forEach(relation -> relation.resolvePropertyReferences(project));
   }
 
   /**
@@ -202,7 +203,7 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildPackageReferences(Project project) {
-    project.getPackages().values().forEach(pkg -> pkg.buildAllReferences(project));
+    project.getAllPackages().forEach(pkg -> pkg.buildAllReferences(project));
   }
 
   /**
@@ -211,7 +212,7 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildGeneralizationReferences(Project project) {
-    project.getGeneralizations().values().forEach(gen -> gen.buildAllReferences(project));
+    project.getAllGeneralizations().forEach(gen -> gen.buildAllReferences(project));
   }
 
   /**
@@ -221,7 +222,7 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildGeneralizationSetReferences(Project project) {
-    project.getGeneralizationSets().values().forEach(gen -> gen.buildAllReferences(project));
+    project.getAllGeneralizationSets().forEach(gen -> gen.buildAllReferences(project));
   }
 
   /**
@@ -230,14 +231,14 @@ public class ReferenceResolver {
    * @param project - the parsed project
    */
   private static void buildAnchorReferences(Project project) {
-    project.getAnchors().values().forEach(anchor -> anchor.buildAllReferences(project));
+    project.getAllAnchors().forEach(anchor -> anchor.buildAllReferences(project));
   }
 
   private static void buildViewsReferences(Project project) {
-    project.getViews().values().forEach(view -> view.resolveAllReferences(project));
+    project.getAllViews().forEach(view -> view.resolveAllReferences(project));
   }
 
   private static void buildDiagramReferences(Project project) {
-    project.getDiagrams().values().forEach(diagram -> diagram.resolveAllReferences(project));
+    project.getAllDiagrams().forEach(diagram -> diagram.resolveAllReferences(project));
   }
 }

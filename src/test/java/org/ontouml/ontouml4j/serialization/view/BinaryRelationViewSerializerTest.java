@@ -20,38 +20,35 @@ public class BinaryRelationViewSerializerTest {
 
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
-    Project project = Project.builder().build();
+    Project project = new Project();
 
-    Class clazz1 = Class.builder().id("class_1").build();
-    Class clazz2 = Class.builder().id("class_2").build();
+    Class clazz1 = new Class("class_1");
+    Class clazz2 = new Class("class_2");
 
     project.addClass(clazz1);
     project.addClass(clazz2);
 
     Rectangle rectangle = project.addRectangle(new Rectangle("rectangle_1", 20, 20));
 
-    ClassView classView1 =
-        ClassView.builder().id("classview_1").rectangle(rectangle).isViewOf(clazz1).build();
-    ClassView classView2 =
-        ClassView.builder().id("classview_2").rectangle(rectangle).isViewOf(clazz2).build();
+    ClassView classView1 = new ClassView("classview_1", clazz1, rectangle);
+    ClassView classView2 = new ClassView("classview_2", clazz2, rectangle);
 
     project.addElement(classView1);
     project.addElement(classView2);
 
-    BinaryRelation binaryRelation = BinaryRelation.builder().id("binaryrelation_1").build();
+    BinaryRelation binaryRelation = new BinaryRelation("binaryrelation_1");
 
     project.addElement(binaryRelation);
 
-    Path path = Path.builder().id("path_1").build();
+    Path path = new Path("path_1");
 
-    binaryRelationView =
-        BinaryRelationView.builder()
-            .id("binaryrelationview_1")
-            .sourceView(classView1)
-            .targetView(classView2)
-            .path(path)
-            .isViewOf(binaryRelation)
-            .build();
+    binaryRelationView = new BinaryRelationView(
+        "binaryrelationview_1",
+        classView1,
+        classView2,
+        path,
+        binaryRelation
+    );
 
     project.addElement(binaryRelationView);
     node = binaryRelationView.serialize();

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.PackageDeserializer;
 import org.ontouml.ontouml4j.model.stereotype.ClassStereotype;
 import org.ontouml.ontouml4j.model.stereotype.RelationStereotype;
@@ -12,34 +11,31 @@ import org.ontouml.ontouml4j.model.stereotype.Stereotype;
 import org.ontouml.ontouml4j.serialization.PackageSerializer;
 
 /**
- * A model element that can group other model elements that are referred to as "packageable
- * elements." Package elements are used to perform the modularization of an ontology. While the
- * OntoUML Metamodel does not require package elements to follow a tree structure (i.e., it allows
- * overlapping packages), ontologies that require UML representations should adhere to this
+ * A model element that can group other model elements that are referred to as
+ * "packageable
+ * elements." Package elements are used to perform the modularization of an
+ * ontology. While the
+ * OntoUML Metamodel does not require package elements to follow a tree
+ * structure (i.e., it allows
+ * overlapping packages), ontologies that require UML representations should
+ * adhere to this
  * constraint for compatibility.
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = PackageDeserializer.class)
 @JsonSerialize(using = PackageSerializer.class)
 public class Package extends PackageableElement {
 
   /** Identifies the contents of a package element. */
-  @Builder.Default List<PackageableElement> contents = new ArrayList<>();
+  HashMap<String, PackageableElement> contents = new HashMap<String, PackageableElement>();
 
-  /** List the ids of the contents of a package */
-  @Builder.Default private List<String> contentIds = new ArrayList<>();
-
-  public void setContents(List<PackageableElement> elements) {
-    this.contentIds = elements.stream().map(PackageableElement::getId).toList();
-    this.contents = elements;
+  public Package(String id, String name) {
+    super(id, new MultilingualText(name));
   }
 
-  public void setContents() {
-    this.contentIds = null;
-    this.contents = null;
+  public Package(String id, MultilingualText name) {
+    super(id, name);
   }
 
   @Override
@@ -47,12 +43,23 @@ public class Package extends PackageableElement {
     return "Package";
   }
 
+  List<String> getContentIds() {
+    return this.contents.values().stream().map(OntoumlElement::getId).toList();
+  }
+
   public void buildAllReferences(Project project) {
     Map<String, ModelElement> elements = project.getModelElementMap();
 
-    for (String id : contentIds) {
+    for (String id : getContentIds()) {
       Optional<ModelElement> element = Optional.ofNullable(elements.get(id));
-      element.ifPresent(item -> this.contents.add((PackageableElement) item));
+      if (element.isPresent()) {
+        ModelElement ele = element.get();
+        if (ele instanceof PackageableElement) {
+          PackageableElement pkgEle = (PackageableElement) ele;
+          pkgEle.setProjectContainer(projectContainer);
+          this.contents.put(pkgEle.getId(), pkgEle);
+        }
+      }
     }
   }
 
@@ -73,18 +80,16 @@ public class Package extends PackageableElement {
   }
 
   public void addContents(Collection<? extends PackageableElement> contents) {
-    if (contents == null) return;
+    if (contents == null)
+      return;
     contents.stream().filter(Objects::nonNull).forEach(this::addContent);
   }
 
   public <T extends PackageableElement> T addContent(T aClass) {
-    if (projectContainer == null) {
-      throw new NullPointerException(
-          "Cannot add content to package that does not belong to any project");
+    if (projectContainer != null) {
+      aClass.setProjectContainer(projectContainer);
     }
-    contents.add(aClass);
-    contentIds.add(aClass.getId());
-    aClass.setProjectContainer(projectContainer);
+    contents.put(aClass.getId(), aClass);
     return aClass;
   }
 
@@ -315,5 +320,17 @@ public class Package extends PackageableElement {
   public GeneralizationSet createGeneralizationSet(
       String id, String name, Class categorizer, Collection<Generalization> generalizations) {
     return addContent(new GeneralizationSet(id, name, categorizer, generalizations));
+  }
+
+  public List<PackageableElement> getContents() {
+    return contents.values().stream().toList();
+  }
+
+  public void resetContents() {
+    this.contents.clear();
+  }
+
+  public Optional<PackageableElement> getElementById(String id) {
+    return Optional.of(this.contents.get(id));
   }
 }

@@ -41,11 +41,8 @@ public class DiagramDeserializer extends JsonDeserializer<Diagram> {
       try {
         List<String> contentIds =
             contentsNode.traverse(codec).readValueAs(new TypeReference<List<String>>() {});
-        Set<View> views =
-            contentIds.stream()
-                .map(item -> ClassView.builder().id(item).build())
-                .collect(Collectors.toSet());
-        diagram.setViews(views);
+        Set<View> views = contentIds.stream().map(ClassView::new).collect(Collectors.toSet());
+        views.forEach(diagram::addElement);
       } catch (IOException e) {
         e.printStackTrace();
       }

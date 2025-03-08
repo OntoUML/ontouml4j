@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.model.ModelElement;
 import org.ontouml.ontouml4j.model.OntoumlElement;
 import org.ontouml.ontouml4j.model.Project;
@@ -25,7 +24,6 @@ import org.ontouml.ontouml4j.model.Project;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class View extends OntoumlElement {
@@ -33,14 +31,17 @@ public abstract class View extends OntoumlElement {
   /** Identifies the model element that the view represents in the diagram. */
   private ModelElement isViewOf;
 
-  private String isViewOfId;
-
   public View(String id) {
     super(id);
   }
 
+  public View(String id, ModelElement isViewOf) {
+    super(id);
+    this.isViewOf = isViewOf;
+  }
+
   public void resolveAllReferences(Project project) {
-    Optional<ModelElement> element = project.getElementById(isViewOfId, ModelElement.class);
+    Optional<ModelElement> element = project.getElementById(isViewOf.getId(), ModelElement.class);
 
     element.ifPresent(this::setIsViewOf);
   }

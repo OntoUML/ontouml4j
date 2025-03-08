@@ -20,30 +20,24 @@ public class NaryRelationViewSerializerTest {
 
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
-    Class clazz1 = Class.builder().id("class_1").build();
-    Class clazz2 = Class.builder().id("class_2").build();
-    Class clazz3 = Class.builder().id("class_3").build();
+    Class clazz1 = new Class("class_1");
+    Class clazz2 = new Class("class_2");
+    Class clazz3 = new Class("class_3");
 
-    ClassView classView1 = ClassView.builder().id("classview_1").isViewOf(clazz1).build();
-    ClassView classView2 = ClassView.builder().id("classview_2").isViewOf(clazz2).build();
-    ClassView classView3 = ClassView.builder().id("classview_3").isViewOf(clazz3).build();
+    ClassView classView1 = new ClassView("classview_1", clazz1);
+    ClassView classView2 = new ClassView("classview_2", clazz2);
+    ClassView classView3 = new ClassView("classview_3", clazz3);
 
-    Path path1 = Path.builder().id("path_1").build();
-    Path path2 = Path.builder().id("path_2").build();
-    Path path3 = Path.builder().id("path_3").build();
+    Path path1 = new Path("path_1");
+    Path path2 = new Path("path_2");
+  Path path3 = new Path("path_3");
 
-    Diamond diamond = Diamond.builder().id("diamond_1").build();
+    Diamond diamond = new Diamond("diamond_1");
 
-    NaryRelation naryRelation = NaryRelation.builder().id("naryrelation_1").build();
+    NaryRelation naryRelation = new NaryRelation("naryrelation_1");
 
-    naryRelationView =
-        NaryRelationView.builder()
-            .id("naryrelationview_1")
-            .members(List.of(classView1, classView2, classView3))
-            .paths(List.of(path1, path2, path3))
-            .diamond(diamond)
-            .isViewOf(naryRelation)
-            .build();
+    naryRelationView = new
+        NaryRelationView("naryrelationview_1", List.of(classView1, classView2, classView3), List.of(path1, path2, path3), diamond, naryRelation);
 
     node = naryRelationView.serialize();
   }

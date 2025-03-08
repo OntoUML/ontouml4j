@@ -24,13 +24,8 @@ public class ClassViewSerializerTest {
 
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
-    Class clazz = Class.builder().id("class_1").name(new MultilingualText("MyClass")).build();
-    classView =
-        ClassView.builder()
-            .id("classview_1")
-            .rectangle(new Rectangle("rectangle_1", 10, 20))
-            .isViewOf(clazz)
-            .build();
+    Class clazz = new Class("class_1", new MultilingualText("MyClass"));
+    classView = new ClassView("classview_1", clazz, new Rectangle("rectangle_1", 10, 20));
 
     node = classView.serialize();
   }

@@ -14,11 +14,9 @@ public class GeneralizationSerializerTest {
 
   @BeforeEach
   void beforeEach() {
-    generalization = Generalization.builder().id("generalization_1").build();
-    Class general = Class.builder().id("class_1").build();
-    Class specific = Class.builder().id("class_2").build();
-    generalization.setGeneral(general);
-    generalization.setSpecific(specific);
+    Class general = new Class("class_1");
+    Class specific = new Class("class_2");
+    generalization = new Generalization("generalization_1", specific, general);
   }
 
   @Test

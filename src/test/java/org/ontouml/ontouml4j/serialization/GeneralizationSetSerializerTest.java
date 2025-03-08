@@ -20,25 +20,15 @@ public class GeneralizationSetSerializerTest {
 
   @BeforeEach
   void beforeEach() {
-    Generalization generalization1 = Generalization.builder().id("generalization_1").build();
-    Class general = Class.builder().id("class_1").build();
-    Class specific = Class.builder().id("class_2").build();
-    generalization1.setGeneral(general);
-    generalization1.setSpecific(specific);
+    Class general = new Class("class_1");
+    Class specific = new Class("class_2");
+    Generalization generalization1 = new Generalization("generalization_1", specific, general);
 
-    Generalization generalization2 = Generalization.builder().id("generalization_2").build();
-    Class general2 = Class.builder().id("class_3").build();
-    Class specific2 = Class.builder().id("class_4").build();
-    generalization1.setGeneral(general2);
-    generalization1.setSpecific(specific2);
+    Class general2 = new Class("class_3");
+    Class specific2 = new Class("class_4");
+    Generalization generalization2 = new Generalization("generalization_2", specific2, general2);
 
-    generalizationSet =
-        GeneralizationSet.builder()
-            .generalizations(Set.of(generalization1, generalization2))
-            .id("genset_1")
-            .name(new MultilingualText("My Genset"))
-            .created(new Date())
-            .build();
+    generalizationSet = new GeneralizationSet("genset_1", "My Genset", List.of(generalization1, generalization2));
   }
 
   @Test
@@ -113,13 +103,13 @@ public class GeneralizationSetSerializerTest {
 
   @Test
   void shouldSerializeCategorizer() throws JsonProcessingException {
-    Class cat = Class.builder().id("class_1").build();
+    Class cat = new Class("cat");
     generalizationSet.setCategorizer(cat);
 
     JsonNode node = generalizationSet.serialize();
     String categorizer = node.get("categorizer").asText();
 
-    assertThat(categorizer).isEqualTo("class_1");
+    assertThat(categorizer).isEqualTo("cat");
   }
 
   @Test

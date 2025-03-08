@@ -21,7 +21,7 @@ public class BinaryRelationSerializerTest {
 
   @BeforeEach
   void setUp() throws JsonProcessingException, URISyntaxException {
-    Class clazz = Class.builder().id("class_1").build();
+    Class clazz = new Class("class_1");
     relation = new BinaryRelation("relation_1", "my relation", clazz, clazz);
     node = relation.serialize();
   }

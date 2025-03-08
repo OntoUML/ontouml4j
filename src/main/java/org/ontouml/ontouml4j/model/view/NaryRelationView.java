@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.view.NaryRelationViewDeserializer;
+import org.ontouml.ontouml4j.model.ModelElement;
 import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.serialization.view.NaryRelationViewSerializer;
 import org.ontouml.ontouml4j.shape.Diamond;
@@ -15,14 +15,13 @@ import org.ontouml.ontouml4j.shape.Path;
 /** A view element that represents the single occurrence of a n-ary relation in a diagram. */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonDeserialize(using = NaryRelationViewDeserializer.class)
 @JsonSerialize(using = NaryRelationViewSerializer.class)
 public class NaryRelationView extends View {
 
-  @Builder.Default List<String> memberIds = new ArrayList<>();
+  List<String> memberIds = new ArrayList<>();
 
   /**
    * Identifies the class views (i.e., the members) that are connected by the n-ary relation view in
@@ -31,7 +30,7 @@ public class NaryRelationView extends View {
    *
    * <p>Restriction - minimum of 3 members
    */
-  @Builder.Default private List<View> members = new ArrayList<>();
+  private List<View> members = new ArrayList<>();
 
   /**
    * Identifies the diamond shape that renders the joining of all paths of the n-ary relation in the
@@ -46,9 +45,16 @@ public class NaryRelationView extends View {
    * This array of paths must be ordered according to the properties of the relation the view
    * represents.
    */
-  @Builder.Default private List<Path> paths = new ArrayList<>();
+  private List<Path> paths = new ArrayList<>();
 
-  @Builder.Default private List<String> pathIds = new ArrayList<>();
+  private List<String> pathIds = new ArrayList<>();
+
+  public NaryRelationView(String id, List<View> views, List<Path> paths, Diamond diamond, ModelElement isViewOf) {
+    super(id, isViewOf);
+    this.members = views;
+    this.paths = paths;
+    this.diamond = diamond;
+  }
 
   @Override
   public String getType() {

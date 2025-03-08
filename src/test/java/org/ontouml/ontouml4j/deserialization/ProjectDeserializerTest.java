@@ -81,6 +81,6 @@ public class ProjectDeserializerTest {
 
   @Test
   void shouldDeserializeDiagrams() {
-    assertThat(project.getDiagrams()).isEmpty();
+    assertThat(project.getAllDiagrams()).isEmpty();
   }
 }

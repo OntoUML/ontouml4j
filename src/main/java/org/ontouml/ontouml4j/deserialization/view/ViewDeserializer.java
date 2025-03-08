@@ -5,13 +5,14 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import org.ontouml.ontouml4j.deserialization.OntoumlElementDeserializer;
+import org.ontouml.ontouml4j.model.placeholders.UnresolvedModelElement;
 import org.ontouml.ontouml4j.model.view.View;
 
 public class ViewDeserializer {
   public static void deserialize(View view, JsonNode root, ObjectCodec codec)
       throws IOException, JacksonException {
     String id = root.get("isViewOf").asText();
-    view.setIsViewOfId(id);
+    view.setIsViewOf(new UnresolvedModelElement(id));
 
     OntoumlElementDeserializer.deserialize(view, root, codec);
   }

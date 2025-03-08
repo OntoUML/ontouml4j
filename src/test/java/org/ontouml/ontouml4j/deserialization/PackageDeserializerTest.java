@@ -60,7 +60,7 @@ public class PackageDeserializerTest {
 
   @Test
   void shouldDeserializeClassInContents() {
-    PackageableElement element = pkg.getContents().get(0);
+    PackageableElement element = pkg.getElementById("class1").get();
     Truth.assertThat(element).isInstanceOf(Class.class);
     assertThat(element.getId()).isEqualTo("class1");
     assertThat(element.getFirstName()).hasValue("Agent");
@@ -68,7 +68,7 @@ public class PackageDeserializerTest {
 
   @Test
   void shouldDeserializeRelationInContents() {
-    PackageableElement element = pkg.getContents().get(1);
+    PackageableElement element = pkg.getElementById("relation1").get();
     Truth.assertThat(element).isInstanceOf(Relation.class);
     assertThat(element.getId()).isEqualTo("relation1");
     assertThat(element.getFirstName()).hasValue("knows");
@@ -76,7 +76,7 @@ public class PackageDeserializerTest {
 
   @Test
   void shouldDeserializeGeneralizationInContents() {
-    PackageableElement element = pkg.getContents().get(3);
+    PackageableElement element = pkg.getElementById("generalization1").get();
     Truth.assertThat(element).isInstanceOf(Generalization.class);
     assertThat(element.getId()).isEqualTo("generalization1");
     assertThat(element.getFirstName()).hasValue("PersonToAgent");
@@ -84,7 +84,7 @@ public class PackageDeserializerTest {
 
   @Test
   void shouldDeserializeGeneralizationSetInContents() {
-    PackageableElement element = pkg.getContents().get(4);
+    PackageableElement element = pkg.getElementById("generalizationSet1").get();
     Truth.assertThat(element).isInstanceOf(GeneralizationSet.class);
     assertThat(element.getId()).isEqualTo("generalizationSet1");
     assertThat(element.getFirstName()).hasValue("AgentNature");
@@ -92,16 +92,16 @@ public class PackageDeserializerTest {
 
   @Test
   void shouldDeserializePackageInContents() {
-    PackageableElement element = pkg.getContents().get(5);
+    PackageableElement element = pkg.getElementById("pk2").get();
     Truth.assertThat(element).isInstanceOf(Package.class);
     assertThat(element.getId()).isEqualTo("pk2");
     assertThat(element.getFirstName()).hasValue("Subpackage");
   }
 
   //
-  //  @Test
-  //  void shouldResolveContainer() {
-  //    PackageableElement element = pkg.getContents().get(0);
-  //    assertThat(element.getContainer()).isEqualTo(pkg);
-  //  }
+  // @Test
+  // void shouldResolveContainer() {
+  // PackageableElement element = pkg.getContents().get(0);
+  // assertThat(element.getContainer()).isEqualTo(pkg);
+  // }
 }

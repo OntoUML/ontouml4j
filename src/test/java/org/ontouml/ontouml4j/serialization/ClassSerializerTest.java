@@ -9,13 +9,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.ontouml4j.model.Class;
-import org.ontouml.ontouml4j.model.MultilingualText;
+import org.ontouml.ontouml4j.model.Literal;
 import org.ontouml.ontouml4j.model.Project;
+import org.ontouml.ontouml4j.model.Property;
 import org.ontouml.ontouml4j.model.stereotype.ClassStereotype;
 
 public class ClassSerializerTest {
@@ -28,13 +30,8 @@ public class ClassSerializerTest {
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
     Project project = new Project();
-    clazz =
-        Class.builder()
-            .name(new MultilingualText("class1"))
-            .id("class_1")
-            .ontoumlStereotype(ClassStereotype.KIND)
-            .isAbstract(true)
-            .build();
+    clazz = new Class("class_1", "Class1", ClassStereotype.KIND);
+    clazz.setAbstract(true);
     project.addClass(clazz);
     node = clazz.serialize();
   }
@@ -138,7 +135,7 @@ public class ClassSerializerTest {
 
   @Test
   void shouldSerializeEmptyAttributesAsNull() throws JsonProcessingException {
-    clazz.setProperties(List.of());
+    clazz.setProperties(new ArrayList<Property>());
     node = clazz.serialize();
 
     JsonNode properties = node.get("properties");
@@ -162,7 +159,7 @@ public class ClassSerializerTest {
 
   @Test
   void shouldSerializeEmptyLiteralsAsNull() throws JsonProcessingException {
-    clazz.setLiterals(List.of());
+    clazz.setLiterals(new ArrayList<Literal>());
     JsonNode literalsNode = node.get("literals");
 
     List<String> literals =

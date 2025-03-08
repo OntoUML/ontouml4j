@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.shape.PointDeserializer;
 import org.ontouml.ontouml4j.serialization.shape.PointSerializer;
 
@@ -15,7 +14,6 @@ import org.ontouml.ontouml4j.serialization.shape.PointSerializer;
  */
 @Getter
 @Data
-@SuperBuilder
 @JsonDeserialize(using = PointDeserializer.class)
 @JsonSerialize(using = PointSerializer.class)
 public class Point {

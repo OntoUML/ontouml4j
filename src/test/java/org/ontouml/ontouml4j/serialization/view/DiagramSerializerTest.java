@@ -26,7 +26,7 @@ public class DiagramSerializerTest {
   void beforeEach() throws JsonProcessingException {
     project = new Project("project_1", "My Project name");
 
-    diagram = Diagram.builder().id("diagram_1").build();
+    diagram = new Diagram("diagram_1");
 
     project.addDiagram(diagram);
 
@@ -75,7 +75,7 @@ public class DiagramSerializerTest {
 
   @Test
   void shouldSerializeOwner() throws IOException, URISyntaxException {
-    Package pkg = Package.builder().id("package_1").name(new MultilingualText("MyPackage")).build();
+    Package pkg = new Package("package_1", "MyPackage");
 
     diagram.setOwner(pkg);
 
@@ -87,13 +87,8 @@ public class DiagramSerializerTest {
 
   @Test
   void shouldSerializeViews() throws IOException, URISyntaxException {
-    Class clazz = Class.builder().id("class_1").name(new MultilingualText("MyClass")).build();
-    ClassView classView =
-        ClassView.builder()
-            .id("classview_1")
-            .rectangle(new Rectangle("rectangle_1", 10, 20))
-            .isViewOf(clazz)
-            .build();
+    Class clazz = new Class("class_1", new MultilingualText("MyClass"));
+    ClassView classView = new ClassView("classview_1", clazz, new Rectangle("rectangle_1", 10, 20));
     diagram.addElement(classView);
 
     node = diagram.serialize();
@@ -105,13 +100,8 @@ public class DiagramSerializerTest {
 
   @Test
   void shouldSerializeInsideProject() throws IOException, URISyntaxException {
-    Class clazz = Class.builder().id("class_1").name(new MultilingualText("MyClass")).build();
-    ClassView classView =
-        ClassView.builder()
-            .id("classview_1")
-            .rectangle(new Rectangle("rectangle_1", 10, 20))
-            .isViewOf(clazz)
-            .build();
+    Class clazz = new Class("class_1", new MultilingualText("MyClass"));
+    ClassView classView = new ClassView("classview_1", clazz, new Rectangle("rectangle_1", 10, 20));
     diagram.addElement(classView);
 
     JsonNode projectNode = project.serialize();

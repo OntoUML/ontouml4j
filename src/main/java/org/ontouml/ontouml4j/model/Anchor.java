@@ -6,14 +6,12 @@ import java.util.Optional;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.AnchorDeserializer;
 import org.ontouml.ontouml4j.serialization.AnchorSerializer;
 
 /** A model element that connects a note to a model element it concerns. */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = AnchorDeserializer.class)
 @JsonSerialize(using = AnchorSerializer.class)
@@ -27,6 +25,12 @@ public class Anchor extends PackageableElement {
   private ModelElement element;
 
   private String elementId;
+
+  public Anchor(String id, String name, ModelElement element, Note note) {
+    super(id, new MultilingualText(name));
+    this.note = note;
+    this.element = element;
+  }
 
   @Override
   public String getType() {

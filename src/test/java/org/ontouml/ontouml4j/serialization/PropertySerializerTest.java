@@ -7,31 +7,35 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.net.URISyntaxException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.ontouml.ontouml4j.model.Cardinality;
+import org.ontouml.ontouml4j.model.*;
 import org.ontouml.ontouml4j.model.Class;
-import org.ontouml.ontouml4j.model.MultilingualText;
-import org.ontouml.ontouml4j.model.Property;
+import org.ontouml.ontouml4j.model.stereotype.ClassStereotype;
+import org.ontouml.ontouml4j.model.stereotype.PropertyStereotype;
 import org.ontouml.ontouml4j.model.utils.AggregationKind;
 
 public class PropertySerializerTest {
-
+  Project project;
   Property property;
   JsonNode node;
 
-  public PropertySerializerTest() throws JsonProcessingException {}
+  public PropertySerializerTest() throws JsonProcessingException {
+  }
 
   @BeforeEach
   void beforeEach() throws URISyntaxException, JsonProcessingException {
-    property =
-        Property.builder()
-            .id("property_1")
-            .name(new MultilingualText("My Property"))
-            .cardinality(new Cardinality("1", "*"))
-            .isDerived(true)
-            .isOrdered(true)
-            .isReadOnly(true)
-            .aggregationKind(AggregationKind.COMPOSITE)
-            .build();
+    project = new Project();
+    Class clazz = project.addClass(new Class("c1", "Person", ClassStereotype.KIND));
+    property = new Property(
+        "property_1",
+        new MultilingualText("My Property"),
+        PropertyStereotype.BEGIN,
+        new Cardinality("1", "*"),
+        clazz);
+    property.setAggregationKind(AggregationKind.COMPOSITE);
+    property.setDerived(true);
+    property.setOrdered(true);
+    property.setReadOnly(true);
+
     node = property.serialize();
   }
 
@@ -74,6 +78,8 @@ public class PropertySerializerTest {
 
   @Test
   void shouldSerializeEmptyPropertyTypeAsNull() throws JsonProcessingException {
+    property.setPropertyType(null);
+    node = property.serialize();
     String propertyType = node.get("propertyType").textValue();
     assertThat(propertyType).isNull();
   }
@@ -130,59 +136,61 @@ public class PropertySerializerTest {
     assertThat(cardinality).isEqualTo("2..5");
   }
 
-  //  @Test
-  //  void shouldSerializeCardinalityOfOne() throws JsonProcessingException {
-  //    property.setCardinality("1");
-  //    json = mapper.writeValueAsString(property);
-  //    assertThat(json).contains("\"cardinality\" : \"1\"");
-  //  }
+  // @Test
+  // void shouldSerializeCardinalityOfOne() throws JsonProcessingException {
+  // property.setCardinality("1");
+  // json = mapper.writeValueAsString(property);
+  // assertThat(json).contains("\"cardinality\" : \"1\"");
+  // }
   //
-  //  @Test
-  //  void shouldSerializeCardinalityOfZeroToMany() throws JsonProcessingException {
-  //    property.setCardinality("0..*");
-  //    json = mapper.writeValueAsString(property);
-  //    assertThat(json).contains("\"cardinality\" : \"0..*\"");
-  //  }
+  // @Test
+  // void shouldSerializeCardinalityOfZeroToMany() throws JsonProcessingException
+  // {
+  // property.setCardinality("0..*");
+  // json = mapper.writeValueAsString(property);
+  // assertThat(json).contains("\"cardinality\" : \"0..*\"");
+  // }
   //
-  //  //  @Test
-  //  //  void shouldSerializeInvalidCardinality() throws JsonProcessingException {
-  //  //    property.setCardinality("a..b");
-  //  //    json = mapper.writeValueAsString(property);
-  //  //    assertThat(json).contains("\"cardinality\" : \"a..b\"");
-  //  //  }
+  // // @Test
+  // // void shouldSerializeInvalidCardinality() throws JsonProcessingException {
+  // // property.setCardinality("a..b");
+  // // json = mapper.writeValueAsString(property);
+  // // assertThat(json).contains("\"cardinality\" : \"a..b\"");
+  // // }
   //
-  //  @Test
-  //  void shouldSerializeEmptySubsettedPropertiesAsNull() throws JsonProcessingException {
-  //    assertThat(json).contains("\"subsettedProperties\" : [ ]");
-  //  }
+  // @Test
+  // void shouldSerializeEmptySubsettedPropertiesAsNull() throws
+  // JsonProcessingException {
+  // assertThat(json).contains("\"subsettedProperties\" : [ ]");
+  // }
 
-  //  @Test
-  //  void shouldSerializeSubsettedProperties() throws JsonProcessingException {
-  //    Class person = Class.createKind("c1", "Person");
+  // @Test
+  // void shouldSerializeSubsettedProperties() throws JsonProcessingException {
+  // Class person = Class.createKind("c1", "Person");
   //
-  //    Property property = new Property("p1", "ancestor", person);
-  //    Property subProperty = new Property("p2", "father", person);
+  // Property property = new Property("p1", "ancestor", person);
+  // Property subProperty = new Property("p2", "father", person);
   //
-  //    subProperty.addSubsettedProperty(property);
+  // subProperty.addSubsettedProperty(property);
   //
-  //    mapper = new ObjectMapper();
-  //    json = mapper.writeValueAsString(subProperty);
+  // mapper = new ObjectMapper();
+  // json = mapper.writeValueAsString(subProperty);
   //
-  //    assertThat(json).contains("\"subsettedProperties\":[{\"id\":\"p1\",\"type\":\"Property\"}");
-  //  }
+  // assertThat(json).contains("\"subsettedProperties\":[{\"id\":\"p1\",\"type\":\"Property\"}");
+  // }
   //
-  //  @Test
-  //  void shouldSerializeRedefinedProperties() throws JsonProcessingException {
-  //    Class person = Class.createKind("c1", "Person");
+  // @Test
+  // void shouldSerializeRedefinedProperties() throws JsonProcessingException {
+  // Class person = Class.createKind("c1", "Person");
   //
-  //    Property property = new Property("p1", "ancestor", person);
-  //    Property subProperty = new Property("p2", "father", person);
+  // Property property = new Property("p1", "ancestor", person);
+  // Property subProperty = new Property("p2", "father", person);
   //
-  //    subProperty.addRedefinedProperty(property);
+  // subProperty.addRedefinedProperty(property);
   //
-  //    mapper = new ObjectMapper();
-  //    json = mapper.writeValueAsString(subProperty);
+  // mapper = new ObjectMapper();
+  // json = mapper.writeValueAsString(subProperty);
   //
-  //    assertThat(json).contains("\"redefinedProperties\":[{\"id\":\"p1\",\"type\":\"Property\"}");
-  //  }
+  // assertThat(json).contains("\"redefinedProperties\":[{\"id\":\"p1\",\"type\":\"Property\"}");
+  // }
 }

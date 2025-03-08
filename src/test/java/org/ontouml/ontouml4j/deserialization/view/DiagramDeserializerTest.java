@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.model.view.Diagram;
+import org.ontouml.ontouml4j.model.view.View;
 import org.ontouml.ontouml4j.utils.ResourceGetter;
 
 public class DiagramDeserializerTest {
@@ -34,8 +35,10 @@ public class DiagramDeserializerTest {
   void shouldDeserializeViews() {
     assertThat(diagram.getViews()).hasSize(2);
 
-    assertThat(diagram.getViews().stream().toList().getFirst().getId()).isEqualTo("classview_1");
-    assertThat(diagram.getViews().stream().toList().getFirst().getIsViewOf().getId())
+    View element = diagram.getViewById("classview_1").get();
+
+    assertThat(element.getId()).isEqualTo("classview_1");
+    assertThat(element.getIsViewOf().getId())
         .isEqualTo("class_1");
   }
 }

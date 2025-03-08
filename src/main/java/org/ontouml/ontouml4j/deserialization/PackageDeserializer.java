@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import java.util.List;
 import org.ontouml.ontouml4j.model.Package;
+import org.ontouml.ontouml4j.model.PackageableElement;
+import org.ontouml.ontouml4j.model.placeholders.UnresolvedPackageableElement;
 
 public class PackageDeserializer extends JsonDeserializer<Package> {
 
@@ -33,7 +35,9 @@ public class PackageDeserializer extends JsonDeserializer<Package> {
       try {
         List<String> contentIds =
             contentsNode.traverse(codec).readValueAs(new TypeReference<List<String>>() {});
-        pkg.setContentIds(contentIds);
+        List<? extends PackageableElement> elements =
+            contentIds.stream().map(UnresolvedPackageableElement::new).toList();
+        pkg.addContents(elements);
       } catch (IOException e) {
         e.printStackTrace();
       }

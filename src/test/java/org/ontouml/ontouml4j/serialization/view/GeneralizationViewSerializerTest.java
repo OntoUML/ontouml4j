@@ -19,25 +19,17 @@ public class GeneralizationViewSerializerTest {
 
   @BeforeEach
   void beforeEach() throws JsonProcessingException {
-    Class clazz = Class.builder().id("class_1").name(new MultilingualText("MyClass")).build();
-    Class clazz2 = Class.builder().id("class_2").name(new MultilingualText("MyClass")).build();
+    Class clazz = new Class("class_1", new MultilingualText("MyClass"));
+    Class clazz2 = new Class("class_2", new MultilingualText("MyClass"));
 
-    Generalization gen =
-        Generalization.builder().id("generalization_1").general(clazz).specific(clazz2).build();
+    Generalization gen = new Generalization("generalization_1", clazz, clazz2);
 
-    ClassView classview1 = ClassView.builder().id("classview_1").isViewOf(clazz).build();
-    ClassView classview2 = ClassView.builder().id("classview_2").isViewOf(clazz2).build();
+    ClassView classview1 = new ClassView("classview_1",clazz);
+    ClassView classview2 = new ClassView("classview_2", clazz2);
 
-    Path path = Path.builder().id("path_1").build();
+    Path path = new Path("path_1");
 
-    generalizationView =
-        GeneralizationView.builder()
-            .id("generalizationview_1")
-            .isViewOf(gen)
-            .sourceView(classview1)
-            .targetView(classview2)
-            .path(path)
-            .build();
+    generalizationView = new GeneralizationView("generalizationview_1", gen, classview1, classview2, path);
 
     node = generalizationView.serialize();
   }

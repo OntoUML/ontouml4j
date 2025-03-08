@@ -3,11 +3,9 @@ package org.ontouml.ontouml4j.model;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.OntoumlUtils;
 import org.ontouml.ontouml4j.deserialization.GeneralizationSetDeserializer;
 import org.ontouml.ontouml4j.serialization.GeneralizationSetSerializer;
@@ -19,7 +17,6 @@ import org.ontouml.ontouml4j.serialization.GeneralizationSetSerializer;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = GeneralizationSetDeserializer.class)
 @JsonSerialize(using = GeneralizationSetSerializer.class)
@@ -41,9 +38,9 @@ public class GeneralizationSet extends PackageableElement {
   private boolean isComplete;
 
   /** Identifies all generalizations that are involved by the generalization set. */
-  @Builder.Default private Set<Generalization> generalizations = new HashSet<>();
+  private Set<Generalization> generalizations = new HashSet<>();
 
-  @Builder.Default private List<String> generalizationIds = new ArrayList<>();
+  private List<String> generalizationIds = new ArrayList<>();
 
   /**
    * Identifies the high-order class that classifies (i.e., is instantiated by) every specific class
@@ -68,7 +65,7 @@ public class GeneralizationSet extends PackageableElement {
   }
 
   public GeneralizationSet(
-          String id, String name, Class categorizer, Collection<Generalization> generalizations) {
+      String id, String name, Class categorizer, Collection<Generalization> generalizations) {
     this(id, new MultilingualText(name), categorizer, generalizations);
   }
 
@@ -81,7 +78,7 @@ public class GeneralizationSet extends PackageableElement {
   }
 
   public GeneralizationSet(
-          MultilingualText name, Class categorizer, Collection<Generalization> generalizations) {
+      MultilingualText name, Class categorizer, Collection<Generalization> generalizations) {
     this(null, name, categorizer, generalizations);
   }
 

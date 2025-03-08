@@ -2,23 +2,28 @@ package org.ontouml.ontouml4j.shape;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.serialization.shape.RectangularShapeSerializer;
 
 /** A shape defined by a top left position, a height, a width. */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonSerialize(using = RectangularShapeSerializer.class)
 public abstract class RectangularShape extends Shape {
 
-  @Builder.Default Point topLeft = new Point(0, 0);
+  Point topLeft = new Point(0, 0);
 
-  @Builder.Default int width = 20;
+  int width = 20;
 
-  @Builder.Default int height = 10;
+  int height = 10;
+
+  public RectangularShape(String id, Point topLeft, int width, int height) {
+    this(id, width, height);
+    this.topLeft = topLeft;
+    this.width = width;
+    this.height = height;
+  }
 
   public RectangularShape(String id) {
     super(id);

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
 import org.ontouml.ontouml4j.model.Property;
+import org.ontouml.ontouml4j.model.placeholders.UnresolvedClassifier;
 import org.ontouml.ontouml4j.model.utils.AggregationKind;
 
 public class PropertyDeserializer extends JsonDeserializer<Property> {
@@ -35,7 +36,7 @@ public class PropertyDeserializer extends JsonDeserializer<Property> {
     }
 
     String propertyType = DeserializerUtils.deserializeNullableStringField(root, "propertyType");
-    property.setPropertyTypeId(propertyType);
+    property.setPropertyType(new UnresolvedClassifier<>(propertyType));
 
     String[] subsettedProperties =
         DeserializerUtils.deserializeNullableStringArrayField(root, "subsettedProperties", codec);

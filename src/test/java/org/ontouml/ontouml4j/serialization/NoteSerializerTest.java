@@ -14,7 +14,7 @@ public class NoteSerializerTest {
 
   @BeforeEach
   void setUp() {
-    note = Note.builder().id("note_1").build();
+    note = new Note("note_1");
     note.addText("en", "My Note Text");
     note.addText("pt", "Meu texto");
   }

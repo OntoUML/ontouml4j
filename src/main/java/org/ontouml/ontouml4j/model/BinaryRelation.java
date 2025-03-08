@@ -8,7 +8,6 @@ import java.util.function.Predicate;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.BinaryRelationDeserializer;
 import org.ontouml.ontouml4j.model.stereotype.ClassStereotype;
 import org.ontouml.ontouml4j.model.stereotype.RelationStereotype;
@@ -25,11 +24,14 @@ import org.ontouml.ontouml4j.serialization.BinaryRelationSerializer;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
 @NoArgsConstructor
 @JsonDeserialize(using = BinaryRelationDeserializer.class)
 @JsonSerialize(using = BinaryRelationSerializer.class)
 public class BinaryRelation extends Relation {
+
+  public BinaryRelation(String id) {
+    super(id);
+  }
 
   public BinaryRelation(String id, MultilingualText name, RelationStereotype ontoumlStereotype) {
     super(id, name, ontoumlStereotype);

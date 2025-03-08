@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
+import org.ontouml.ontouml4j.model.placeholders.UnresolvedPath;
+import org.ontouml.ontouml4j.model.placeholders.UnresolvedView;
 import org.ontouml.ontouml4j.model.view.BinaryConnectorView;
 
 public class BinaryConnectorViewDeserializer {
@@ -13,9 +15,9 @@ public class BinaryConnectorViewDeserializer {
     String targetId = root.get("targetView").asText();
     String pathId = root.get("path").asText();
 
-    view.setSourceViewId(sourceId);
-    view.setTargetViewId(targetId);
-    view.setPathId(pathId);
+    view.setSourceView(new UnresolvedView(sourceId));
+    view.setTargetView(new UnresolvedView(targetId));
+    view.setPath(new UnresolvedPath(pathId));
 
     ViewDeserializer.deserialize(view, root, codec);
   }

@@ -16,15 +16,10 @@ public class AnchorSerializerTest {
 
   @BeforeEach
   void setUp() throws JsonProcessingException, URISyntaxException {
-    Class clazz = Class.builder().id("class_1").build();
-    Note note = Note.builder().id("note_1").build();
-    anchor =
-        Anchor.builder()
-            .id("anchor_1")
-            .name(new MultilingualText("My Anchor"))
-            .element(clazz)
-            .note(note)
-            .build();
+    Class clazz = new Class("class_1");
+
+    Note note = new Note("note_1", "My Note text");
+    anchor = new Anchor("anchor_1", "My Anchor", clazz, note);
   }
 
   @Test

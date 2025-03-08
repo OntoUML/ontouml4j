@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.*;
 import java.util.stream.Collectors;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import org.ontouml.ontouml4j.deserialization.ProjectDeserializer;
 import org.ontouml.ontouml4j.model.utils.ElementContainer;
 import org.ontouml.ontouml4j.model.utils.ProjectMetaProperties;
@@ -19,22 +18,19 @@ import org.ontouml.ontouml4j.shape.*;
  * diagrams, view, and shapes).
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
-@SuperBuilder
-@NoArgsConstructor
-@Getter
 @JsonSerialize(using = ProjectSerializer.class)
+@NoArgsConstructor
 @JsonDeserialize(using = ProjectDeserializer.class)
 public class Project extends NamedElement implements ElementContainer {
 
   /** Contains the OntoUML elements that are part of the project. */
-  @Builder.Default ProjectMetaProperties metaProperties = new ProjectMetaProperties();
+  ProjectMetaProperties metaProperties = new ProjectMetaProperties();
 
   /** Properties related to diagrams, views, and shapes that are part of the project. */
-  @Builder.Default Map<String, Diagram> diagrams = new HashMap<>();
+  Map<String, Diagram> diagrams = new HashMap<>();
 
-  @Builder.Default Map<String, View> views = new HashMap<>();
-  @Builder.Default Map<String, Shape> shapes = new HashMap<>();
+  Map<String, View> views = new HashMap<>();
+  Map<String, Shape> shapes = new HashMap<>();
 
   /**
    * Identifies the root package of a project (the package containing all other model elements of
@@ -42,15 +38,15 @@ public class Project extends NamedElement implements ElementContainer {
    */
   private Package root;
 
-  @Builder.Default private Map<String, Class> classes = new HashMap<>();
-  @Builder.Default private Map<String, Package> packages = new HashMap<>();
-  @Builder.Default private Map<String, Relation> relations = new HashMap<>();
-  @Builder.Default private Map<String, Property> properties = new HashMap<>();
-  @Builder.Default private Map<String, Literal> literals = new HashMap<>();
-  @Builder.Default private Map<String, GeneralizationSet> generalizationSets = new HashMap<>();
-  @Builder.Default private Map<String, Generalization> generalizations = new HashMap<>();
-  @Builder.Default private Map<String, Note> notes = new HashMap<>();
-  @Builder.Default private Map<String, Anchor> anchors = new HashMap<>();
+  private Map<String, Class> classes = new HashMap<>();
+  private Map<String, Package> packages = new HashMap<>();
+  private Map<String, Relation> relations = new HashMap<>();
+  private Map<String, Property> properties = new HashMap<>();
+  private Map<String, Literal> literals = new HashMap<>();
+  private Map<String, GeneralizationSet> generalizationSets = new HashMap<>();
+  private Map<String, Generalization> generalizations = new HashMap<>();
+  private Map<String, Note> notes = new HashMap<>();
+  private Map<String, Anchor> anchors = new HashMap<>();
 
   public Project(String id, String name) {
     super(id, new MultilingualText(name));
@@ -240,18 +236,6 @@ public class Project extends NamedElement implements ElementContainer {
     return Optional.ofNullable(this.classes.get(id));
   }
 
-  public Iterable<? extends Property> getAllProperties() {
-    return this.properties.values();
-  }
-
-  public Iterable<? extends Generalization> getAllGeneralizations() {
-    return this.generalizations.values();
-  }
-
-  public Iterable<? extends GeneralizationSet> getAllGeneralizationSets() {
-    return this.generalizationSets.values();
-  }
-
   public ModelElement addElement(ModelElement element) {
     if (element.getId() == null) {
       throw new RuntimeException("Element id cannot be null");
@@ -302,10 +286,17 @@ public class Project extends NamedElement implements ElementContainer {
    * @return the created package.
    */
   public Package createPackage(String id, String name) {
-    Package pkg = Package.builder().id(id).name(new MultilingualText(name)).build();
+    Package pkg = new Package(id, name);
     pkg.setProjectContainer(this);
     this.packages.put(id, pkg);
     return pkg;
+  }
+
+  public Diagram createDiagram(String id, String name) {
+    Diagram diagram = new Diagram(id, name);
+    diagram.setProjectContainer(this);
+    this.diagrams.put(id, diagram);
+    return diagram;
   }
 
   public Class addClass(Class clazz) {
@@ -462,5 +453,77 @@ public class Project extends NamedElement implements ElementContainer {
     //        + ", anchors="
     //        + anchors.keySet()
     //        + '}';
+  }
+
+  public ProjectMetaProperties getMetaProperties() {
+    return metaProperties;
+  }
+
+  public void setMetaProperties(ProjectMetaProperties metaProperties) {
+    this.metaProperties = metaProperties;
+  }
+
+  public Iterable<? extends View> getAllDiagramElements() {
+    return this.views.values();
+  }
+
+  public List<Anchor> getAllAnchors() {
+    return anchors.values().stream().toList();
+  }
+
+  public List<Class> getAllClasses() {
+    return classes.values().stream().toList();
+  }
+
+  public List<Relation> getAllRelations() {
+    return relations.values().stream().toList();
+  }
+
+  public List<Diagram> getAllDiagrams() {
+    return diagrams.values().stream().toList();
+  }
+
+  public List<Generalization> getAllGeneralizations() {
+    return generalizations.values().stream().toList();
+  }
+
+  public List<GeneralizationSet> getAllGeneralizationSets() {
+    return generalizationSets.values().stream().toList();
+  }
+
+  public Iterable<? extends Property> getAllProperties() {
+    return this.properties.values();
+  }
+
+  public List<Literal> getAllLiterals() {
+    return literals.values().stream().toList();
+  }
+
+  public List<Note> getAllNotes() {
+    return notes.values().stream().toList();
+  }
+
+  public List<Package> getAllPackages() {
+    return packages.values().stream().toList();
+  }
+
+  public List<Relation> getAlRelations() {
+    return relations.values().stream().toList();
+  }
+
+  public List<Shape> getAllShapes() {
+    return shapes.values().stream().toList();
+  }
+
+  public List<View> getAllViews() {
+    return views.values().stream().toList();
+  }
+
+  public Package getRoot() {
+    return root;
+  }
+
+  public void setRoot(Package root) {
+    this.root = root;
   }
 }

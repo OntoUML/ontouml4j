@@ -7,13 +7,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.Date;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 /**
  * description: An identified element of an OntoUML ontology according to the OntoUML Metamodel,
  * which includes projects, model elements, diagrams, views, and shapes.
  */
-@SuperBuilder
 @Getter
 @Setter
 @AllArgsConstructor
