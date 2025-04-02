@@ -30,7 +30,6 @@ public class PropertySerializer extends JsonSerializer<Property> {
     if (propertyType.isEmpty()) {
       jsonGen.writeNullField("aggregationKind");
     } else {
-
       Serializer.writeNullableStringField("aggregationKind", propertyType.get().getId(), jsonGen);
     }
 

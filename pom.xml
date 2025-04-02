@@ -6,7 +6,7 @@
 
     <groupId>org.ontouml</groupId>
     <artifactId>ontouml4j</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
     <name>OntoUML4j</name>
     <description>
         🪐 A Java library for OntoUML modeling.

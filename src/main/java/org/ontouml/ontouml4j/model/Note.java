@@ -55,4 +55,8 @@ public class Note extends PackageableElement {
   public String getType() {
     return "Note";
   }
+
+  public String getFirstText() {
+    return this.text.getMap().values().stream().toList().getFirst();
+  }
 }

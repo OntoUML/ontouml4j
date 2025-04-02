@@ -15,9 +15,21 @@ import org.ontouml.ontouml4j.serialization.shape.TextSerializer;
 @JsonSerialize(using = TextSerializer.class)
 public class Text extends RectangularShape {
 
-    public Text(String id, Point topLeft, int width, int height) {
-        super(id, topLeft, width, height);
-    }
+  // TODO: Add text value?
+  public String text;
+
+  public Text(String id, Point topLeft, int width, int height, String text) {
+    super(id, topLeft, width, height);
+    this.text = text;
+  }
+
+  public Text(String id, Point topLeft, int width, int height) {
+    super(id, topLeft, width, height);
+  }
+
+  public Text(String id) {
+    super(id);
+  }
 
   @Override
   public String getType() {

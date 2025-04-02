@@ -13,8 +13,10 @@ import org.ontouml.ontouml4j.serialization.ProjectSerializer;
 import org.ontouml.ontouml4j.shape.*;
 
 /**
- * A named element that serves as the container of an entire OntoUML ontology, including the
- * elements of both the abstract syntax (i.e., model elements) and the concrete syntax (i.e.,
+ * A named element that serves as the container of an entire OntoUML ontology,
+ * including the
+ * elements of both the abstract syntax (i.e., model elements) and the concrete
+ * syntax (i.e.,
  * diagrams, view, and shapes).
  */
 @EqualsAndHashCode(callSuper = true)
@@ -26,14 +28,18 @@ public class Project extends NamedElement implements ElementContainer {
   /** Contains the OntoUML elements that are part of the project. */
   ProjectMetaProperties metaProperties = new ProjectMetaProperties();
 
-  /** Properties related to diagrams, views, and shapes that are part of the project. */
+  /**
+   * Properties related to diagrams, views, and shapes that are part of the
+   * project.
+   */
   Map<String, Diagram> diagrams = new HashMap<>();
 
   Map<String, View> views = new HashMap<>();
   Map<String, Shape> shapes = new HashMap<>();
 
   /**
-   * Identifies the root package of a project (the package containing all other model elements of
+   * Identifies the root package of a project (the package containing all other
+   * model elements of
    * the project) if present.
    */
   private Package root;
@@ -270,6 +276,7 @@ public class Project extends NamedElement implements ElementContainer {
       case GeneralizationSet genset -> this.addGeneralizationSet(genset);
       case Generalization gen -> this.addGeneralization(gen);
       case Note note -> this.addNote(note);
+      case Path path -> this.addPath(path);
       case Anchor anchor -> this.addAnchor(anchor);
       case Shape shape -> this.shapes.put(element.getId(), shape);
       default -> throw new IllegalStateException("Unexpected value: " + element);
@@ -279,9 +286,10 @@ public class Project extends NamedElement implements ElementContainer {
   }
 
   /**
-   * Method that creates a new package and add it to the list of elements of the project
+   * Method that creates a new package and add it to the list of elements of the
+   * project
    *
-   * @param id - Package id.
+   * @param id   - Package id.
    * @param name - Package Name.
    * @return the created package.
    */
@@ -315,6 +323,13 @@ public class Project extends NamedElement implements ElementContainer {
     relation.setProjectContainer(this);
     this.relations.put(relation.getId(), relation);
     return relation;
+  }
+
+  public BinaryRelationView addBinaryRelationView(BinaryRelationView view) {
+    view.setProjectContainer(this);
+    this.views.put(view.getId(), view);
+    this.shapes.put(view.getPath().getId(), view.getPath());
+    return view;
   }
 
   public Literal addLiteral(Literal literal) {
@@ -418,41 +433,41 @@ public class Project extends NamedElement implements ElementContainer {
   @Override
   public String toString() {
     return "Project";
-    //    return "Project{"
-    //        + "type='"
-    //        + getType()
-    //        + '\''
-    //        + ", metaProperties="
-    //        + metaProperties.toString()
-    //        + ", diagrams="
-    //        + diagrams.keySet()
-    //        + // Including keys to summarize data
-    //        ", views="
-    //        + views.keySet()
-    //        + ", shapes="
-    //        + shapes.keySet()
-    //        + ", root="
-    //        + (root != null ? root.getName() : "null")
-    //        + // Assuming root has getName method
-    //        ", classes="
-    //        + classes.keySet()
-    //        + ", packages="
-    //        + packages.keySet()
-    //        + ", relations="
-    //        + relations.keySet()
-    //        + ", properties="
-    //        + properties.keySet()
-    //        + ", literals="
-    //        + literals.keySet()
-    //        + ", generalizationSets="
-    //        + generalizationSets.keySet()
-    //        + ", generalizations="
-    //        + generalizations.keySet()
-    //        + ", notes="
-    //        + notes.keySet()
-    //        + ", anchors="
-    //        + anchors.keySet()
-    //        + '}';
+    // return "Project{"
+    // + "type='"
+    // + getType()
+    // + '\''
+    // + ", metaProperties="
+    // + metaProperties.toString()
+    // + ", diagrams="
+    // + diagrams.keySet()
+    // + // Including keys to summarize data
+    // ", views="
+    // + views.keySet()
+    // + ", shapes="
+    // + shapes.keySet()
+    // + ", root="
+    // + (root != null ? root.getName() : "null")
+    // + // Assuming root has getName method
+    // ", classes="
+    // + classes.keySet()
+    // + ", packages="
+    // + packages.keySet()
+    // + ", relations="
+    // + relations.keySet()
+    // + ", properties="
+    // + properties.keySet()
+    // + ", literals="
+    // + literals.keySet()
+    // + ", generalizationSets="
+    // + generalizationSets.keySet()
+    // + ", generalizations="
+    // + generalizations.keySet()
+    // + ", notes="
+    // + notes.keySet()
+    // + ", anchors="
+    // + anchors.keySet()
+    // + '}';
   }
 
   public ProjectMetaProperties getMetaProperties() {

@@ -30,6 +30,8 @@ public class Package extends PackageableElement {
   /** Identifies the contents of a package element. */
   HashMap<String, PackageableElement> contents = new HashMap<String, PackageableElement>();
 
+  boolean isRoot = false;
+
   public Package(String id, String name) {
     super(id, new MultilingualText(name));
   }
@@ -61,6 +63,10 @@ public class Package extends PackageableElement {
         }
       }
     }
+  }
+
+  public boolean isRoot() {
+    return this.isRoot;
   }
 
   public Class createClass() {
