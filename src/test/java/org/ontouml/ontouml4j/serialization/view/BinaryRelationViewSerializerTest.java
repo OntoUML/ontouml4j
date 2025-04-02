@@ -2,6 +2,8 @@ package org.ontouml.ontouml4j.serialization.view;
 
 import static com.google.common.truth.Truth.assertThat;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,7 @@ import org.ontouml.ontouml4j.model.Project;
 import org.ontouml.ontouml4j.model.view.BinaryRelationView;
 import org.ontouml.ontouml4j.model.view.ClassView;
 import org.ontouml.ontouml4j.shape.Path;
+import org.ontouml.ontouml4j.shape.Point;
 import org.ontouml.ontouml4j.shape.Rectangle;
 
 public class BinaryRelationViewSerializerTest {
@@ -40,17 +43,16 @@ public class BinaryRelationViewSerializerTest {
 
     project.addElement(binaryRelation);
 
-    Path path = new Path("path_1");
+    Path path = new Path("path_1", List.of(new Point(0, 0), new Point(10, 10)));
 
     binaryRelationView = new BinaryRelationView(
         "binaryrelationview_1",
         classView1,
         classView2,
         path,
-        binaryRelation
-    );
-
-    project.addElement(binaryRelationView);
+        binaryRelation);
+    project.addBinaryRelationView(binaryRelationView);
+    project.serialize();
     node = binaryRelationView.serialize();
   }
 
